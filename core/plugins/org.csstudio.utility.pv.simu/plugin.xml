@@ -23,6 +23,11 @@
             name="Constant PV"
             prefix="const">
       </PVFactory>
+      <PVFactory
+            class="org.csstudio.utility.pv.simu.MonitorPVFactory"
+            name="monitorCounter pv"
+            prefix="mon">
+      </PVFactory>
    </extension>
 
 </plugin>
