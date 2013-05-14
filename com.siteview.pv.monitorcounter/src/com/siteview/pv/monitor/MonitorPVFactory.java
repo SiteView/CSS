@@ -21,7 +21,7 @@ public class MonitorPVFactory implements IPVFactory{
 		 Value value = values.get(name);
 	        if (value == null)
 	        {
-	          value=new MonitorCounter(name);
+	          value=new MonitorCounterValue(name);
 	          values.put(name, value);
 	        }
 	        if (value instanceof DynamicValue)

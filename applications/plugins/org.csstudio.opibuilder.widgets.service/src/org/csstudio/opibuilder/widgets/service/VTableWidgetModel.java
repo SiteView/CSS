@@ -12,6 +12,7 @@ public class VTableWidgetModel extends AbstractWidgetModel {
 	
 	@Override
 	protected void configureProperties() {
+		
 		addProperty(new StringProperty(IPVWidgetModel.PROP_PVNAME, "PV Formula", WidgetPropertyCategory.Basic, ""));
 	}
 	

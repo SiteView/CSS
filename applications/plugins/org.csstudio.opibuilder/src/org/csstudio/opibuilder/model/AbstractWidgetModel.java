@@ -39,6 +39,7 @@ import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.csstudio.opibuilder.properties.ActionsProperty;
 import org.csstudio.opibuilder.properties.BooleanProperty;
+import org.csstudio.opibuilder.properties.ButtonProperty;
 import org.csstudio.opibuilder.properties.ColorProperty;
 import org.csstudio.opibuilder.properties.ComboProperty;
 import org.csstudio.opibuilder.properties.ComplexDataProperty;
@@ -309,6 +310,13 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 		addProperty(pvNameProperty);
 		addProperty(pvValueProperty);
 		pvMap.put(pvNameProperty, pvValueProperty);
+	}
+	
+	public void addPVProperty1(final ButtonProperty pvNameProperty, 
+			final PVValueProperty pvValueProperty){
+		addProperty(pvNameProperty);
+		addProperty(pvValueProperty);
+//		pvMap.put(pvNameProperty, pvValueProperty);
 	}
 	
 	private void checkPropertyExist(Object propID) {

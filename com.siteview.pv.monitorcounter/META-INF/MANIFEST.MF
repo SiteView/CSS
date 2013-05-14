@@ -7,7 +7,13 @@ Bundle-Activator: com.siteview.pv.monitorcounter.Activator
 Bundle-Vendor: SITEVIEW
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.csstudio.utility.pv;bundle-version="3.1.0"
+ org.csstudio.utility.pv;bundle-version="3.1.0",
+ org.csstudio.opibuilder;bundle-version="3.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.csstudio.utility.pv.simu
+Export-Package: com.siteview.pv.monitor,
+ com.siteview.pv.monitor.data,
+ com.siteview.pv.monitorcounter
+Bundle-ClassPath: .,
+ lib/sqljdbc4.jar

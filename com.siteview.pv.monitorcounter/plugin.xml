@@ -4,9 +4,9 @@
    <extension
          point="org.csstudio.utility.pv.pvfactory">
       <PVFactory
-            class="com.siteview.pv.monitor.MonitorCounter"
+            class="com.siteview.pv.monitor.MonitorPVFactory"
             name="monitorcounter pv"
-            prefix="id">
+            prefix="mon">
       </PVFactory>
    </extension>
 

@@ -77,5 +77,7 @@ public abstract class PropertySSHelper {
 	
 	public abstract PropertyDescriptor getMatrixPropertyDescriptor(String prop_id,
 			String description);
+
+	public abstract PropertyDescriptor getButtonPropertyDescriptor(String prop_id,String description);
 	
 }

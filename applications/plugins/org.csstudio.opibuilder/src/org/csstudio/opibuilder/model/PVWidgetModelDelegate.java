@@ -8,6 +8,7 @@
 package org.csstudio.opibuilder.model;
 
 import org.csstudio.opibuilder.properties.BooleanProperty;
+import org.csstudio.opibuilder.properties.ButtonProperty;
 import org.csstudio.opibuilder.properties.PVValueProperty;
 import org.csstudio.opibuilder.properties.StringProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
@@ -17,7 +18,7 @@ import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
  * @author Xihui Chen
  *
  */
-public class PVWidgetModelDelegate implements IPVWidgetModel{	
+public  class PVWidgetModelDelegate implements IPVWidgetModel{	
 	
 
 	AbstractWidgetModel model;
@@ -27,9 +28,10 @@ public class PVWidgetModelDelegate implements IPVWidgetModel{
 	}
 	
 	public void configureBaseProperties() {
-		model.addPVProperty(new StringProperty(PROP_PVNAME, "PV Name", WidgetPropertyCategory.Basic,
-				""), new PVValueProperty(PROP_PVVALUE, null));
+//		model.addPVProperty(new StringProperty(PROP_PVNAME, "PV Name", WidgetPropertyCategory.Basic,
+//				""), new PVValueProperty(PROP_PVVALUE, null));
 		
+		model.addPVProperty1(new ButtonProperty(PROP_PVNAME, "PV Name",  WidgetPropertyCategory.Basic,""), new PVValueProperty(PROP_PVVALUE, null));
 		model.addProperty(new BooleanProperty(PROP_BORDER_ALARMSENSITIVE, 
 				"Alarm Sensitive", WidgetPropertyCategory.Border, true));
 		model.addProperty(new BooleanProperty(PROP_FORECOLOR_ALARMSENSITIVE, 

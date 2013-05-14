@@ -14,6 +14,7 @@ public class HistogramModel extends AbstractWidgetModel {
 	
 	@Override
 	protected void configureProperties() {
+		
 		addProperty(new StringProperty(AbstractPVWidgetModel.PROP_PVNAME, "PV Name", WidgetPropertyCategory.Basic, ""));
 	}
 	

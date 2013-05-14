@@ -1,0 +1,6 @@
+driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+ip=10.100.100.11
+port=1433
+DatabaseName=Itsm_Ecc
+USER=sa
+PASSWORD=siteview

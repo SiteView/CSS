@@ -131,6 +131,12 @@ public class PropertySSHelperImpl extends PropertySSHelper {
 		return null;
 	}
 
+	@Override
+	public PropertyDescriptor getButtonPropertyDescriptor(String prop_id,
+			String description) {
+		return null;
+	}
+
 	
 
 }
