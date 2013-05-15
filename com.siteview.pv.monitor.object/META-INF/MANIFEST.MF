@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Object
+Bundle-SymbolicName: com.siteview.pv.monitor.object
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: SITEVIEW
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: Siteview.lib;bundle-version="1.0.0",
+ Siteview.Windows.Forms;bundle-version="1.0.0"
