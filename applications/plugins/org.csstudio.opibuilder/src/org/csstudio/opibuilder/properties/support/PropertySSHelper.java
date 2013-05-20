@@ -25,6 +25,8 @@ public abstract class PropertySSHelper {
 
 	public abstract PropertyDescriptor getActionsPropertyDescriptor(final String prop_id,
 			final String description, final boolean showHookOption);
+	
+	public abstract PropertyDescriptor getMonitorPropertyDescriptor(final String prop_id,final String description, final boolean showHookOption);
 
 	public  abstract PropertyDescriptor getBooleanPropertyDescriptor(
 			String prop_id, String description);

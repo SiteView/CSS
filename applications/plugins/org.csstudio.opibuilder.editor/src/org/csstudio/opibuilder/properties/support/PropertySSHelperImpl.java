@@ -10,6 +10,7 @@ package org.csstudio.opibuilder.properties.support;
 
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.StringTableProperty.TitlesProvider;
+import org.csstudio.opibuilder.properties.monitor.MonitorPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
@@ -135,6 +136,13 @@ public class PropertySSHelperImpl extends PropertySSHelper {
 	public PropertyDescriptor getButtonPropertyDescriptor(String prop_id,
 			String description) {
 		return null;
+	}
+
+	@Override
+	public PropertyDescriptor getMonitorPropertyDescriptor(String prop_id,
+			String description, boolean showHookOption) {
+		// TODO Auto-generated method stub
+		return new MonitorPropertyDescriptor(prop_id, description, showHookOption);
 	}
 
 	

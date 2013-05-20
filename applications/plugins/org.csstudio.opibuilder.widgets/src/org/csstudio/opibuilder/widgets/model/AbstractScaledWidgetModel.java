@@ -7,6 +7,7 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.model;
 
+
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.BooleanProperty;
 import org.csstudio.opibuilder.properties.DoubleProperty;
@@ -67,13 +68,14 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
 	
 		/** The default value of the major tick step hint property. */
 	private static final int DEFAULT_MAJOR_TICK_STEP_HINT = 50;	
+	
+
 
 	@Override
 	protected void configureProperties() {
 		
 		addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent Background",
 				WidgetPropertyCategory.Display, true));
-		
 		
 		addProperty(new DoubleProperty(PROP_MIN, "Minimum", 
 				WidgetPropertyCategory.Behavior, DEFAULT_MIN));
@@ -171,5 +173,4 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
 	public String getValueLabelFormat(){
 		return (String)getPropertyValue(PROP_VALUE_LABEL_FORMAT);
 	}
-	
 }

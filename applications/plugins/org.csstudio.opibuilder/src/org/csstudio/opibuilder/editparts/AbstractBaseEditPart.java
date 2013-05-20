@@ -56,6 +56,7 @@ import org.csstudio.opibuilder.visualparts.TooltipLabel;
 import org.csstudio.opibuilder.widgetActions.AbstractOpenOPIAction;
 import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
 import org.csstudio.opibuilder.widgetActions.ActionsInput;
+import org.csstudio.swt.widgets.figures.AbstractScaledWidgetFigure;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.csstudio.utility.pv.PV;
@@ -549,6 +550,10 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
 				tooltipLabel = new TooltipLabel(getWidgetModel());
 				figure.setToolTip(tooltipLabel);
 			}
+		}
+		
+		if(allPropIds.contains(AbstractWidgetModel.MONITOR_COUNTER)){
+			
 		}
 	}
 

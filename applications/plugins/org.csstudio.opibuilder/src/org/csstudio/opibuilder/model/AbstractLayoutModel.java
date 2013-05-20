@@ -30,6 +30,7 @@ public abstract class AbstractLayoutModel extends AbstractWidgetModel {
 		setPropertyVisible(PROP_VISIBLE,false);
 		setPropertyVisible(PROP_ENABLED,false);
 		setPropertyVisible(PROP_TOOLTIP,false);
+//		setProperty(MONITOR_COUNTER, false);
 		setPropertyVisible(PROP_ACTIONS,false);
 		setPropertyVisible(PROP_COLOR_BACKGROUND,false);
 		setPropertyVisible(PROP_COLOR_FOREGROUND,false);

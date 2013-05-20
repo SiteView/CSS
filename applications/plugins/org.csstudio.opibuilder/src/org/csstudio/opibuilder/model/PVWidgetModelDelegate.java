@@ -7,18 +7,10 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.model;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import org.csstudio.opibuilder.datadefinition.WidgetScaleData;
 import org.csstudio.opibuilder.properties.BooleanProperty;
-import org.csstudio.opibuilder.properties.ButtonProperty;
-import org.csstudio.opibuilder.properties.ComplexDataProperty;
 import org.csstudio.opibuilder.properties.PVValueProperty;
 import org.csstudio.opibuilder.properties.StringProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * The model delegate for widgets have PV Name property.
@@ -45,13 +37,6 @@ public  class PVWidgetModelDelegate implements IPVWidgetModel{
 				"BackColor Alarm Sensitive", WidgetPropertyCategory.Display, false));
 		
 		model.setTooltip("$(" + PROP_PVNAME + ")\n" + "$(" + PROP_PVVALUE + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		model.getProperty(PROP_PVNAME).addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent arg0) {
-				MessageDialog.openConfirm(null, "here", "adfagafgawgf");
-			}
-		});
-		
-		
 		
 	}
 	

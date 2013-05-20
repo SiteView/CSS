@@ -16,39 +16,47 @@ public class MonitorCounterValue extends DynamicValue{
 	}
 	public String recId="";
 	public String counter="";
-		
+	public static int i=0;	
 	@Override//B1E587E8AE67448BAAAB2EFE462CD48C=size
 	protected void update() {
-		String sql="select * from MonitorLog where monitorId='"+recId+"' order by CreatedDateTime desc;";
-		ResultSet result=JDBCForSQL.sql_ConnectExecute_Select(sql); 
-		try {
-			if(result.next()){
-				String value=result.getString("MonitorMassage");
-				value=value.replaceAll("\t", ";");
-				String[] values=value.split(";");
-				System.out.println(value);
-				for(String s:values){
-					if(s.contains("=")){
-						String s1=s.substring(0,s.indexOf("="));
-						if(s1.equalsIgnoreCase(counter)){
-							String s0=s.substring(s.indexOf("=")+1);
-							if(s0.contains("ok")||s0.contains("good")){
-								s0="200";
-							}
-							try{
-								final double count=Double.parseDouble(s0);
-								setValue((double )count);
-							}catch (Exception e) {
-								setValue((double )0);
-							}
-						}
-					}
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			setValue(0);
+		if(i<5){
+			setValue(i);
+			i++;
+		}else{
+			i=0;
+			setValue(i);
 		}
+		
+//		String sql="select * from MonitorLog where monitorId='"+recId+"' order by CreatedDateTime desc;";
+//		ResultSet result=JDBCForSQL.sql_ConnectExecute_Select(sql); 
+//		try {
+//			if(result.next()){
+//				String value=result.getString("MonitorMassage");
+//				value=value.replaceAll("\t", ";");
+//				String[] values=value.split(";");
+//				System.out.println(value);
+//				for(String s:values){
+//					if(s.contains("=")){
+//						String s1=s.substring(0,s.indexOf("="));
+//						if(s1.equalsIgnoreCase(counter)){
+//							String s0=s.substring(s.indexOf("=")+1);
+//							if(s0.contains("ok")||s0.contains("good")){
+//								s0="200";
+//							}
+//							try{
+//								final double count=Double.parseDouble(s0);
+//								setValue((double )count);
+//							}catch (Exception e) {
+//								setValue((double )0);
+//							}
+//						}
+//					}
+//				}
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			setValue(0);
+//		}
 	}
 
 }

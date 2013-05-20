@@ -191,6 +191,20 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 			}
 		};
 		setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_VALUE_LABEL_FORMAT, valueFormatHandler);
+		
+		
+//		IWidgetPropertyChangeHandler monitorcounterHandler=new IWidgetPropertyChangeHandler() {
+//			
+//			@Override
+//			public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
+//				// TODO Auto-generated method stub
+//				AbstractScaledWidgetFigure scaleFigure = (AbstractScaledWidgetFigure) figure;
+//				setValueLabelFormat(scaleFigure, (String)newValue);
+//				return false;
+//			}
+//		};
+//		setPropertyChangeHandler(AbstractScaledWidgetModel.MONITOR_COUNTER, monitorcounterHandler);
+//		
 
 	}
 

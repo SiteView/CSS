@@ -36,6 +36,7 @@ import java.util.Set;
 
 import org.csstudio.opibuilder.datadefinition.WidgetScaleData;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
+import org.csstudio.opibuilder.monitor.MonitorProperty;
 import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.csstudio.opibuilder.properties.ActionsProperty;
 import org.csstudio.opibuilder.properties.BooleanProperty;
@@ -229,6 +230,8 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 	private Point originLocation;
 
 	private Version versionOnFile;
+	
+	public static final String MONITOR_COUNTER="monitor_counter";
 
 	public AbstractWidgetModel() {
 		propertyMap = new HashMap<String, AbstractWidgetProperty>();
@@ -391,7 +394,7 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 		addProperty(new UnsavableListProperty(
 				PROP_TGT_CONNETIONS, "Target Connections", WidgetPropertyCategory.Display, targetConnections));
 		setPropertyVisible(PROP_TGT_CONNETIONS, false);
-		
+		addProperty(new MonitorProperty(MONITOR_COUNTER, "Monitor counter",  WidgetPropertyCategory.Basic,"Defualt"),true);
 		
 	}
 	
@@ -1050,5 +1053,6 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 	public void generateNewWUID(){
 		setPropertyValue(PROP_WIDGET_UID, new UID().toString());
 	}
+
 
 }
