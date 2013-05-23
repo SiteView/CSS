@@ -15,6 +15,7 @@ public class Monitor implements Serializable{
 	private String monitorTitle;
 	private String groupId;
 	private String monitorUrl;
+	private String importCounter;
 	private List<String> counter=new ArrayList<String>();
 	public List<String> getCounter() {
 		return counter;
@@ -58,4 +59,11 @@ public class Monitor implements Serializable{
 	public void setMonitorUrl(String monitorUrl) {
 		this.monitorUrl = monitorUrl;
 	}
+	public String getImportCounter() {
+		return importCounter;
+	}
+	public void setImportCounter(String importCounter) {
+		this.importCounter = importCounter;
+	}
+	
 }

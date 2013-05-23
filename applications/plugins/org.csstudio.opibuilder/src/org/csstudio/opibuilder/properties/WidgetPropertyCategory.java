@@ -93,4 +93,13 @@ public interface WidgetPropertyCategory {
 			return "Basic";
 		}
 	};
+	
+	/**
+	 * Ecc Monitor
+	 */
+	public final static WidgetPropertyCategory EccMonitor=new WidgetPropertyCategory(){
+		public String toString() {			
+			return "aMonitor";
+		}
+	};
 }

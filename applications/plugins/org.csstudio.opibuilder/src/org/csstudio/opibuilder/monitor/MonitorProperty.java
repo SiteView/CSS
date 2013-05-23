@@ -1,32 +1,16 @@
 package org.csstudio.opibuilder.monitor;
 
+import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.properties.support.PropertySSHelper;
-import org.csstudio.opibuilder.widgetActions.ActionsInput;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
 public class MonitorProperty  extends AbstractWidgetProperty{
-
-	/**
-	 * XML ELEMENT name <code>Monitor Counter</code>.
-	 */
-	public static final String XML_ELEMENT_MONITOR = "monitor"; //$NON-NLS-1$
-
-	/**
-	 * XML ATTRIBUTE name <code>PATHSTRING</code>.
-	 */
-	public static final String XML_ATTRIBUTE_ACTION_TYPE = "type"; //$NON-NLS-1$
-
-	/**
-	 * XML ATTRIBUTE name <code>HOOK</code>.
-	 */
-	public static final String XML_ATTRIBUTE_HOOK_FIRST = "hook"; //$NON-NLS-1$
-	
-	public static final String XML_ATTRIBUTE_HOOK_ALL = "hook_all"; //$NON-NLS-1$
-
 	private boolean showHookOption;
+	private String MONITOR_ID="monitorid";
+	private String TYPE="type";
 	
 	public MonitorProperty(String prop_id, String description,
 			WidgetPropertyCategory category, Object defaultValue) {
@@ -35,7 +19,7 @@ public class MonitorProperty  extends AbstractWidgetProperty{
 	}
 	public MonitorProperty(String prop_id, String description,
 			WidgetPropertyCategory category, boolean showHookOption) {
-		super(prop_id, description, category, new ActionsInput());
+		super(prop_id, description, category, new MonitorInput());
 		this.showHookOption = showHookOption;
 	}
 	
@@ -49,7 +33,7 @@ public class MonitorProperty  extends AbstractWidgetProperty{
 			((MonitorInput) value).setWidgetModel(widgetModel);
 			acceptableValue = (MonitorInput)value;
 		}
-
+		
 		return acceptableValue;
 	}
 
@@ -65,13 +49,24 @@ public class MonitorProperty  extends AbstractWidgetProperty{
 	@Override
 	public void writeToXML(Element propElement) {
 		// TODO Auto-generated method stub
-		
+		MonitorInput actionsInput = (MonitorInput)getPropertyValue();
+		propElement.setText(actionsInput.getMonitorUrl());
+//		propElement.setAttribute(MONITOR_ID, actionsInput.getMonitorId()==null?"":actionsInput.getMonitorId());
+//		propElement.setAttribute(TYPE,actionsInput.getType()==null?"":actionsInput.getType());
 	}
 
 	@Override
 	public Object readValueFromXML(Element propElement) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		MonitorInput result = new MonitorInput();
+		String monitorUrl=propElement.getText();
+		result.setMonitorId(monitorUrl);
+		return result;
+	}
+	
+	public void setWidgetModel(AbstractWidgetModel widgetModel) {
+		super.setWidgetModel(widgetModel);
+		((MonitorInput)getPropertyValue()).setWidgetModel(widgetModel);
 	}
 
 }

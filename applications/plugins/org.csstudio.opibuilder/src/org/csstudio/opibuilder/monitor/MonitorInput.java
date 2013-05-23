@@ -1,51 +1,36 @@
 package org.csstudio.opibuilder.monitor;
 
-import java.util.LinkedList;
-
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
+import org.csstudio.opibuilder.widgetActions.ActionsInput;
 
 public class MonitorInput {
-private LinkedList<AbstractWidgetAction> actionsList;
-	
+	private String monitorUrl;
+	private String monitorId="";
+	private String type="";
 	private boolean hookUpFirstActionToWidget = false;
 	
 	private boolean hookUpAllActionsToWidget = false;
 	
 	private AbstractWidgetModel widgetModel;
 	
-	public MonitorInput(LinkedList<AbstractWidgetAction> actionsList) {
-		this.actionsList = actionsList;
+	public MonitorInput(String monitorUrl,String monitorId,String type) {
+		this.monitorUrl = monitorUrl;
+		this.monitorId=monitorId;
+		this.type=type;
+	}
+	
+	public MonitorInput(AbstractWidgetModel widgetModel) {
+		monitorUrl ="no select monitor";
+		monitorId="";
+		this.type="";
+		this.widgetModel=widgetModel;
 	}
 	
 	public MonitorInput() {
-		actionsList = new LinkedList<AbstractWidgetAction>();
-	}
-
-	/**
-	 * @return the scriptList
-	 */
-	public LinkedList<AbstractWidgetAction> getActionsList() {
-		return actionsList;
-	}
-	
-	public void addAction(AbstractWidgetAction action){
-		actionsList.add(action);
-		action.setWidgetModel(widgetModel);
-	}
-	
-	/**
-	 * @return a total contents copy of this ScriptsInput.
-	 */
-	public MonitorInput getCopy(){
-		MonitorInput copy = new MonitorInput();
-		for(AbstractWidgetAction data : actionsList){
-			copy.getActionsList().add(data.getCopy());
-		}
-		copy.setWidgetModel(widgetModel);
-		copy.setHookUpFirstActionToWidget(hookUpFirstActionToWidget);
-		copy.setHookUpAllActionsToWidget(hookUpAllActionsToWidget);
-		return copy;
+		monitorUrl ="no select monitor";
+		monitorId="";
+		this.type="";
 	}
 
 	/**
@@ -65,23 +50,24 @@ private LinkedList<AbstractWidgetAction> actionsList;
 	
 	@Override
 	public String toString() {
-		if(actionsList.size() ==0){
-			return "no monitor_counter";
-		}
-		if(actionsList.size() == 1){
-			return actionsList.get(0).getDescription();
-		}
-		return actionsList.size() + "monitor_counter";
+		return monitorUrl;
 	}
 
-	/**
-	 * @param widgetModel the widgetModel to set
-	 */
-	public void setWidgetModel(AbstractWidgetModel widgetModel) {
-		this.widgetModel = widgetModel;
-		for(AbstractWidgetAction action : actionsList)
-			action.setWidgetModel(widgetModel);
+	public void addAction(AbstractWidgetAction action){
+		action.setWidgetModel(widgetModel);
 	}
+	
+	/**
+	 * @return a total contents copy of this ScriptsInput.
+	 */
+	public MonitorInput getCopy(){
+		MonitorInput copy = new MonitorInput();
+		copy.setWidgetModel(widgetModel);
+		copy.setHookUpFirstActionToWidget(hookUpFirstActionToWidget);
+		copy.setHookUpAllActionsToWidget(hookUpAllActionsToWidget);
+		return copy;
+	}
+	
 
 	/**
 	 * @return the widgetModel
@@ -97,4 +83,34 @@ private LinkedList<AbstractWidgetAction> actionsList;
 	public void setHookUpAllActionsToWidget(boolean hookUpAllActionsToWidget) {
 		this.hookUpAllActionsToWidget = hookUpAllActionsToWidget;
 	}
+
+	public String getMonitorUrl() {
+		return monitorUrl;
+	}
+
+	public void setMonitorUrl(String monitorUrl) {
+		this.monitorUrl = monitorUrl;
+	}
+
+	public void setWidgetModel(AbstractWidgetModel widgetModel2) {
+		// TODO Auto-generated method stub
+		widgetModel=widgetModel2;
+	}
+
+	public String getMonitorId() {
+		return monitorId;
+	}
+
+	public void setMonitorId(String monitorId) {
+		this.monitorId = monitorId;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 }

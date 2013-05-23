@@ -551,10 +551,6 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
 				figure.setToolTip(tooltipLabel);
 			}
 		}
-		
-		if(allPropIds.contains(AbstractWidgetModel.MONITOR_COUNTER)){
-			
-		}
 	}
 
 	@Override

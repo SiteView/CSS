@@ -18,6 +18,7 @@ public class Group implements Serializable{
 	private String groupUrl;
 	private List<Group> subGroup=new ArrayList<Group>();
 	private List<Monitor> monitors=new ArrayList<Monitor>();
+	private List<Machine> machines=new ArrayList<Machine>();
 	public String getGroupName() {
 		return groupName;
 	}
@@ -54,4 +55,11 @@ public class Group implements Serializable{
 	public void setGroupUrl(String groupUrl) {
 		this.groupUrl = groupUrl;
 	}
+	public List<Machine> getMachines() {
+		return machines;
+	}
+	public void setMachines(List<Machine> machines) {
+		this.machines = machines;
+	}
+	
 }

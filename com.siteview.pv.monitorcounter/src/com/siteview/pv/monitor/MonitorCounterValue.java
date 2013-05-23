@@ -1,11 +1,6 @@
 package com.siteview.pv.monitor;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.csstudio.utility.pv.simu.DynamicValue;
-
-import com.siteview.pv.monitor.data.JDBCForSQL;
 
 
 public class MonitorCounterValue extends DynamicValue{

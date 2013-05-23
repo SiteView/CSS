@@ -36,6 +36,7 @@ import java.util.Set;
 
 import org.csstudio.opibuilder.datadefinition.WidgetScaleData;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
+import org.csstudio.opibuilder.monitor.MonitorInput;
 import org.csstudio.opibuilder.monitor.MonitorProperty;
 import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.csstudio.opibuilder.properties.ActionsProperty;
@@ -231,7 +232,11 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 
 	private Version versionOnFile;
 	
-	public static final String MONITOR_COUNTER="monitor_counter";
+	public static final String ECC_NODE="ecc_node";//组名，设备ip，监测器名字，计数器名
+	public static final String ECC_TYPE="ecc_type";//Group/Machine/Monitor/Counter
+	public static final String ECC_URL="ecc_url";//url(group/subgroup/machine/monitor/couter)
+	public static final String ECC_ID="ecc_id";//groupid/machineid/monitorid
+	
 
 	public AbstractWidgetModel() {
 		propertyMap = new HashMap<String, AbstractWidgetProperty>();
@@ -315,12 +320,6 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 		pvMap.put(pvNameProperty, pvValueProperty);
 	}
 	
-	public void addPVProperty1(final ButtonProperty pvNameProperty, 
-			final PVValueProperty pvValueProperty){
-		addProperty(pvNameProperty);
-		addProperty(pvValueProperty);
-//		pvMap.put(pvNameProperty, pvValueProperty);
-	}
 	
 	private void checkPropertyExist(Object propID) {
 		if(!propertyMap.containsKey(propID))
@@ -394,8 +393,10 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 		addProperty(new UnsavableListProperty(
 				PROP_TGT_CONNETIONS, "Target Connections", WidgetPropertyCategory.Display, targetConnections));
 		setPropertyVisible(PROP_TGT_CONNETIONS, false);
-		addProperty(new MonitorProperty(MONITOR_COUNTER, "Monitor counter",  WidgetPropertyCategory.Basic,"Defualt"),true);
-		
+		addProperty(new MonitorProperty(ECC_NODE, "Ecc Node", WidgetPropertyCategory.EccMonitor,"no Node select"),true);
+		addProperty(new UnchangableStringProperty(ECC_TYPE, "Node Type", WidgetPropertyCategory.EccMonitor,""));
+		addProperty(new UnchangableStringProperty(ECC_ID, "Node ID", WidgetPropertyCategory.EccMonitor,""));
+		addProperty(new UnchangableStringProperty(ECC_URL, "Ecc URL", WidgetPropertyCategory.EccMonitor,""));
 	}
 	
 	/**
@@ -465,6 +466,10 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 	
 	public ActionsInput getActionsInput(){
 		return (ActionsInput)getCastedPropertyValue(PROP_ACTIONS);
+	}
+	
+	public MonitorInput getMonitorInput(){
+		return (MonitorInput)getCastedPropertyValue(ECC_NODE);
 	}
 	
 	public Rectangle getBounds(){
@@ -1054,5 +1059,7 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 		setPropertyValue(PROP_WIDGET_UID, new UID().toString());
 	}
 
-
+	public String getEccNode(){
+		return getCastedPropertyValue(ECC_NODE);
+	}
 }
