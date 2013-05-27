@@ -3,9 +3,9 @@ package com.siteview.pv.monitor.api;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import system.Collections.ICollection;
 import system.Collections.IEnumerator;
-
 import Siteview.Api.BusinessObject;
 
 import com.siteview.pv.monitor.bean.FileTools;
@@ -28,7 +28,7 @@ public class CssMonitorIpm implements CssMonitorInterface{
 			group.setGroupId(bo.get_RecId());
 			group.setGroupId("");
 			group.getSubGroup().addAll(getSubGroup(bo.get_RecId(), group.getGroupUrl()));
-			group.getMachines().addAll(getMachine(bo.get_RecId),group.getGroupUrl());
+			group.getMachines().addAll(getMachine(bo.get_RecId(),group.getGroupUrl()));
 			group.getMonitors().addAll(getMoniotor(bo.get_RecId(), group.getGroupUrl()));
 			groups.add(group);
 		}
@@ -97,7 +97,7 @@ public class CssMonitorIpm implements CssMonitorInterface{
 		return counter;
 	}
 
-	public List<String> getMachine(String groupId,String groupUrl){
+	public List<Machine> getMachine(String groupId,String groupUrl){
 		List<Machine> machines=new ArrayList<Machine>();
 		ICollection ico=FileTools.getBussCollection("Groups", groupId, "RemoteMachine");
 		IEnumerator ien=ico.GetEnumerator();
@@ -107,11 +107,12 @@ public class CssMonitorIpm implements CssMonitorInterface{
 			m.setMachineId(bo.get_RecId());
 			m.setMachineIp(bo.GetField("ServerAddress").get_NativeValue().toString());
 			m.setMachineTitle(bo.GetField("Title").get_NativeValue().toString());
-			m.setMachineType(bo.get_name);
+			m.setMachineType(bo.get_Name());
 			m.setMachineUrl(groupUrl+"\\"+bo.GetField("Title").get_NativeValue().toString());
-			m.getMonitors().addAll(getMoniotorforMachine(groupId,bo.get_RecId, m.getMachineUrl()));
+			m.getMonitors().addAll(getMoniotorforMachine(groupId,bo.get_RecId(), m.getMachineUrl()));
 			machines.add(m);
 		}
+		return machines;
 	}
 	
 	public List<Monitor> getMoniotorforMachine(String groupid,String machineid,String machineURL){

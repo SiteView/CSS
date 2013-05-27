@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            canFinishEarly="false"
+            category="org.csstudio.opibuilder.wizards"
+            class="com.stieview.monitor.model.NewWindowsModel"
+            id="com.stieview.monitor.model.WindowsModel"
+            name="WindowsModel">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.siteview.monitor.modeledit.editor.WindowsEditor"
+            extensions="opi"
+            id="com.siteview.monitor.modeledit.editor.windows"
+            name="Windows Edit">
+      </editor>
+   </extension>
+
+</plugin>
