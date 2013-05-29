@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension
+         point="org.csstudio.opibuilder.widget">
+      <widget
+            category="Monitors"
+            description="An Topo. "
+            editpart_class="com.siteview.css.topo.editparts.TopologyEdit"
+            icon="icons/topo.png"
+            model_class="com.siteview.css.topo.models.TopologyModel"
+            name="Topology"
+            typeId="com.siteview.css.topo.topology">
+      </widget>
+	</extension>
+ <extension
+       point="org.csstudio.opibuilder.graphicalFeedbackFactory">
+    <graphicalFeedbackFactory
+          class="com.siteview.css.topo.feedBack.TopologyFeedBackFactory"
+          typeId="com.siteview.css.topo.TopologyFeedBackFactory">
+    </graphicalFeedbackFactory>
+ </extension>
+ <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.siteview.css.topo.editparts.TOPOEdit"
+            contributorClass="org.csstudio.opibuilder.editor.OPIEditorActionBarContributor"
+            extensions="opi"
+            icon="icons/OPIBuilder.png"
+            id="com.siteview.css.topo.editparts.TOPOEdit"
+            name="TOPO Editor"
+            matchingStrategy="org.csstudio.opibuilder.editor.OPIEditorMatcher">
+      </editor>
+   </extension>
+ 
+</plugin>

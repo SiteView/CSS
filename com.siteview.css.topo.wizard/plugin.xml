@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.csstudio.opibuilder.wizards"
+            name="BOY">
+      </category>
+      <wizard
+      		canFinishEarly="false"
+            category="org.csstudio.opibuilder.wizards"
+            hasPages="true"
+            class="com.siteview.css.topo.wizard.NewTopoFileWizard"
+            icon="icons/OPIBuilder.png"
+            id="com.siteview.css.topo.wizard.NewTopoFileWizard"
+            name="Topology File">
+      </wizard>
+   </extension>
+</plugin>
