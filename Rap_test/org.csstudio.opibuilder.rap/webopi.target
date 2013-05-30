@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="webopi" sequenceNumber="53">
+<locations>
+<location path="E:\eclipse_rap\RAP_GEF_1.5.0" type="Directory"/>
+<location path="E:\eclipse_rap\rap-runtime-1.5.0-M6-20120320-1638" type="Directory"/>
+</locations>
+</target>
