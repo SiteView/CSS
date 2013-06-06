@@ -22,9 +22,11 @@ public class InterfaceTable {
    /** @pdOid 515c5fce-9fdc-41ca-9a13-f48872954052 */
    private String ifPhysAddress;
    /** @pdOid adf676ef-5d6b-4c6b-8458-89276b3b932e */
-   private String ifAdminStatus;
+   private int ifAdminStatus;
    /** @pdOid b3836306-de0f-4553-9b1a-cf9ba4c88cc2 */
-   private Date ifLastChange;
+   private String ifLastChange;
+   /** @pdOid 80109bcd-a31b-4205-94ee-f78cfde31796 */
+   private int ifOperStatus;
    /** @pdOid 149018c3-f616-48bf-a4e6-7b83450a6a36 */
    private String inoctetsOid;
    /** 商品接收的字节总数
@@ -35,6 +37,8 @@ public class InterfaceTable {
     * 
     * @pdOid 554602b0-763b-43c6-b9c7-80391c5547ac */
    private double ifInNUcastPkts;
+   /** @pdOid 8c7cd3b5-7667-4f5f-84f0-6afeff392318 */
+   private double ifinUcastPkts;
    /** 输入包丢弃数
     * 
     * @pdOid 24744e00-0616-44db-8d4a-a6e93ea30ca6 */
@@ -67,7 +71,34 @@ public class InterfaceTable {
    private String ip;
    /** @pdOid 716ac60f-cecc-4287-bfe7-cc694dd3d582 */
    private int ifInUnknownProtos;
-   
+   /**
+    * 判断接口是否正常使用中
+    * @return
+    */
+   public boolean isUsed(){
+	   return (this.getIfOperStatus() == 1 && this.getIfAdminStatus() == 1);
+   }
+   /**
+    * 接口连接失败
+    * @return
+    */
+   public boolean isError(){
+	   return (this.getIfOperStatus() ==2 && this.getIfAdminStatus() == 1);
+   }
+   /**
+    * 接口是否己停用
+    * @return
+    */
+   public boolean isDown(){
+	   return (this.getIfOperStatus() == 2 && this.getIfAdminStatus() == 2);
+   }
+   /**
+    * 接口是否正在测试中
+    * @return
+    */
+   public boolean isTesting(){
+	   return (this.getIfOperStatus() == 3 && this.getIfAdminStatus() == 3);
+   }
    /** @pdOid 4bd6b0a6-c8c3-412d-a7f4-7eafd42f4cf6 */
    public int getIfIndex() {
       return ifIndex;
@@ -135,24 +166,24 @@ public class InterfaceTable {
    }
    
    /** @pdOid 8432a03c-7e94-46c1-9eba-b1e307a7b277 */
-   public String getIfAdminStatus() {
+   public int getIfAdminStatus() {
       return ifAdminStatus;
    }
    
    /** @param newIfAdminStatus
     * @pdOid 1de77687-e787-4470-820f-5b985a3750a0 */
-   public void setIfAdminStatus(String newIfAdminStatus) {
+   public void setIfAdminStatus(int newIfAdminStatus) {
       ifAdminStatus = newIfAdminStatus;
    }
    
    /** @pdOid 98e76d5d-b741-4fc0-aeb5-edb952e4f8fc */
-   public Date getIfLastChange() {
+   public String getIfLastChange() {
       return ifLastChange;
    }
    
    /** @param newIfLastChange
     * @pdOid 93db93b5-3e2d-444a-aef8-fc4fdd99ce80 */
-   public void setIfLastChange(Date newIfLastChange) {
+   public void setIfLastChange(String newIfLastChange) {
       ifLastChange = newIfLastChange;
    }
    
@@ -254,12 +285,10 @@ public class InterfaceTable {
    public void setIfOutNUcastPkts(double newIfOutNUcastPkts) {
       ifOutNUcastPkts = newIfOutNUcastPkts;
    }
-   
    /** @pdOid c6b4b2ac-3722-4f25-9b45-756b98d9222b */
    public double getIfOutDiscards() {
       return ifOutDiscards;
    }
-   
    /** @param newIfOutDiscards
     * @pdOid 49086591-2a4c-4d46-a471-efef4386fe7e */
    public void setIfOutDiscards(double newIfOutDiscards) {
@@ -292,55 +321,65 @@ public class InterfaceTable {
    public String getIfspecific() {
       return ifspecific;
    }
-   
    /** @param newIfspecific
     * @pdOid 49e0573f-e985-4a82-a3f4-6017133e71e8 */
    public void setIfspecific(String newIfspecific) {
       ifspecific = newIfspecific;
    }
-   
    /** @pdOid 1b7ac6cc-f372-4d1c-b859-0fae872ef954 */
    public String getIfalias() {
       return ifalias;
    }
-   
    /** @param newIfalias
     * @pdOid e52a6600-3526-4bdb-9c48-00b5da5d76c1 */
    public void setIfalias(String newIfalias) {
       ifalias = newIfalias;
    }
-   
    /** @pdOid bb40d3a7-2cd2-49e6-98b5-a946e54df936 */
    public Date getCreateddatetime() {
       return createddatetime;
    }
-   
    /** @param newCreateddatetime
     * @pdOid 34741526-303c-426d-be56-fbf89c7ca4f2 */
    public void setCreateddatetime(Date newCreateddatetime) {
       createddatetime = newCreateddatetime;
    }
-   
    /** @pdOid 7e3d3e52-4581-4a1b-b6e0-d30146176c07 */
    public String getIp() {
       return ip;
    }
-   
    /** @param newIp
     * @pdOid 745e54f7-c610-4f0e-ad87-f5e96347d31e */
    public void setIp(String newIp) {
       ip = newIp;
    }
-   
    /** @pdOid 11aea556-17af-4ff6-ac4c-bc95a90cf28d */
    public int getIfInUnknownProtos() {
       return ifInUnknownProtos;
    }
-   
    /** @param newIfInUnknownProtos
     * @pdOid 8be474d8-0ab1-4cc8-82bd-ff1e68d81e5e */
    public void setIfInUnknownProtos(int newIfInUnknownProtos) {
       ifInUnknownProtos = newIfInUnknownProtos;
    }
+   /** @pdOid 624e9bd5-6bb6-43bf-996a-502631282fe4 */
+   public int getIfOperStatus() {
+      return ifOperStatus;
+   }
+   /** @param newIfOperStatus
+    * @pdOid 70d99826-c095-4bb0-9d9b-0e2b8cdd4858 */
+   public void setIfOperStatus(int newIfOperStatus) {
+      ifOperStatus = newIfOperStatus;
+   }
 
+   /** @pdOid a37eb551-fab5-4d64-b042-9c48da12fcb6 */
+   public double getIfinUcastPkts() {
+      return ifinUcastPkts;
+   }
+   
+   /** @param newIfinUcastPkts
+    * @pdOid 06ac94b0-db75-4cc3-a238-4af34e29b3b2 */
+   public void setIfinUcastPkts(double newIfinUcastPkts) {
+      ifinUcastPkts = newIfinUcastPkts;
+   }
 }
