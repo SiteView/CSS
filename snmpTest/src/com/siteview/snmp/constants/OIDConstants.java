@@ -113,78 +113,7 @@ public class OIDConstants {
 	 */
 	public static final OID INTERFACE_ifEntry_Specific = new OID("1.3.6.1.2.1.2.2.1.22.0");
 	
-	public static OID getInterfaceIftable() {
-		return INTERFACE_ifTable;
-	}
-	public static OID getInterfaceIfentry() {
-		return INTERFACE_ifEntry;
-	}
-	public static OID getInterfaceIfentryIndex() {
-		return INTERFACE_ifEntry_Index;
-	}
-	public static OID getInterfaceIfentryDescr() {
-		return INTERFACE_ifEntry_Descr;
-	}
-	public static OID getInterfaceIfentryType() {
-		return INTERFACE_ifEntry_Type;
-	}
-	public static OID getInterfaceIfentryMtu() {
-		return INTERFACE_ifEntry_Mtu;
-	}
-	public static OID getInterfaceIfentrySpeed() {
-		return INTERFACE_ifEntry_Speed;
-	}
-	public static OID getInterfaceIfentryPhysaddress() {
-		return INTERFACE_ifEntry_PhysAddress;
-	}
-	public static OID getInterfaceIfentryAdminstatus() {
-		return INTERFACE_ifEntry_AdminStatus;
-	}
-	public static OID getInterfaceIfentryOperstatus() {
-		return INTERFACE_ifEntry_OperStatus;
-	}
-	public static OID getInterfaceIfentryLastchange() {
-		return INTERFACE_ifEntry_LastChange;
-	}
-	public static OID getInterfaceIfentryInoctets() {
-		return INTERFACE_ifEntry_InOctets;
-	}
-	public static OID getInterfaceIfentryInucastpkts() {
-		return INTERFACE_ifEntry_InUcastPkts;
-	}
-	public static OID getInterfaceIfentryInnucastpkts() {
-		return INTERFACE_ifEntry_InNUcastPkts;
-	}
-	public static OID getInterfaceIfentryIndiscards() {
-		return INTERFACE_ifEntry_InDiscards;
-	}
-	public static OID getInterfaceIfentryInerrors() {
-		return INTERFACE_ifEntry_InErrors;
-	}
-	public static OID getInterfaceIfentryInunknownprotos() {
-		return INTERFACE_ifEntry_InUnknownProtos;
-	}
-	public static OID getInterfaceIfentryOutoctets() {
-		return INTERFACE_ifEntry_OutOctets;
-	}
-	public static OID getInterfaceIfentryOutucastpkts() {
-		return INTERFACE_ifEntry_OutUcastPkts;
-	}
-	public static OID getInterfaceIfentryOutnucastpkts() {
-		return INTERFACE_ifEntry_OutNUcastPkts;
-	}
-	public static OID getInterfaceIfentryOutdiscards() {
-		return INTERFACE_ifEntry_OutDiscards;
-	}
-	public static OID getInterfaceIfentryOuterrors() {
-		return INTERFACE_ifEntry_OutErrors;
-	}
-	public static OID getInterfaceIfentryOutqlen() {
-		return INTERFACE_ifEntry_OutQLen;
-	}
-	public static OID getInterfaceIfentrySpecific() {
-		return INTERFACE_ifEntry_Specific;
-	}
+	
 	
 	
 	public static final String sysPrefix = "1.3.6.1.2.1.1";
@@ -214,6 +143,22 @@ public class OIDConstants {
 	 */
 	public static final OID sysLocation = new OID(sysPrefix+".6.0");
 	/**
+	 *该设备提供的服务
+	 */
+	public static final OID sysServices = new OID(sysPrefix+".7.0");
+	/**
+	 * system组OID集合
+	 */
+	public static final OID[] sysOIDs = new OID[]{
+		sysDescr,
+		sysObjectId,
+		sysUptime,
+		sysContact,
+		sysName,
+		sysLocation,
+		sysServices
+	};
+	/**
 	 * 接口表oid字串前缀
 	 */
 	public static final String ifPrefix = "1.3.6.1.2.1.2";
@@ -240,7 +185,7 @@ public class OIDConstants {
 	/**
 	 * at表OID
 	 */
-	public static final OID atTable = new OID(atTablePrefix + ".1.1.1.1");
+	public static final OID atTable = new OID(atTablePrefix + ".1.1");//1.3.6.1.2.1.3.1.1 
 	/**
 	 * ip路由表oid
 	 */

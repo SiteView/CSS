@@ -1,4 +1,4 @@
-package com.siteview.snmp.tablescan;
+package com.siteview.snmp.scan;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,15 +11,15 @@ import org.snmp4j.smi.OID;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.util.TableEvent;
 
-import test.Utils;
 
+import com.siteview.snmp.base.BaseTableRequest;
 import com.siteview.snmp.constants.OIDConstants;
 import com.siteview.snmp.pojo.InterfaceTable;
-import com.siteview.snmp.scan.BaseTableRequest;
+import com.siteview.snmp.util.Utils;
 
 public class InterfaceTableScan extends BaseTableRequest {
 	
-	public static final OID defaultEndOID = new OID("22");
+	public static final OID defaultEndOID = new OID("23");
 
 	public static OID _OID = OIDConstants.ifTable; 
 	@Override
@@ -47,9 +47,9 @@ public class InterfaceTableScan extends BaseTableRequest {
 			} else if ("3".equals(type)) {
 				iftable.setIfType(value);
 			} else if ("4".equals(type)) {
-				iftable.setIfMtu(Utils.getDoubleValueFromString(value));
+				iftable.setIfMtu(Long.valueOf(value));
 			} else if ("5".equals(type)) {
-				iftable.setIfSpeed(Utils.getDoubleValueFromString(value));
+				iftable.setIfSpeed(Long.valueOf(value));
 			} else if ("6".equals(type)) {
 				iftable.setIfPhysAddress(value);
 			} else if ("7".equals(type)) {
@@ -60,31 +60,30 @@ public class InterfaceTableScan extends BaseTableRequest {
 			} else if ("9".equals(type)) {
 				iftable.setIfLastChange(value);
 			} else if ("10".equals(type)) {
-				iftable.setIfInoctets(Utils.getDoubleValueFromString(value));
+				iftable.setIfInoctets(Long.valueOf(value));
 			} else if ("11".equals(type)) {
-				iftable.setIfinUcastPkts(Utils.getDoubleValueFromString(value));
+				iftable.setIfinUcastPkts(Long.valueOf(value));
 			} else if ("12".equals(type)) {
-				iftable.setIfInNUcastPkts(Utils.getDoubleValueFromString(value));
+				iftable.setIfInNUcastPkts(Long.valueOf(value));
 			} else if ("13".equals(type)) {
-				iftable.setIfInDiscards(Utils.getDoubleValueFromString(value));
+				iftable.setIfInDiscards(Long.valueOf(value));
 			} else if ("14".equals(type)) {
-				iftable.setIfInErrors(Utils.getDoubleValueFromString(value));
+				iftable.setIfInErrors(Long.valueOf(value));
 			} else if ("15".equals(type)) {
 				iftable.setIfInUnknownProtos(Utils
 						.getIntValueFromAllowNullString(value));
 			} else if ("16".equals(type)) {
-				iftable.setIfOutOctets(Utils.getDoubleValueFromString(value));
+				iftable.setIfOutOctets(Long.valueOf(value));
 			} else if ("17".equals(type)) {
-				iftable.setIfOutUcastPkts(Utils.getDoubleValueFromString(value));
+				iftable.setIfOutUcastPkts(Long.valueOf(value));
 			} else if ("18".equals(type)) {
-				iftable.setIfOutNUcastPkts(Utils
-						.getDoubleValueFromString(value));
+				iftable.setIfOutNUcastPkts(Long.valueOf(value));
 			} else if ("19".equals(type)) {
-				iftable.setIfOutDiscards(Utils.getDoubleValueFromString(value));
+				iftable.setIfOutDiscards(Long.valueOf(value));
 			} else if ("20".equals(type)) {
-				iftable.setIfOutErrors(Utils.getDoubleValueFromString(value));
+				iftable.setIfOutErrors(Long.valueOf(value));
 			} else if ("21".equals(type)) {
-				iftable.setIfOutQLen(Utils.getDoubleValueFromString(value));
+				iftable.setIfOutQLen(Long.valueOf(value));
 			} else if ("22".equals(type)) {
 				iftable.setIfspecific(value);
 			}

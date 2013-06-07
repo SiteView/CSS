@@ -1,4 +1,4 @@
-package com.siteview.snmp.scan;
+package com.siteview.snmp.base;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +16,7 @@ public abstract class BaseTableRequest extends BaseRequest {
 
 	
 	private OID start = new OID("1");
+	
 	private OID end = new OID("10");
 	
 	public OID getStart() {
@@ -44,8 +45,31 @@ public abstract class BaseTableRequest extends BaseRequest {
 		};
 		return resolute(utils.getTable(target, columnOIDs, getStart(), getEnd()));
 	}
+	public Map<String,Object> getTablePojos(OID oid,CommunityTarget target){
+		try {
+			init();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		TableUtils utils = new TableUtils(snmp,new DefaultPDUFactory());
+		utils.setMaxNumRowsPerPDU(5);
+		OID[] columnOIDs = new OID[]{
+				oid
+		};
+		return resolute(utils.getTable(target, columnOIDs, getStart(), getEnd()));
+	}
 	public Map<String,Object> getTablePojos(OID[] oids){
 		CommunityTarget target = buildGetPduCommunityTarget();
+		try {
+			init();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		TableUtils utils = new TableUtils(snmp,new DefaultPDUFactory());
+		utils.setMaxNumRowsPerPDU(23);
+		return resolute(utils.getTable(target, oids, getStart(), getEnd()));
+	}
+	public Map<String,Object> getTablePojos(OID[] oids,CommunityTarget target){
 		try {
 			init();
 		} catch (IOException e) {

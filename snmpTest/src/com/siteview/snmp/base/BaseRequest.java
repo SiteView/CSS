@@ -1,4 +1,4 @@
-package com.siteview.snmp.scan;
+package com.siteview.snmp.base;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,8 +23,9 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TableUtils;
 
+import com.siteview.snmp.util.Utils;
+
 import test.TableUtilsTest;
-import test.Utils;
 
 public class BaseRequest {
 
@@ -37,7 +38,6 @@ public class BaseRequest {
 	private int trapPort = 162;
 	private int version = SnmpConstants.version2c;
 	boolean inited = false;
-	
 
 	public Snmp getSnmp() {
 		return snmp;
@@ -96,7 +96,7 @@ public class BaseRequest {
 
 	public CommunityTarget buildGetPduCommunityTarget() {
 		CommunityTarget target = new CommunityTarget();
-		target.setAddress(GenericAddress.parse("udp:" + ip +"/" + port));
+		target.setAddress(GenericAddress.parse("udp:" + ip + "/" + port));
 		target.setCommunity(new OctetString(community));
 		target.setRetries(2);
 		target.setTimeout(200);
@@ -106,7 +106,6 @@ public class BaseRequest {
 
 	protected void init() throws IOException {
 		if (snmp == null) {
-			// �趨��ȡ��Э��--SNMP
 			TransportMapping transport1 = new DefaultUdpTransportMapping();
 			snmp = new Snmp(transport1);
 			snmp.listen();
@@ -118,7 +117,17 @@ public class BaseRequest {
 			init();
 		return snmp.send(pdu, target);
 	}
-
+	
+	protected synchronized void destroy(){
+		if(this.snmp != null){
+			try {
+				this.snmp.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			snmp = null;
+		}
+	}
 	// public void sendSynchronismGet(String ip,String type,String community){
 	// try{
 	// ResponseEvent responseEvent = send(buildPDU(),
