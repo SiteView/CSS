@@ -21,7 +21,6 @@ public class IPNetToMediaTableScan extends BaseTableRequest {
 	public Map<String, Object> resolute(List<TableEvent> tEvent) {
 		Map<String,Object> result = new HashMap<String, Object>();
 		for (TableEvent t : tEvent) {
-			VariableBinding[] vbs = t.getColumns();
 			String varible = t.getColumns()[0].toString();
 			String[] varibleSplit = varible.split("=");
 			//前20位表示OID，之后的数据是由对应商品号+IP地生成的INDEX

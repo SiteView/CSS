@@ -6,7 +6,6 @@ package com.siteview.snmp.pojo;
  * Purpose: Defines the Class IpAddressTable
  ***********************************************************************/
 
-import java.util.*;
 
 /**
  * ip地址属性表

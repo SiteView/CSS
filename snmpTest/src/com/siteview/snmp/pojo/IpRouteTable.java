@@ -6,7 +6,6 @@ package com.siteview.snmp.pojo;
  * Purpose: Defines the Class IpRouteTable
  ***********************************************************************/
 
-import java.util.*;
 
 /**
  * 路由表

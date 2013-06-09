@@ -6,7 +6,6 @@ package com.siteview.snmp.pojo;
  * Purpose: Defines the Class IpNetToMedia
  ***********************************************************************/
 
-import java.util.*;
 
 /**
  * IP NetToMedia 属性 ARP表

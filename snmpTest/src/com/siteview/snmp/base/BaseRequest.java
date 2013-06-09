@@ -1,10 +1,6 @@
 package com.siteview.snmp.base;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
@@ -13,27 +9,20 @@ import org.snmp4j.Target;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.smi.Address;
 import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
-import org.snmp4j.smi.UdpAddress;
-import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
-import org.snmp4j.util.DefaultPDUFactory;
-import org.snmp4j.util.TableUtils;
 
 import com.siteview.snmp.util.Utils;
 
-import test.TableUtilsTest;
 
 public class BaseRequest {
 
 	public Snmp snmp = null;
-	private PDU request = new PDU();
 	private static final String COMMUNITY248 = "siteview";
 	private String community = COMMUNITY248;
-	private String ip = "192.168.0.248";
+	private transient String ip = "192.168.0.248";
 	private int port = 161;
 	private int trapPort = 162;
 	private int version = SnmpConstants.version2c;
@@ -98,8 +87,17 @@ public class BaseRequest {
 		CommunityTarget target = new CommunityTarget();
 		target.setAddress(GenericAddress.parse("udp:" + ip + "/" + port));
 		target.setCommunity(new OctetString(community));
-		target.setRetries(2);
-		target.setTimeout(200);
+		target.setRetries(5);
+		target.setTimeout(5000);
+		target.setVersion(version);
+		return target;
+	}
+	public CommunityTarget buildGetPduCommunityTarget(String ip,int port,String community) {
+		CommunityTarget target = new CommunityTarget();
+		target.setAddress(GenericAddress.parse("udp:" + ip + "/" + port));
+		target.setCommunity(new OctetString(community));
+		target.setRetries(5);
+		target.setTimeout(5000);
 		target.setVersion(version);
 		return target;
 	}

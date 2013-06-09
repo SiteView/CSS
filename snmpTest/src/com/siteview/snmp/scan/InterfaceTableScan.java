@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
 
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.VariableBinding;
@@ -26,7 +25,6 @@ public class InterfaceTableScan extends BaseTableRequest {
 	public Map<String, Object> resolute(List<TableEvent> l) {
 		Map<String, Object> ifTables = new HashMap<String, Object>();
 		for (TableEvent t : l) {
-			VariableBinding[] vbs = t.getColumns();
 			String varible = t.getColumns()[0].toString();
 			String[] varibleSplit = varible.split("=");
 			String[] oids = varibleSplit[0].trim().split("\\.");

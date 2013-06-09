@@ -1,24 +1,16 @@
 package com.siteview.snmp.scan;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import org.snmp4j.PDU;
-import org.snmp4j.Target;
-import org.snmp4j.event.ResponseEvent;
-import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.VariableBinding;
-import org.snmp4j.util.TableEvent;
 
 
 import com.siteview.snmp.base.BaseRequest;
-import com.siteview.snmp.base.BaseTableRequest;
 import com.siteview.snmp.constants.OIDConstants;
 import com.siteview.snmp.pojo.IpGroupTable;
-import com.siteview.snmp.util.Utils;
 
 public class IpTableBaseInfoScan extends BaseRequest{
 

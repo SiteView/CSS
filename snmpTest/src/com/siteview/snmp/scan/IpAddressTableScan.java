@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.snmp4j.Target;
+import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.util.TableEvent;
@@ -12,7 +14,7 @@ import org.snmp4j.util.TableEvent;
 import com.siteview.snmp.base.BaseTableRequest;
 import com.siteview.snmp.constants.OIDConstants;
 import com.siteview.snmp.pojo.IpAddressTable;
-import com.siteview.snmp.pojo.IpNetToMedia;
+import com.siteview.snmp.util.ScanUtils;
 import com.siteview.snmp.util.Utils;
 
 public class IpAddressTableScan extends BaseTableRequest {
@@ -23,8 +25,6 @@ public class IpAddressTableScan extends BaseTableRequest {
 	public Map<String, Object> resolute(List<TableEvent> tEvent) {
 		Map<String,Object> result = new HashMap<String, Object>();
 		for(TableEvent t : tEvent){
-			VariableBinding[] vbs = t.getColumns();
-			
 			String varible = t.getColumns()[0].toString();
 			String[] varibleSplit = varible.split("=");
 			//前20位表示OID，之后的数据是由对应商品号+IP地生成的INDEX
@@ -52,6 +52,9 @@ public class IpAddressTableScan extends BaseTableRequest {
 			}
 		}
 		return result;
+	}
+	public Map<String,Object> getTablePojos(){
+		return getTablePojos(_OID);
 	}
 	public static void main(String[] args) {
 		IpAddressTableScan scan = new IpAddressTableScan();

@@ -23,9 +23,9 @@ public class IpRoutTableScan extends BaseTableRequest {
 	}
 	public static void main(String[] args) {
 		IpRoutTableScan scan = new IpRoutTableScan();
+		scan.setIp("192.168.0.251");
 		scan.setEnd(defaultEndOID);
-		scan.getTablePojos(scan._OID);
-		
+		scan.getTablePojos(OIDConstants.ipRouteTable);
 	}
 
 }
