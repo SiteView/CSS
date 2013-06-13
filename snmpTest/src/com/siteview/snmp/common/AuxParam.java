@@ -1,5 +1,8 @@
 package com.siteview.snmp.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.siteview.snmp.model.Pair;
 
 public class AuxParam {
@@ -15,7 +18,7 @@ public class AuxParam {
 	private String vrrp_read_type; 	// 是否读取VRRP,HSRP
 	private String bgp_read_type; 	// 是否读取BGP
 	private String snmp_version; 	// 指定特定SNMP Version的设备
-	private Pair<String, String> SNMPV_list;
+	private List<Pair<String, String>> SNMPV_list = new ArrayList<Pair<String,String>>();
 	private String tracert_type;		// 是否执行trace route
 	private String filter_type;		// 是否清除扫描范围外的ip
 	private String commit_pc;		// 是否提交PC到SVDB
@@ -85,10 +88,11 @@ public class AuxParam {
 	public void setSnmp_version(String snmp_version) {
 		this.snmp_version = snmp_version;
 	}
-	public Pair<String, String> getSNMPV_list() {
+	
+	public List<Pair<String, String>> getSNMPV_list() {
 		return SNMPV_list;
 	}
-	public void setSNMPV_list(Pair<String, String> sNMPV_list) {
+	public void setSNMPV_list(List<Pair<String, String>> sNMPV_list) {
 		SNMPV_list = sNMPV_list;
 	}
 	public String getTracert_type() {

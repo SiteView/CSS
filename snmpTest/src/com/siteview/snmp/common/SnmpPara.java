@@ -17,4 +17,35 @@ public class SnmpPara {
 			this.retry = retry;
 			this.snmpver = snmpver;
 		}
+		public String getIp() {
+			return ip;
+		}
+		public void setIp(String ip) {
+			this.ip = ip;
+		}
+		public String getCommunity() {
+			return community;
+		}
+		public void setCommunity(String community) {
+			this.community = community;
+		}
+		public int getTimeout() {
+			return timeout;
+		}
+		public void setTimeout(int timeout) {
+			this.timeout = timeout;
+		}
+		public int getRetry() {
+			return retry;
+		}
+		public void setRetry(int retry) {
+			this.retry = retry;
+		}
+		public String getSnmpver() {
+			return snmpver;
+		}
+		public void setSnmpver(String snmpver) {
+			this.snmpver = snmpver;
+		}
+		
 }

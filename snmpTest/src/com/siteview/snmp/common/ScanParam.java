@@ -1,6 +1,7 @@
 package com.siteview.snmp.common;
 
 import java.util.List;
+import java.util.Map;
 
 import com.siteview.snmp.model.Pair;
 
@@ -23,8 +24,8 @@ public class ScanParam {
 	private Pair<String, String> scan_scales;
 	private Pair<Long, Long> scan_scales_num;
 	// <<范围>,<读写共同体名> >
-	private Pair<Pair<String, String>, Pair<String, String>> communitys;
-	private Pair<Pair<Long, Long>, Pair<Long, Long>> communitys_num;
+	private List<Pair<Pair<String, String>, Pair<String, String>>> communitys;
+	private List<Pair<Pair<Long, Long>, Pair<String, String>>> communitys_num;
 	// 排除的范围
 	private List<Pair<String, String>> filter_scales;
 	private List<Pair<Long, Long>> filter_scales_num;
@@ -104,22 +105,22 @@ public class ScanParam {
 	public void setScan_scales_num(Pair<Long, Long> scan_scales_num) {
 		this.scan_scales_num = scan_scales_num;
 	}
-
-	public Pair<Pair<String, String>, Pair<String, String>> getCommunitys() {
+	
+	public List<Pair<Pair<String, String>, Pair<String, String>>> getCommunitys() {
 		return communitys;
 	}
 
 	public void setCommunitys(
-			Pair<Pair<String, String>, Pair<String, String>> communitys) {
+			List<Pair<Pair<String, String>, Pair<String, String>>> communitys) {
 		this.communitys = communitys;
 	}
 
-	public Pair<Pair<Long, Long>, Pair<Long, Long>> getCommunitys_num() {
+	public List<Pair<Pair<Long, Long>, Pair<String, String>>> getCommunitys_num() {
 		return communitys_num;
 	}
 
 	public void setCommunitys_num(
-			Pair<Pair<Long, Long>, Pair<Long, Long>> communitys_num) {
+			List<Pair<Pair<Long, Long>, Pair<String, String>>> communitys_num) {
 		this.communitys_num = communitys_num;
 	}
 

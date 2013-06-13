@@ -18,14 +18,6 @@ public class Device {
 	 */
 	private DeviceType deviceType;
 	/**
-	 * 父设备
-	 */
-	private Device parent;
-	/**
-	 * 相连的子设备集合
-	 */
-	private List<Device> childen;
-	/**
 	 * 运行时间
 	 */
 	private String lastChangeTime;
@@ -91,27 +83,6 @@ public class Device {
 	public void setDeviceType(DeviceType deviceType) {
 		this.deviceType = deviceType;
 	}
-
-
-	public Device getParent() {
-		return parent;
-	}
-
-
-	public void setParent(Device parent) {
-		this.parent = parent;
-	}
-
-
-	public List<Device> getChilden() {
-		return childen;
-	}
-
-
-	public void setChilden(List<Device> childen) {
-		this.childen = childen;
-	}
-
 
 	public String getLastChangeTime() {
 		return lastChangeTime;
