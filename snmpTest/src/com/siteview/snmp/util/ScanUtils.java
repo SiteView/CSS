@@ -1,5 +1,7 @@
 package com.siteview.snmp.util;
 
+import java.util.Vector;
+
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.Target;
 import org.snmp4j.smi.OctetString;
@@ -9,6 +11,7 @@ import com.siteview.snmp.model.Pair;
 
 public class ScanUtils {
 
+	public static final int npos = -1;
 
 	public static Pair<String, String> getScaleByIPMask(
 			Pair<String, String> ipMask) {
@@ -106,9 +109,32 @@ public class ScanUtils {
 	}
 
 	public static void main(String[] args) {
-		long i = ipToLong("192.168.0.248");
-		System.out.println(i);
-		System.out.println(longToIp(i));
+//		long i = ipToLong("192.168.0.248");
+//		System.out.println(i);
+//		System.out.println(longToIp(i));
+		Vector<String> v1 = ScanUtils.tokenize("1.3.6.1.2.1.4.22.1.2.1.192.168.0.118".substring(21), ".", true,"asdfasdf");
+	}
+	//trim指示是否保留空串，默认为保留。
+	public static Vector<String> tokenize(String src, String tok, boolean trim, String null_subst)
+	{
+		Vector<String> v = new Vector<String>();
+		if( src.isEmpty() || tok.isEmpty() )
+		{
+			return v;
+		}
+		int pre_index = 0, index = 0, len = 0;
+		if( (index = src.indexOf(tok, pre_index)) != npos )
+		{
+			String[] ss = src.split(tok);
+			for(int i=0;i<ss.length;i++){
+				String temp = ss[i];
+				if(temp.isEmpty())
+					v.add(null_subst);
+				else
+					v.add(ss[i]);
+			}
+		}
+		return v;
 	}
 	
 }

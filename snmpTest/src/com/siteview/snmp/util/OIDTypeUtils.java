@@ -5,11 +5,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.siteview.snmp.constants.IDeviceType;
+import com.siteview.snmp.constants.CommonDef;
+
 
 public class OIDTypeUtils {
 
@@ -42,7 +42,7 @@ public class OIDTypeUtils {
 	}
 	public String getTypeByOid(String oid){
 		if(!OidMap.containsKey(oid)){
-			return IDeviceType.OTHER;
+			return CommonDef.OTHER;
 		}
 		return OidMap.get(oid);
 	}
