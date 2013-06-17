@@ -357,65 +357,65 @@ public class NetScan {
 		//vector<string>::const_iterator i;
 		//i = "172.25.1.1";
 		//spr_list.push_back(SnmpPara(*i, "public", scanParam.timeout, scanParam.retrytimes, "2"));
-
-		siReader.setIp_visited_list(m_ip_list_visited);
-		//siReader->devid_list_visited = devid_list;//by zhangyan 2008-10-20
-	        if (!siReader->getDeviceData(spr_list))
-	        {
-	            return false;
-	        }
-		//devid_list = siReader->devid_list_visited;//by zhangyan 2008-10-20
-		m_ip_list_visited = siReader.getIp_visited_list();//更新后的已访问ip地址表
-		DEVID_LIST devlist_cur = siReader->devid_list_valid;//在当前范围中发现的新设备
-
-		AFT_LIST aftlist_cur = siReader->getAftData();
-		ARP_LIST arplist_cur = siReader->getArpData();
-		IFPROP_LIST inflist_cur = siReader->getInfProps();
-		OSPFNBR_LIST nbrlist_cur = siReader->getOspfNbrData();
-		ROUTE_LIST rttbl_cur = siReader->getRouteData();  //changed by zhang 2009-03-26 去掉路由表的取数
-														 //changed again by wings 2009-11-13 恢复路由表
-		BGP_LIST bgplist_cur = siReader->getBgpData();
-		RouterStandby_LIST vrrplist_cur = siReader->getVrrpData();
-
-		DIRECTDATA_LIST directlist_cur = siReader->getDirectData();
-
-		if(!aftlist_cur.empty())
-		{
-			aft_list.insert(aftlist_cur.begin(), aftlist_cur.end());
-		}
-		if(!arplist_cur.empty())
-		{
-			arp_list.insert(arplist_cur.begin(), arplist_cur.end());
-		}
-		if(!inflist_cur.empty())
-		{
-			ifprop_list.insert(inflist_cur.begin(), inflist_cur.end());
-		}
-		if(!nbrlist_cur.empty())
-		{
-			ospfnbr_list.insert(nbrlist_cur.begin(), nbrlist_cur.end());
-		}
-		if(!rttbl_cur.empty())		//changed by zhang 2009-03-26 去掉路由表的取数
-			//changed again by wings 2009-11-13 恢复路由表
-		{
-			rttbl_list.insert(rttbl_cur.begin(), rttbl_cur.end());
-		}
-		if(!bgplist_cur.empty())
-		{
-			bgp_list.insert(bgp_list.end(), bgplist_cur.begin(), bgplist_cur.end());
-		}	
-		if(!vrrplist_cur.empty())
-		{
-			routeStandby_list.insert(vrrplist_cur.begin(), vrrplist_cur.end());
-		}
-		if(!directlist_cur.empty())
-		{
-			directdata_list.insert(directlist_cur.begin(), directlist_cur.end());
-		}
+//
+//		siReader.setIp_visited_list(m_ip_list_visited);
+//		//siReader->devid_list_visited = devid_list;//by zhangyan 2008-10-20
+//	        if (!siReader->getDeviceData(spr_list))
+//	        {
+//	            return false;
+//	        }
+//		//devid_list = siReader->devid_list_visited;//by zhangyan 2008-10-20
+//		m_ip_list_visited = siReader.getIp_visited_list();//更新后的已访问ip地址表
+//		DEVID_LIST devlist_cur = siReader->devid_list_valid;//在当前范围中发现的新设备
+//
+//		AFT_LIST aftlist_cur = siReader->getAftData();
+//		ARP_LIST arplist_cur = siReader->getArpData();
+//		IFPROP_LIST inflist_cur = siReader->getInfProps();
+//		OSPFNBR_LIST nbrlist_cur = siReader->getOspfNbrData();
+//		ROUTE_LIST rttbl_cur = siReader->getRouteData();  //changed by zhang 2009-03-26 去掉路由表的取数
+//														 //changed again by wings 2009-11-13 恢复路由表
+//		BGP_LIST bgplist_cur = siReader->getBgpData();
+//		RouterStandby_LIST vrrplist_cur = siReader->getVrrpData();
+//
+//		DIRECTDATA_LIST directlist_cur = siReader->getDirectData();
+//
+//		if(!aftlist_cur.empty())
+//		{
+//			aft_list.insert(aftlist_cur.begin(), aftlist_cur.end());
+//		}
+//		if(!arplist_cur.empty())
+//		{
+//			arp_list.insert(arplist_cur.begin(), arplist_cur.end());
+//		}
+//		if(!inflist_cur.empty())
+//		{
+//			ifprop_list.insert(inflist_cur.begin(), inflist_cur.end());
+//		}
+//		if(!nbrlist_cur.empty())
+//		{
+//			ospfnbr_list.insert(nbrlist_cur.begin(), nbrlist_cur.end());
+//		}
+//		if(!rttbl_cur.empty())		//changed by zhang 2009-03-26 去掉路由表的取数
+//			//changed again by wings 2009-11-13 恢复路由表
+//		{
+//			rttbl_list.insert(rttbl_cur.begin(), rttbl_cur.end());
+//		}
+//		if(!bgplist_cur.empty())
+//		{
+//			bgp_list.insert(bgp_list.end(), bgplist_cur.begin(), bgplist_cur.end());
+//		}	
+//		if(!vrrplist_cur.empty())
+//		{
+//			routeStandby_list.insert(vrrplist_cur.begin(), vrrplist_cur.end());
+//		}
+//		if(!directlist_cur.empty())
+//		{
+//			directdata_list.insert(directlist_cur.begin(), directlist_cur.end());
+//		}
 
 		if(bChange)
 		{//增加新范围
-			addScaleFromDevID(devlist_cur);
+//			addScaleFromDevID(devlist_cur);
 //			addScaleFromRouteItems(rttbl_cur);			//by zhangyan 2008-12-18
 //			addScaleFromDirectData(directlist_cur);		//by zhangyan 2008-10-15
 		}

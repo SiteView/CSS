@@ -168,29 +168,29 @@ public class ReadService {
 				SnmpPara para = spr_list.get(0);
 				if(isNewIp(para.getIp()))
 				{
-					getOneSysInfo(para.getIp());
+//					getOneSysInfo(para.getIp());
 				}
 			}
 			else
 			{
 				//pool tp(scanPara.thrdamount);
-	                        pool tp(min(scanPara.thrdamount, spr_list.size()));//by zhangyan 2008-12-29
-				for (vector<SnmpPara>::const_iterator i = spr_list.begin(); i != spr_list.end(); ++i) 
-				{
-					if(isNewIp(i->ip))
-					{
-	                                        if (isStop)
-	                                        {
-	                                            return false;
-	                                        }
-	                                        else
-	                                        {
-	                                            tp.schedule((boost::bind(&ReadService::getOneSysInfo, this, *i)));
-	                                        }
-
-					}
-				}
-	                        tp.wait();
+//	                        pool tp(min(scanPara.thrdamount, spr_list.size()));//by zhangyan 2008-12-29
+//				for (vector<SnmpPara>::const_iterator i = spr_list.begin(); i != spr_list.end(); ++i) 
+//				{
+//					if(isNewIp(i->ip))
+//					{
+//	                                        if (isStop)
+//	                                        {
+//	                                            return false;
+//	                                        }
+//	                                        else
+//	                                        {
+//	                                            tp.schedule((boost::bind(&ReadService::getOneSysInfo, this, *i)));
+//	                                        }
+//
+//					}
+//				}
+//	                        tp.wait();
 			}
 		}
 	        return true;

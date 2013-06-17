@@ -34,14 +34,22 @@ public class PingMaster implements Runnable {
 	}
 
 	public int siglePing(String ip) {
-		return pingHelper.ping(ip);
+		
+		boolean result = false; 
+//		try{
+//		result= pingHelper.singlePing(ip,300);
+//		catch (Exception e) {
+//		}
+		if(result){
+			return 1;
+		}else return -1;
 	}
 
 	@Override
 	public void run() {
 		Set<String> pingIPs = pingMap.keySet();
 		for (String pingIP : pingIPs) {
-			int pingStatus = pingHelper.ping(pingIP);
+			int pingStatus = 0;//pingHelper.ping(pingIP);
 			setPingStatus(pingIP, pingStatus);
 			if (pingStatus > 0) {
 				aliveIp_list.add(pingIP);
