@@ -13,7 +13,6 @@ import com.siteview.snmp.common.SnmpPara;
 import com.siteview.snmp.model.In_Addr;
 import com.siteview.snmp.model.Pair;
 import com.siteview.snmp.pojo.IDBody;
-import com.siteview.snmp.pojo.IpAddressTable;
 import com.siteview.snmp.util.ScanUtils;
 
 
@@ -63,26 +62,26 @@ public class NetScan {
 
 			//将接口表中的MAC添加到设备的mac地址表中
 			Set<String> keys = devid_list.keySet();
-			for(String key : keys)
-			{
-				
-				IFPROP_LIST::iterator iinf =  ifprop_list.find(i->first);
-				if(iinf != ifprop_list.end())
-				{
-					for(list<IFREC>::iterator j = iinf->second.second.begin();
-						j != iinf->second.second.end();
-						++j)
-					{
-						if(j->ifMac != "" && j->ifMac != "000000000000" && j->ifMac != "FFFFFFFFFFFF")
-						{
-							if(find(i->second.macs.begin(), i->second.macs.end(), j->ifMac) == i->second.macs.end())
-							{
-								i->second.macs.push_back(j->ifMac);
-							}
-						}
-					}
-				}
-			}
+//			for(String key : keys)
+//			{
+//				
+//				IFPROP_LIST iinf =  ifprop_list.find(i->first);
+//				if(iinf != ifprop_list.end())
+//				{
+//					for(list<IFREC> j = iinf->second.second.begin();
+//						j != iinf->second.second.end();
+//						++j)
+//					{
+//						if(j->ifMac != "" && j->ifMac != "000000000000" && j->ifMac != "FFFFFFFFFFFF")
+//						{
+//							if(find(i->second.macs.begin(), i->second.macs.end(), j->ifMac) == i->second.macs.end())
+//							{
+//								i->second.macs.push_back(j->ifMac);
+//							}
+//						}
+//					}
+//				}
+//			}
 			
 		//delete by wings 2009-11-13
 			/*if (!localport_macs.empty())
@@ -106,9 +105,9 @@ public class NetScan {
 				
 			}*/
 
-	                SvLog::writeLog("To Save.");
-			saveOriginData();
-	                SvLog::writeLog("End Save.");
+//	                SvLog::writeLog("To Save.");
+//			saveOriginData();
+//	                SvLog::writeLog("End Save.");
 		}
 		//delete by wings 2009-11-13
 		/*else
@@ -117,76 +116,76 @@ public class NetScan {
 			readOriginData();
 		}*/
 
-	        SvLog::writeLog("To Format data.");
-		FormatData();
-	        SvLog::writeLog("To save Format data.");
-		saveFormatData();
+//	        SvLog::writeLog("To Format data.");
+//		FormatData();
+//	        SvLog::writeLog("To save Format data.");
+//		saveFormatData();
 
 	        //SvLog::writeLog("Analyse data...", COMMON_MSG, m_callback);
-			SvLog::writeLog("Analyse data...");
+//			SvLog::writeLog("Analyse data...");
 
-		if(devid_list.empty())
+		if(devid_list.isEmpty())
 		{
-			topo_edge_list.clear();		
+//			topo_edge_list.clear();		
 		}
-		else if(ExistNetDevice(devid_list))
-		{
-			topoAnalyse TA(devid_list, ifprop_list, aft_list_frm, arp_list_frm, ospfnbr_list, rttbl_list, bgp_list, directdata_list, myParam);
-			if(TA.EdgeAnalyse())
-			{
-				topo_edge_list = TA.getEdgeList();
-				// add by zhangyan 2008-09-24
-				if ((myParam.tracert_type == "1") && (TraceAnalyse::getConnection(topo_edge_list) > 1))
-				{
-					//TODO(read,analyse)
-					TraceReader traceR(devid_list, bgp_list, scanParam.retrytimes, scanParam.timeout, 30);				
-					traceR.TracePrepare();
-					if (myParam.scan_type == "0")
-					{
-						rtpath_list = traceR.getTraceRouteByIPs();
-						//将trace path保存到文件
-						StreamData myfile;
-						myfile.saveTracertList(rtpath_list);
-
-						TraceAnalyse traceA(devid_list, rtpath_list, traceR.RouteDESTIPPairList, traceR.unManagedDevices, scanParam);
-						traceA.AnalyseRRByRtPath(topo_edge_list);
-					}
-					else
-					{//从文件扫描时
-						TraceAnalyse traceA(devid_list, rtpath_list, traceR.RouteDESTIPPairList, traceR.unManagedDevices);
-						traceA.AnalyseRRByRtPath_Direct(topo_edge_list);
-					}				
-					
-				}		
-
-				//补充边的附加信息
-				FillEdge(topo_edge_list);
-				//创建哑设备
-				GenerateDumbDevice(topo_edge_list,devid_list);
-				if(myParam.commit_pc == "0")//not commit pc to svdb
-				{
-	                                SvLog::writeLog("delete pc from entities.");
-					for(DEVID_LIST::iterator j = devid_list.begin();j != devid_list.end();++j)
-					{
-						/*if(j->second.devType != "5" && j->second.devType != "4")*/
-						if(j->second.devType != "5")
-						{
-							topo_entity_list.insert(*j);						
-						}
-					}			
-				}
-				else
-				{
-					topo_entity_list = devid_list;
-				}
-	                        SvLog::writeLog("success to analyse.");
-	                        emit FinishAnalyse();
-			}
-			else
-			{
-	                        SvLog::writeLog("fail to analyse.");
-			}
-		}
+//		else if(ExistNetDevice(devid_list))
+//		{
+//			topoAnalyse TA(devid_list, ifprop_list, aft_list_frm, arp_list_frm, ospfnbr_list, rttbl_list, bgp_list, directdata_list, myParam);
+//			if(TA.EdgeAnalyse())
+//			{
+//				topo_edge_list = TA.getEdgeList();
+//				// add by zhangyan 2008-09-24
+//				if ((myParam.tracert_type == "1") && (TraceAnalyse::getConnection(topo_edge_list) > 1))
+//				{
+//					//TODO(read,analyse)
+//					TraceReader traceR(devid_list, bgp_list, scanParam.retrytimes, scanParam.timeout, 30);				
+//					traceR.TracePrepare();
+//					if (myParam.scan_type == "0")
+//					{
+//						rtpath_list = traceR.getTraceRouteByIPs();
+//						//将trace path保存到文件
+//						StreamData myfile;
+//						myfile.saveTracertList(rtpath_list);
+//
+//						TraceAnalyse traceA(devid_list, rtpath_list, traceR.RouteDESTIPPairList, traceR.unManagedDevices, scanParam);
+//						traceA.AnalyseRRByRtPath(topo_edge_list);
+//					}
+//					else
+//					{//从文件扫描时
+//						TraceAnalyse traceA(devid_list, rtpath_list, traceR.RouteDESTIPPairList, traceR.unManagedDevices);
+//						traceA.AnalyseRRByRtPath_Direct(topo_edge_list);
+//					}				
+//					
+//				}		
+//
+//				//补充边的附加信息
+//				FillEdge(topo_edge_list);
+//				//创建哑设备
+//				GenerateDumbDevice(topo_edge_list,devid_list);
+//				if(myParam.commit_pc == "0")//not commit pc to svdb
+//				{
+//	                                SvLog::writeLog("delete pc from entities.");
+//					for(DEVID_LIST::iterator j = devid_list.begin();j != devid_list.end();++j)
+//					{
+//						/*if(j->second.devType != "5" && j->second.devType != "4")*/
+//						if(j->second.devType != "5")
+//						{
+//							topo_entity_list.insert(*j);						
+//						}
+//					}			
+//				}
+//				else
+//				{
+//					topo_entity_list = devid_list;
+//				}
+//	                        SvLog::writeLog("success to analyse.");
+//	                        emit FinishAnalyse();
+//			}
+//			else
+//			{
+//	                        SvLog::writeLog("fail to analyse.");
+//			}
+//		}
 	}
 
 	public boolean scanBySeeds(List<String> seedList) {
@@ -245,21 +244,16 @@ public class NetScan {
 	public boolean scanOneScale(Pair<String, String> scale, boolean bChng)
 	{
 	        String msg = "start scan scale : " + scale.getFirst() + "-" + scale.getSecond();
-	        //SvLog::writeLog(msg, SCAN_SUBNET_MSG, m_callback);
 //	        emit SendScanMessage(s2q(msg));
 //	        SvLog::writeLog(msg);
 
 		long ipnumMin = ScanUtils.ipToLong(scale.getFirst());
 		long ipnumMax = ScanUtils.ipToLong(scale.getSecond()) + 1;
-//		struct in_addr addr;
 		In_Addr addr = new In_Addr();
 		Vector<String> ip_list_all = new Vector<String>();
 		for(long i = ipnumMin; i < ipnumMax; ++i)
 		{
-//	                qDebug() << "test12";
-//			addr.S_un.S_addr = htonl(i);
 			addr.setS_addr(i);
-//			String ipStr = inet_ntoa(addr);
 			String ipStr = ScanUtils.longToIp(i);
 			if(ipStr.length() < 7 || ipStr.substring(ipStr.length()-4).equals(".255") || ipStr.substring(ipStr.length()-2) == ".0")
 			{//排除广播和缺省地址
@@ -332,18 +326,6 @@ public class NetScan {
 	// 获取IP对应的SNMP Version
 	public String getSNMPVersion(String ip)
 	{
-		/*std::string sVersion(scanParam.snmpv_dft);
-		if (scanParam.specSNMPVList.empty())
-		{
-			return sVersion;
-		}
-	        for (std::list<std::pair<std::string,std::string> >::iterator iter = scanParam.specSNMPVList.begin(); iter != scanParam.specSNMPVList.end(); ++iter)
-		{
-			if (iter->first == ip)
-			{
-				return iter->second;
-			}		
-		}*/
 		String sVersion = myParam.getSnmp_version();
 		if (myParam.getSNMPV_list().isEmpty())
 		{
@@ -360,7 +342,7 @@ public class NetScan {
 	}
 	public boolean scanByIps(Vector<String> aliveIp_list, boolean bChange)
 	{
-		Vector<SnmpPara> spr_list;
+		Vector<SnmpPara> spr_list = new Vector<SnmpPara>();
 		for(String aliveIp : aliveIp_list)
 		{
 			//remarked by zhangyan2008-10-20
@@ -383,7 +365,7 @@ public class NetScan {
 	            return false;
 	        }
 		//devid_list = siReader->devid_list_visited;//by zhangyan 2008-10-20
-		m_ip_list_visited = siReader->ip_visited_list;//更新后的已访问ip地址表
+		m_ip_list_visited = siReader.getIp_visited_list();//更新后的已访问ip地址表
 		DEVID_LIST devlist_cur = siReader->devid_list_valid;//在当前范围中发现的新设备
 
 		AFT_LIST aftlist_cur = siReader->getAftData();
@@ -440,82 +422,49 @@ public class NetScan {
 
 	        return true;
 	}
-	public boolean icmpPing(Vector<String> iplist, boolean bGetla, String msg, Vector<String> iplist_alive)
-	{
+	/**完成*/
+	public boolean icmpPing(Vector<String> iplist, boolean bGetla, String msg,
+			Vector<String> iplist_alive) {
 		iplist_alive.clear();
 
 		Vector<String> iplist_to_ping;
-//	        SvLog::writeLog(string("start ping scale: ") + msg);
+		// SvLog::writeLog(string("start ping scale: ") + msg);
 
-		PingFind  myPing = new PingFind(scanParam.getTimeout());
+		PingHelper myPing = new PingHelper();
 
 		int iTotal = iplist.size();
 		int istart = 0, iend = 0;
-		/*int iBatchs = (iTotal + 253) / 254;*/
-		int iBatchs = (iTotal + 99) / 100;
-	        for(int btchs = 0; btchs < iBatchs; ++btchs){//ping 100 devices at a time
-	                iend += 100;
-	                if(iend > iTotal)
-	                {
-	                        iend = iTotal;
-	                }
-	                iplist_to_ping = new Vector<String>(iplist.begin() + istart, iplist.begin() + iend);
-	                istart = iend;
-			//myPing.multiPing(iplist_to_ping, scanParam.retrytimes, scanParam.timeout);
-	                if (!myPing.multiPing(iplist_to_ping, 2, 1000))//Ping重试及超时固定为2，1000ms
-	                {
-	                    return false;
-	                }
-	                //先用单线程ping
-	                //iplist_to_ping.assign(iplist.begin(), iplist.begin()+iplist.size());
-	               // vector<string>::iterator i;
-	                //for (i = iplist_to_ping.begin(); i != iplist_to_ping.end(); ++i)
-	                //{
-	                //    myPing.singlePing(*i, 2, 100);//Ping重试及超时固定为2，1000ms
-	                //}
-			list<string> list_tmp = myPing.getAliveIPList();
-			for(list<string>::iterator i = list_tmp.begin();
-				i != list_tmp.end();
-				++i)
+		int iBatchs = (iTotal + 99)/100;
+		for(int btchs = 0;btchs < iBatchs; ++btchs){
+			//ping 100 devices at a time ;
+			 iend += 100;
+             if(iend > iTotal)
+             {
+                     iend = iTotal;
+             }
+             iplist_to_ping = new Vector<>(istart, iend);
+			istart = iend;
+			// myPing.multiPing(iplist_to_ping, scanParam.retrytimes,
+			// scanParam.timeout);
+			if (!myPing.multPing(iplist_to_ping, 2, scanParam.getTimeout()))// Ping重试及超时固定为2，1000ms
 			{
-	                        QString msg = "alive ip : " + s2q(*i);
-	                        emit SendScanMessage(msg);
-				iplist_alive.push_back(*i);
+				return false;
 			}
-			if (bGetla)
-			{	
-				//获取本机arp表
-	                        string localcmty = getCommunity_Get(localip);
-				siReader->getOneArpData(SnmpPara(localip, localcmty, scanParam.timeout, scanParam.retrytimes), localport_macs);		
+			List<String> list_tmp = myPing.getAliveIpList();
+			for(int i = 0;i<list_tmp.size();++i){
+				iplist_alive.add(list_tmp.get(i));
 			}
-			/*getLocalArp(ipMin, ipMax);
-			for(list<string>::iterator i = m_loacal_ip_from_arp.begin();
-				i != m_loacal_ip_from_arp.end();
-				++i)
-			{
-				if(find(iplist_alive.begin(), iplist_alive.end(), *i) == iplist_alive.end())
-				{
-					iplist_alive.push_back(*i);
-				}
-			}*/
-//	        }
-		/*if (bGetla)
-		{
-	                for (std::map<std::string, std::list<std::pair<std::string,std::string> > >::iterator iter = localport_macs.begin(); iter != localport_macs.end(); ++iter)
-			{
-	                        for (std::list<std::pair<std::string,std::string> >::iterator ii = iter->second.begin(); ii != iter->second.end(); ++ii)
-				{
-					if (find(iplist_alive.begin(), iplist_alive.end(), ii->first) == iplist_alive.end())
-					{
-						iplist_alive.push_back(ii->first);
-					}
-				}
+			if(bGetla){//获取本机arp表
+				String communityStr = getCommunity_Get(localip);
+				
+				siReader.getOneArpData(new SnmpPara(localip, communityStr, scanParam.getTimeout(), scanParam.getRetrytimes()), localport_macs);//???????????localport_macs 是干什么的
 			}
-		}*/
-//	        SvLog::writeLog(string("End ping: there are ") + int2str((int)iplist_alive.size()) + " alive ips in " + msg);
-	        return true;
+		}
+		
+		return true;
 	}
-	
+	private Map<String, List<Pair<String,String>>> localport_macs = new HashMap<String, List<Pair<String,String>>>();
+
 	private ScanParam scanParam;
 	
 	//扫描补充参数
@@ -529,10 +478,18 @@ public class NetScan {
 
 	private ReadService siReader = new ReadService();
 	// 本地主机ip地址列表
-	List<String> localip_list = new ArrayList<String>();
+	private List<String> localip_list = new ArrayList<String>();
+	private String localip;
 	//设备列表
 	private Map<String, IDBody> devid_list = new HashMap<String, IDBody>(); 
 	
+	public Map<String, List<Pair<String, String>>> getLocalport_macs() {
+		return localport_macs;
+	}
+	public void setLocalport_macs(
+			Map<String, List<Pair<String, String>>> localport_macs) {
+		this.localport_macs = localport_macs;
+	}
 	public ReadService getSiReader() {
 		return siReader;
 	}
@@ -581,5 +538,12 @@ public class NetScan {
 	public void setToscan(List<Pair<String, String>> toscan) {
 		this.toscan = toscan;
 	}
+	public String getLocalip() {
+		return localip;
+	}
+	public void setLocalip(String localip) {
+		this.localip = localip;
+	}
+	
 
 }

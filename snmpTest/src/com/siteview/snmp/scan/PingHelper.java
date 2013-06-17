@@ -51,7 +51,14 @@ public class PingHelper {
 		}
 		return true;
 	}
-
+	/**
+	 * 使用java自带的icmp服务ping主机
+	 * @param ip
+	 * @param timeout
+	 * @return
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 */
 	public boolean singlePing(String ip, int timeout)
 			throws UnknownHostException, IOException {
 		return InetAddress.getByName(ip).isReachable(timeout);

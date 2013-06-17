@@ -20,7 +20,7 @@ import com.siteview.snmp.util.Utils;
 public class BaseRequest {
 
 	public Snmp snmp = null;
-	private static final String COMMUNITY248 = "siteview";
+	private static final String COMMUNITY248 = "public";
 	private String community = COMMUNITY248;
 	private transient String ip = "192.168.0.248";
 	private int port = 161;
