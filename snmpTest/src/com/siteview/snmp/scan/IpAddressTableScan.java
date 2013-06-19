@@ -1,30 +1,41 @@
 package com.siteview.snmp.scan;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.snmp4j.CommunityTarget;
+import org.snmp4j.Snmp;
 import org.snmp4j.Target;
+import org.snmp4j.TransportMapping;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.VariableBinding;
+import org.snmp4j.transport.DefaultUdpTransportMapping;
+import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TableEvent;
+import org.snmp4j.util.TableUtils;
 
 import com.siteview.snmp.base.BaseTableRequest;
+import com.siteview.snmp.common.SnmpPara;
 import com.siteview.snmp.constants.OIDConstants;
+import com.siteview.snmp.model.Pair;
 import com.siteview.snmp.pojo.IpAddressTable;
 import com.siteview.snmp.util.ScanUtils;
 import com.siteview.snmp.util.Utils;
 
-public class IpAddressTableScan extends BaseTableRequest {
+public class IpAddressTableScan {
 
 	public static final OID defaultEndOID = new OID("6");
 	public static OID _OID = OIDConstants.ipAddressTable;
-	@Override
-	public Map<String, Object> resolute(List<TableEvent> tEvent) {
-		Map<String,Object> result = new HashMap<String, Object>();
+	public Map<String, IpAddressTable> resolute(List<TableEvent> tEvent) {
+		Map<String,IpAddressTable> result = new HashMap<String, IpAddressTable>();
+		if(tEvent.isEmpty()) return result;
+		
 		for(TableEvent t : tEvent){
+			if(t.getStatus() < 0) continue;
 			String varible = t.getColumns()[0].toString();
 			String[] varibleSplit = varible.split("=");
 			//前20位表示OID，之后的数据是由对应商品号+IP地生成的INDEX
@@ -53,17 +64,58 @@ public class IpAddressTableScan extends BaseTableRequest {
 		}
 		return result;
 	}
-	public Map<String,Object> getTablePojos(){
-		return getTablePojos(_OID);
+	public void getIpMaskList(SnmpPara spr, List<Pair<String, String>> ipcm_result){
+		Map<String, IpAddressTable> tables = getIpAddressTables(spr);
+		Set<String> keys = tables.keySet();
+		for(String key : keys){
+				if (!"".equals(key) 
+					&& !"0.0.0.0".equals(key) // 排除任意匹配地址
+					&& !key.substring(0, 3).equals("127") // 排除环回地址
+					&& !key.startsWith("0.255")) {
+					ipcm_result.add(new Pair<String, String>(key, tables.get(key).getIpAdEntNetMask()));
+				}
+		}
 	}
+	public Map<String,IpAddressTable> getIpAddressTables(SnmpPara spr){
+		Map<String,IpAddressTable> result = new HashMap<String, IpAddressTable>();
+		CommunityTarget target = ScanUtils.buildGetPduCommunityTarget(spr.getIp(), 161, spr.getCommunity(), spr.getTimeout(), spr.getRetry(), Integer.parseInt(spr.getSnmpver()));
+		Snmp snmp = new Snmp();
+		TransportMapping transport1 = null;
+		try {
+			transport1 = new DefaultUdpTransportMapping();
+			snmp = new Snmp(transport1);
+			snmp.listen();
+			TableUtils utils = new TableUtils(snmp,new DefaultPDUFactory());
+			utils.setMaxNumRowsPerPDU(5);
+			OID[] columnOIDs = new OID[]{
+					_OID
+			};
+			result =  resolute(utils.getTable(target, columnOIDs, new OID("1"), defaultEndOID)); 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(snmp != null){
+				try {
+					snmp.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+	
 	public static void main(String[] args) {
 		IpAddressTableScan scan = new IpAddressTableScan();
-		scan.setEnd(defaultEndOID);
-		
-		Map<String, Object> result = scan.getTablePojos(_OID);
+		SnmpPara sp = new SnmpPara();
+		sp.setCommunity("public");
+		sp.setIp("192.168.0.248");
+		sp.setRetry(2);
+		sp.setTimeout(3000);
+		Map<String, IpAddressTable> result = scan.getIpAddressTables(sp);
 		Set<String> keys = result.keySet();
 		for(String key : keys){
-			IpAddressTable media = (IpAddressTable)result.get(key);
+			IpAddressTable media = result.get(key);
 			System.out.println("key = " + key + " { setIpAdEntAddr = "  +media.getIpAdEntAddr()  
 					+" setIpAdEntIfIndex = "  +media.getIpAdEntIfIndex()
 					+" setIpAdEntNetMask = "  +media.getIpAdEntNetMask()

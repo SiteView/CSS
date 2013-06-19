@@ -44,11 +44,6 @@ public class PingHelper {
 				ThreadTaskPool.getInstance().excute(new Task(ip, retrys, timeout));
 			}
 		}
-		try {
-			ThreadTaskPool.getInstance().wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		return true;
 	}
 	/**
@@ -111,10 +106,14 @@ public class PingHelper {
 				if (InetAddress.getByName(ip).isReachable(timeout)) {
 					alive_list.add(ip);
 				}
+				synchronized (alive_list) {
+					endCount++;
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
 	}
+	public static int endCount = 0;
 }

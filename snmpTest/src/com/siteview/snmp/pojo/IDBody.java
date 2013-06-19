@@ -15,10 +15,10 @@ public class IDBody {
 	private String sysOid;//sysObjectID 1.3.6.1.2.1.1.2
 	private String sysSvcs;//sysServices 1.3.6.1.2.1.1.7
 	private String sysName;//sysName 1.3.6.1.2.1.1.5 
-	private Vector<String> ips;//IP地址1.3.6.1.2.1.4.20.1.3
-	private Vector<String> infinxs;//IP地址对应的索引1.3.6.1.2.1.4.20.1.2
-	private Vector<String> msks;//MASK地址1.3.6.1.2.1.4.20.1.3
-	private Vector<String> macs;//MAC地址1.3.6.1.2.1.2.2.1.6
+	private Vector<String> ips = new Vector<String>();//IP地址1.3.6.1.2.1.4.20.1.3
+	private Vector<String> infinxs = new Vector<String>();//IP地址对应的索引1.3.6.1.2.1.4.20.1.2
+	private Vector<String> msks = new Vector<String>();//MASK地址1.3.6.1.2.1.4.20.1.3
+	private Vector<String> macs = new Vector<String>();//MAC地址1.3.6.1.2.1.2.2.1.6
 	public String getBaseMac() {
 		return baseMac;
 	}

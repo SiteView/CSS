@@ -28,27 +28,27 @@ public class ScanMibData extends BaseRequest {
 	
 	public List<Pair<String, String>> scanMasks(String ip, int port, String community,
 			int timeout, int retry, int version) {
-		Target target = buildGetPduCommunityTarget();
+//		Target target = buildGetPduCommunityTarget();
 		List<Pair<String, String>> resultList = new ArrayList<Pair<String,String>>();
-		IpAddressTableScan ipaddscan = new IpAddressTableScan();
-		ipaddscan.setIp(ip);
-		Map<String, Object> ipmask_list = ipaddscan.getTablePojos();
-		if (!ipmask_list.isEmpty()) {
-			Set<String> keys = ipmask_list.keySet();
-			for (String key : keys) {
-					if (!"".equals(key) 
-						&& !"0.0.0.0".equals(key) // 排除任意匹配地址
-						&& !key.substring(0, 3).equals("127") // 排除环回地址
-						&& !key.startsWith("0.255")) {
-					IpAddressTable ipAddressTable = (IpAddressTable) ipmask_list
-							.get(key);
-					Pair<String, String> pair = new Pair<String,String>();
-					pair.setFirst(key);
-					pair.setSecond(ipAddressTable.getIpAdEntNetMask());
-					resultList.add(pair);
-				}
-			}
-		}
+//		IpAddressTableScan ipaddscan = new IpAddressTableScan();
+//		ipaddscan.setIp(ip);
+//		Map<String, Object> ipmask_list = ipaddscan.getTablePojos();
+//		if (!ipmask_list.isEmpty()) {
+//			Set<String> keys = ipmask_list.keySet();
+//			for (String key : keys) {
+//					if (!"".equals(key) 
+//						&& !"0.0.0.0".equals(key) // 排除任意匹配地址
+//						&& !key.substring(0, 3).equals("127") // 排除环回地址
+//						&& !key.startsWith("0.255")) {
+//					IpAddressTable ipAddressTable = (IpAddressTable) ipmask_list
+//							.get(key);
+//					Pair<String, String> pair = new Pair<String,String>();
+//					pair.setFirst(key);
+//					pair.setSecond(ipAddressTable.getIpAdEntNetMask());
+//					resultList.add(pair);
+//				}
+//			}
+//		}
 
 		return resultList;
 	}

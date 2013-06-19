@@ -10,6 +10,8 @@ import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TableEvent;
 import org.snmp4j.util.TableUtils;
 
+import com.siteview.snmp.scan.IpAddressTableScan;
+
 
 
 public abstract class BaseTableRequest extends BaseRequest {
@@ -30,6 +32,17 @@ public abstract class BaseTableRequest extends BaseRequest {
 	}
 	public void setEnd(OID end) {
 		this.end = end;
+	}
+	public static void main(String[] args) {
+		BaseTableRequest request = new BaseTableRequest() {
+			
+			@Override
+			public Map<String, Object> resolute(List<TableEvent> tEvent) {
+				System.out.println(tEvent.get(0).getColumns()[0]);
+				return null;
+			}
+		};
+		request.getTablePojos(IpAddressTableScan._OID);
 	}
 	public Map<String,Object> getTablePojos(OID oid){
 		CommunityTarget target = buildGetPduCommunityTarget();

@@ -9,14 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.siteview.snmp.constants.CommonDef;
+import com.siteview.snmp.pojo.DevicePro;
 
 
 public class OIDTypeUtils {
 
-	private static String dbName = "DeviceType.db";
-	private static String basedir = System.getProperty("user.dir");
-	private static String dataDir = basedir + File.separator + "resource\\";
-	private static Map<String, String> OidMap = new HashMap<String, String>();
+	private  String dbName = "DeviceType.db";
+	private  String basedir = System.getProperty("user.dir");
+	private  String dataDir = basedir + File.separator + "resource\\";
+	private static Map<String, DevicePro> OidMap = new HashMap<String, DevicePro>();
 	private static OIDTypeUtils instance = null;
 	private OIDTypeUtils(){
 		dbName = dataDir + dbName;
@@ -26,7 +27,12 @@ public class OIDTypeUtils {
 			con = DriverManager.getConnection("jdbc:sqlite:" + dbName);
 			ResultSet rs = con.createStatement().executeQuery("select * from SYSOBJECTID");
 			while(rs.next()){
-				OidMap.put(rs.getString("id"), rs.getString("devname"));
+				DevicePro devicePro = new DevicePro();
+				devicePro.setDevFac(rs.getString("factory"));
+				devicePro.setDevModel(rs.getString("romversion"));
+				devicePro.setDevType(rs.getString("devtype"));
+				devicePro.setDevTypeName(rs.getString("devname"));
+				OidMap.put(rs.getString("id"), devicePro);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -40,11 +46,20 @@ public class OIDTypeUtils {
 			}
 		}
 	}
-	public String getTypeByOid(String oid){
+	public  String getTypeByOid(String oid){
 		if(!OidMap.containsKey(oid)){
 			return CommonDef.OTHER;
 		}
+		return OidMap.get(oid).getDevType();
+	}
+	public  DevicePro getDevicePro(String oid){
+		if(!OidMap.containsKey(oid)){
+			return null;
+		}
 		return OidMap.get(oid);
+	}
+	public boolean containsKey(String oid){
+		return OidMap.containsKey(oid);
 	}
 	public synchronized static OIDTypeUtils getInstance(){
 		if(instance == null){

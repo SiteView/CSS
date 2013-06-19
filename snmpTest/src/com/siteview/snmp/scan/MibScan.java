@@ -18,6 +18,7 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 import com.siteview.snmp.common.SnmpPara;
 import com.siteview.snmp.model.Pair;
+import com.siteview.snmp.util.Utils;
 
 public class MibScan {
 
@@ -28,15 +29,23 @@ public class MibScan {
 	public void scan(String ip,int port){
 		
 	}
+	public int getVersion(String snmpVer){
+		int version = defaultVersion;
+		if(!Utils.isEmptyOrBlank(snmpVer)){
+			version = Integer.parseInt(snmpVer);
+		}
+		return version;
+	}
 	public List<Pair<String,String>> getMibTable(SnmpPara par,String oidStr){
-		return getMibTable(defaultVersion, par, oidStr);
+		return getMibTable(getVersion(par.getSnmpver()), par, oidStr);
 	}
 	public String getMibObject(SnmpPara par,String oidStr){
-		return getMibObject(par, oidStr);
+		return getMibObject(getVersion(par.getSnmpver()),par, oidStr);
 	}
 	public String getMibObject(int version,SnmpPara par,String oidStr){
 		String result = "";
-		UdpAddress address = new UdpAddress(par.getIp());
+		String ip = par.getIp().indexOf("/") < 0 ?par.getIp() + "/161" : par.getIp();
+		UdpAddress address = new UdpAddress(ip);
 		OID oid = new OID(oidStr);
 		if(!oid.isValid()){
 			return result;
@@ -63,7 +72,7 @@ public class MibScan {
 			if(response == null){
 				return null;
 			}
-			VariableBinding vb = event.getRequest().get(0);
+			VariableBinding vb = response.get(0);
 			return vb.getVariable().toString();
 			
 		} catch (IOException e) {
@@ -81,7 +90,8 @@ public class MibScan {
 	}
 	public List<Pair<String,String>> getMibTable(int version,SnmpPara par,String oidStr){
 		List<Pair<String,String>> result = new ArrayList<Pair<String,String>>();
-		UdpAddress address = new UdpAddress(par.getIp());
+		String ip = par.getIp().indexOf("/") < 0 ?par.getIp() + "/161" : par.getIp();
+		UdpAddress address = new UdpAddress(ip);
 		OID oid = new OID(oidStr);
 		if(!oid.isValid()){
 			return result;
@@ -105,11 +115,11 @@ public class MibScan {
 				pdu.setType(PDU.GETNEXT);
 				ResponseEvent event = snmp.getNext(pdu, target);
 				if(event == null){
-					continue;
+					break;
 				}
 				PDU response = event.getResponse();
 				if(response == null){
-					continue;
+					break;
 				}
 				Vector<? extends VariableBinding> vbs = response.getVariableBindings();
 				for(VariableBinding vb :vbs){
@@ -139,12 +149,20 @@ public class MibScan {
 		return result;
 	}
 	public static void main(String[] args) {
+		new MibScan().getMibTable(
+				new SnmpPara("192.168.9.1", "public@0", 300, 2), "1.3.6.1.2.1.17.1.4.1.2");
+//				[public@9, public@4, public@0]
+	}
+	public static void maian(String[] args) {
 		MibScan scan = new MibScan();
 		SnmpPara sp = new SnmpPara();
 		sp.setCommunity("public");
-		sp.setIp("192.168.0.248/161");
+		sp.setIp("192.168.9.1");
 		sp.setRetry(2);
 		sp.setTimeout(300);
-		scan.getMibTable(sp, "1.3.6.1.2.1.4.22.1.2");
+//		scan.getMibTable(sp, "1.3.6.1.2.1.4.20.1.3");//[1.3.6.1.2.1.4.20.1.3
+		
+		String result = scan.getMibObject(sp, "1.3.6.1.2.1.17.1.1.0");//"1.3.6.1.2.1.2.1.0");
+		System.out.println(result);
 	}
 }

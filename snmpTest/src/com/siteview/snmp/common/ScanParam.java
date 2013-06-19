@@ -1,34 +1,39 @@
 package com.siteview.snmp.common;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import com.siteview.snmp.model.Pair;
 
 public class ScanParam {
 	// 缺省读共同体名
-	private String community_get_dft;
+	private String community_get_dft = "public";
 	// 缺省写共同体名
-	private String community_set_dft;
+	private String community_set_dft = "public";
 	// 超时时间
-	private int timeout;
+	private int timeout = 300;
 	// 线程数量
 	private int threadCount;
 	// 扫描深度
 	private int depth;
 	// 重试次数
-	private int retrytimes;
+	private int retrytimes = 2;
 	// <种子IP>
-	private List<String> scan_seeds;
+	private List<String> scan_seeds = new ArrayList<String>();
 	// <起始IP,结束IP>
-	private Pair<String, String> scan_scales;
-	private Pair<Long, Long> scan_scales_num;
+	private Pair<String, String> scan_scales = new Pair<String, String>();
+	private Pair<Long, Long> scan_scales_num = new Pair<Long,Long>();
 	// <<范围>,<读写共同体名> >
-	private List<Pair<Pair<String, String>, Pair<String, String>>> communitys;
-	private List<Pair<Pair<Long, Long>, Pair<String, String>>> communitys_num;
+	private List<Pair<Pair<String, String>, Pair<String, String>>> communitys = new ArrayList<Pair<Pair<String,String>,Pair<String,String>>>();
+
+	private List<Pair<Pair<Long, Long>, Pair<String, String>>> communitys_num = new ArrayList<Pair<Pair<Long, Long>, Pair<String, String>>>();
 	// 排除的范围
-	private List<Pair<String, String>> filter_scales;
-	private List<Pair<Long, Long>> filter_scales_num;
+	private List<Pair<String, String>> filter_scales = new ArrayList<Pair<String, String>>();
+	private List<Pair<Long, Long>> filter_scales_num = new ArrayList<Pair<Long, Long>>();
 //	std::list<std::pair<std::string,std::string> > filter_scales;
 //    std::list<std::pair<unsigned long, unsigned long> > filter_scales_num;
 
@@ -83,7 +88,7 @@ public class ScanParam {
 	}
 
 	public List<String> getScan_seeds() {
-		return scan_seeds;
+ 		return scan_seeds;
 	}
 
 	public void setScan_seeds(List<String> scan_seeds) {

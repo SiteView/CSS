@@ -26,6 +26,7 @@ public class CommonDef {
 	public static final String PC = "5";
 	public static final String OTHER = "6";
 	
+	
 	public static final String ERR_AFT_LOG = "Err_Aft_log.txt";
 	public static final String ERR_ARP_LOG = "Err_Arp_log.txt";
 	public static final String ERR_OID_LOG = "Err_Oid_log.txt";
@@ -75,6 +76,5 @@ public class CommonDef {
 	//路由跟踪路径表 [[path1],[path2],...,[pathn]]
 	public static List<List<String>> ROUTEPATH_LIST = new ArrayList<List<String>>();
 	
-	public static Map<String, DevicePro> DEVICE_TYPE_MAP = new HashMap<String,DevicePro>();
 
 }

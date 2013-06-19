@@ -4,13 +4,19 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.VariableBinding;
 
 import com.siteview.snmp.constants.OIDConstants;
+import com.siteview.snmp.model.Pair;
 
 public class Utils {
 
@@ -55,6 +61,43 @@ public class Utils {
 	}
 	public static char getCapitalized(char value){
 		 return Character.toUpperCase(value);
+	}
+	public static <V> void collectionCopyAll(Collection<V> target,Collection<V> src){
+		if(target == null || src == null){
+			throw new NullPointerException();
+		}
+		if(src.size() == 0) return;
+		for(V v :src){
+			target.add(v);
+		}
+	}
+	public static <K,V> void mapAddAll(Map<K,V> target,Map<K,V> source){
+		if(target == null || source == null) throw new NullPointerException();
+		if(source.size() == 0) return;
+		Set<K> keys = source.keySet();
+		for(K k :keys){
+			target.put(k, source.get(k));
+		}
+	}
+	public static void main(String[] args) {
+		Map<String, Pair<String, String>> target = new HashMap<String, Pair<String, String>>(); 
+		Map<String, Pair<String, String>> src = new HashMap<String, Pair<String, String>>();
+		
+		Pair<String,String> t1 = new Pair<String, String>("t1", "t1");
+		Pair<String,String> t2 = new Pair<String, String>("t2", "t2");
+		target.put("t1", t1);
+		target.put("t2", t2);
+		
+		Pair<String,String> c1 = new Pair<String, String>("c1", "c1");
+		Pair<String,String> c2 = new Pair<String, String>("c2", "c2");
+		src.put("c1", t1);
+		src.put("c2", t2);
+		Map<String, String> c = new HashMap<String,String>();
+		mapAddAll(target, src);
+		Set<String> keys = target.keySet();
+		for(String key : keys){
+			System.out.println("key: " + key + " value : " + target.get(key));
+		}
 	}
 	@SuppressWarnings("unchecked")
 	public static Vector<VariableBinding> createVaribles(String middleFix){
