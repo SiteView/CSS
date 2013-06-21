@@ -1,13 +1,16 @@
 package com.siteview.css.topo.editparts;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.csstudio.opibuilder.editor.OPIEditor;
@@ -32,16 +35,21 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.NewExampleAction;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import com.siteview.css.topo.models.TopologyModel;
 
-public class TOPOEdit extends OPIEditor {
+public class TOPOEdit extends OPIEditor{
 	/**模型节点*/
-	LabelModel[] model=new LabelModel[5];
+	LabelModel[] model=new LabelModel[13];
 	/**连接模型*/
 	ConnectionModel[] cModels = new ConnectionModel[model.length];
+	/**测试数据*/
+	List testList = new ArrayList();
 	
+	int nnodes;
+	//List list =  new A
 	private StringBuffer strContext = new StringBuffer("");
 	public static final String ID = "com.siteview.css.topo.editparts.TOPOEdit";
 	static Random rand = new Random(90);
@@ -54,7 +62,40 @@ public class TOPOEdit extends OPIEditor {
 		super.init(site, input);
 	}
 	
-	
+ /*   //查找节点    
+    int findNode(String lbl) {//x-a,x-b,a-c,a-f,b-d,b-e
+    	System.out.println("初始值="+nnodes+"   lbl="+lbl);
+		for (int i = 0 ; i < nnodes ; i++) {
+			System.out.println("现在获得的lbl是："+model[i].getIndex()+"   i="+i);
+		    if ((model[i].getIndex()+"").equals(lbl)) {
+		    	System.out.println("返回的i为:"+i);
+		    	return i;
+		    }
+		}
+		return addNode(lbl);
+    }
+    //添加节点 设置节点坐标
+    int x=300;
+    int y=0;
+    int addNode(String lbl) {
+    	
+	    model[nnodes].setX(x);  //(int) (10 + 380*Math.random())
+	    model[nnodes].setY(y);
+		y=y+30;
+		x=x+20;
+		return nnodes++;
+    }
+    
+    //添加边线  0-1,0-2,0-3,1-4,1-5,1-6,2-7,2-8,2-9,3-10,3-11,3-12
+    void addEdge(String from, String to) {//x-a,x-b,a-c,a-f,b-d,b-e
+    	System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~from="+from+" to="+to);
+		System.out.println("=================from=============");
+		findNode(from);
+		System.out.println("=================to===============");
+		findNode(to);
+    }*/
+    
+    
 	@Override
 	protected void createGraphicalViewer(Composite parent) {
 		super.createGraphicalViewer(parent);
@@ -68,33 +109,54 @@ public class TOPOEdit extends OPIEditor {
 			//创建i个连接线模型
 			cModels[i] = new ConnectionModel(displayModel);
 			//设置模型坐标 
-			
-//			model[i].setX(model[0].getX());
-//			oneModel +=180;
 			getDisplayModel().addChild(model[i]);
 		}
-		model[0].setX(200);
-		model[0].setY(0);
-		//如果横坐标相同，那么向右移动。如果纵坐标相同，那么向下移动。
-		model[1].setX(0);
-		model[1].setY(125);
-		model[2].setX(150);
-		model[2].setY(125);
-		model[3].setX(300);
-		model[3].setY(125);
-		model[4].setX(450);
-		model[4].setY(125);
+		//解析设置模型坐标
+		TopoParsing topParsing= new TopoParsing();
+		Map<String, String> map =topParsing.readFileByChars();
+		Iterator its = map.keySet().iterator();
+		while (its.hasNext()) {
+			String key = (String) its.next();
+			String value = map.get(key);
+			String[] values = value.split("-");
+			String value1[] =values[0].split("[.]");
+			String value2[] =values[1].split("[.]");
+		    model[Integer.parseInt(key)].setX(Integer.parseInt(value1[0]));  
+		    model[Integer.parseInt(key)].setY(Integer.parseInt(value2[0])); 
+			//System.out.println("key="+key+"-----value="+value);
+		}
 		
-		//设置连接模型
-//		for (int i = 0; i < cModels.length-1; i++) {
-//				cModels[i].connect(model[i], "BOTTOM", model[i+oneConnectModel], "TOP");
+//		/**
+//		 * 1.解析gml获得坐标 key=0 value=300,0  map存放
+//		 */
+//		int centerX = 400;//圆心坐标  
+//		int centerY = 300;  
+//		int radius = 200;//半径  
+//		//count: 节点数目  
+//		int count =13;
+//		for (int i= 0; i<count; i++)  
+//		{  
+//		    int x = centerX+ (int)(radius * Math.cos(Math.PI * 2 / count * i));  
+//		    int y = centerY+ (int)(radius * Math.sin(Math.PI * 2 / count * i));  
+//		    model[i].setX(x);  
+//		    model[i].setY(y);  
 //		}
- 
-		cModels[0].connect(model[0], "BOTTOM", model[0+oneConnectModel], "TOP");//这里可以用键值对的形式
-		cModels[1].connect(model[0], "BOTTOM", model[1+oneConnectModel], "TOP");
-		cModels[2].connect(model[0], "BOTTOM", model[2+oneConnectModel], "TOP");
-		cModels[3].connect(model[0], "BOTTOM", model[3+oneConnectModel], "TOP");
 		
+		String t = "0-1,0-2,0-3,1-4,1-5,1-6,2-7,2-8,2-9,3-10,3-11,3-12";
+		String test[] = t.split(",");
+		for (int i = 0; i < test.length; i++) {
+			testList.add(test[i]);
+		}
+		Iterator it = testList.iterator();
+		String mStr = "";
+		String spitStr[];
+		for (int i = 0; i < test.length; i++) {
+			mStr = (String) it.next();
+			spitStr = mStr.split("-");
+			cModels[i].connect(model[Integer.parseInt(spitStr[0])], "BOTTOM", model[Integer.parseInt(spitStr[1])], "TOP");
+			//addEdge(spitStr[0],spitStr[1]);//设置模型坐标
+		}
+
 		load();
 	}
 	
@@ -283,5 +345,11 @@ public class TOPOEdit extends OPIEditor {
 		}
 		return result;
 	}
-
+//========================
+	private void buildLevelTree(Node v,int x){
+		if (v.getOffsetIncoming() !=0) {
+			
+		}
+	}
+//==============
 }
