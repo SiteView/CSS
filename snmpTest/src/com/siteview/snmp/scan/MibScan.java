@@ -2,7 +2,12 @@ package com.siteview.snmp.scan;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 import org.snmp4j.CommunityTarget;
@@ -18,6 +23,7 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 import com.siteview.snmp.common.SnmpPara;
 import com.siteview.snmp.model.Pair;
+import com.siteview.snmp.pojo.Directitem;
 import com.siteview.snmp.util.Utils;
 
 public class MibScan {
@@ -132,7 +138,7 @@ public class MibScan {
 					temp.setFirst(vb.getOid().toString());
 					temp.setSecond(vb.getVariable().toString());
 					result.add(temp);
-					System.out.println("oid = " + vb.getOid().toString() + " : value = " + vb.getVariable().toString());
+//					System.out.println("oid = " + vb.getOid().toString() + " : value = " + vb.getVariable().toString());
 				}
 			}
 		} catch (IOException e) {
@@ -148,7 +154,7 @@ public class MibScan {
 		}
 		return result;
 	}
-	public static void main(String[] args) {
+	public static void mbain(String[] args) {
 		new MibScan().getMibTable(
 				new SnmpPara("192.168.9.1", "public@0", 300, 2), "1.3.6.1.2.1.17.1.4.1.2");
 //				[public@9, public@4, public@0]
@@ -164,5 +170,56 @@ public class MibScan {
 		
 		String result = scan.getMibObject(sp, "1.3.6.1.2.1.17.1.1.0");//"1.3.6.1.2.1.2.1.0");
 		System.out.println(result);
+	}
+	public static void main(String[] args) {
+		Map<String, List<Directitem>> map = new HashMap<String, List<Directitem>>();
+		List<Directitem> l1 = new ArrayList<Directitem>();
+		l1.add(buildd("l1_1"));
+		l1.add(buildd("l1_2"));
+		l1.add(buildd("l1_3"));
+		l1.add(buildd("l1_4"));
+		l1.add(buildd("l1_5"));
+		
+		List<Directitem> l2 = new ArrayList<Directitem>();
+		l2.add(buildd("l2_1"));
+		l2.add(buildd("l2_2"));
+		l2.add(buildd("l2_3"));
+		l2.add(buildd("l2_4"));
+		l2.add(buildd("21_5"));
+		map.put("li", l1);
+		map.put("l2", l2);
+		
+		for(Entry<String, List<Directitem>> entry : map.entrySet()){
+//			Iterator<Directitem> it = entry.getValue().iterator();
+			for(Iterator<Directitem> it = entry.getValue().iterator();it.hasNext();){
+				Directitem iter = it.next();
+				if(iter.getLocalPortDsc().equals("l2_2_localportdsc")){
+					it.remove();
+				}
+			}
+		}
+//		Set<String> keys = map.keySet();
+//		for(String key : keys){
+//			List<Directitem> iters = map.get(key);
+//			for(Directitem iter : iters){
+//				if(iter.getLocalPortDsc().equals("l2_2_localportdsc")){
+//					iters.remove(iter);
+//				}
+//			}
+//		}
+		for(Entry<String, List<Directitem>> entry : map.entrySet()){
+			for(Directitem iter : entry.getValue()){
+				System.out.println(iter.getLocalPortDsc());
+			}
+		}
+		
+ 	}
+	public static Directitem buildd(String prefix){
+		Directitem iter = new Directitem();
+		iter.setLocalPortDsc(prefix +"_localportdsc");
+		iter.setLocalPortInx(prefix + "_localportinx");
+		iter.setPeerId(prefix +"_peerid");
+		iter.setPeerPortInx(prefix+"_peerportinx");
+		return iter;
 	}
 }

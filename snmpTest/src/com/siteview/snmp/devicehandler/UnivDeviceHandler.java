@@ -22,7 +22,7 @@ public class UnivDeviceHandler implements IDeviceHandler {
 	protected Map<String, Map<String, List<String>>> aft_list = new ConcurrentHashMap<String, Map<String, List<String>>>();
 	protected Map<String, Map<String, List<RouteItem>>> route_list = new ConcurrentHashMap<String, Map<String, List<RouteItem>>>();
 	protected Map<String, Map<String, List<Pair<String, String>>>> arp_list = new ConcurrentHashMap<String, Map<String, List<Pair<String, String>>>>();
-	protected Map<String, RouterStandbyItem> routeStandby_list = new HashMap<String, RouterStandbyItem>();
+	protected Map<String, RouterStandbyItem> routeStandby_list = new ConcurrentHashMap<String, RouterStandbyItem>();
 	public boolean getAftByDtp(MibScan snmp, SnmpPara spr,
 			Map<String, String> oidIndexList) {
 		// SvLog::writeLog("Start read " + spr.ip + " aft by " + spr.community);
@@ -149,7 +149,7 @@ public class UnivDeviceHandler implements IDeviceHandler {
 			}
 			List<String> i_pm = new ArrayList<String>();
 
-			// add by jiangshanwen 2010-8-11 有些设备必需直接取端口，不能靠截取oid
+			// 有些设备必需直接取端口，不能靠截取oid
 			Pair<String, String> oneItem = portMacs.get(0);
 			String[] v0 = oneItem.getFirst().split("\\.");// vector<string> v0 =
 															// tokenize(oneItem->first,
@@ -207,7 +207,7 @@ public class UnivDeviceHandler implements IDeviceHandler {
 						continue;
 					// vector<string> v1 = tokenize(imac->first.substr(22), ".",
 					// true);
-					String[] v1 = imac.getFirst().substring(22).split("//.");
+					String[] v1 = imac.getFirst().substring(23).split("\\.");
 					// qDebug() << "imac first: " << imac->first.c_str() <<
 					// " second:" << imac->second.c_str();
 					String mac_str = "";
@@ -276,7 +276,6 @@ public class UnivDeviceHandler implements IDeviceHandler {
 		// list<pair<String,String> > IpInfInx = snmp.getMibTable(spr,
 		// "1.3.6.1.2.1.4.22.1.1");
 
-		// add by jiangshanwen 2010-7-21
 		boolean isSpecial = false;
 		/*
 		 * if(IpInfInx.isEmpty() && (oidIndexList.find(ARP_INFINDEX_MACRO) !=
@@ -287,7 +286,6 @@ public class UnivDeviceHandler implements IDeviceHandler {
 		 */
 		List<Pair<String, String>> i_pm = new ArrayList<Pair<String, String>>();
 		// IP-MAC地址1.3.6.1.2.1.4.22.1.2
-		// update by jiangshanwen 2010-7-21
 		List<Pair<String, String>> ipMacs = new ArrayList<Pair<String, String>>();
 		if (isSpecial && oidIndexList.containsKey(ARP_MAC_MACRO))// (oidIndexList.find(ARP_MAC_MACRO)
 																	// !=
@@ -317,8 +315,14 @@ public class UnivDeviceHandler implements IDeviceHandler {
 			if (len >= 4) {
 				String ip_tmp = v1[len - 4] + "." + v1[len - 3] + "."
 						+ v1[len - 2] + "." + v1[len - 1];
-				String mac_tmp = imac.getSecond().replaceAll(" ", "")
-						.substring(0, 12);// replaceAll(imac->second,
+				String mac_tmp = imac.getSecond().replaceAll(":", "");
+						
+				if(mac_tmp.length()>12){
+					mac_tmp = mac_tmp.substring(0, 12);// replaceAll(imac->second,
+				}else{
+					
+				}
+				
 											// " ","").substr(0,12);
 				if (v1[len - 1] == "0" || v1[len - 1] == "255") {
 					continue;
@@ -788,5 +792,9 @@ public class UnivDeviceHandler implements IDeviceHandler {
 					}
 				}
 				return ospfnbr_list;
+	}
+	public static void main(String[] args) {
+		String oid = "1.3.6.1.2.1.17.4.3.1.2.0.19.32.125.202.170";
+		System.out.println(oid.substring(22).split("\\.").length);
 	}
 }

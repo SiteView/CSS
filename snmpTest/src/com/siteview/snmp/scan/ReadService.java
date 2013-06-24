@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
 import org.snmp4j.Snmp;
@@ -36,32 +37,35 @@ import com.siteview.snmp.util.Utils;
 public class ReadService {
 
 	//设备基本信息列表{devIP,(TYPE,SNMP,[IP],[MAC],[MASK],SYSOID,sysname)}
-	Map<String, IDBody> devid_list = new HashMap<String,IDBody>();
+	private Map<String, IDBody> devid_list = new ConcurrentHashMap<String,IDBody>();
 	//设备接口属性列表 {devIP,(ifAmount,[(ifindex,ifType,ifDescr,ifMac,ifPort,ifSpeed)])}
-	Map<String, Pair<String, List<IfRec>>> ifprop_list = new HashMap<String,Pair<String,List<IfRec>>>();
+	private Map<String, Pair<String, List<IfRec>>> ifprop_list = new ConcurrentHashMap<String,Pair<String,List<IfRec>>>();
 	//设备AFT数据列表 {sourceIP,{port,[MAC]}}
-	Map<String, Map<String, List<String>>> aft_list = new HashMap<String, Map<String,List<String>>>();
+	private Map<String, Map<String, List<String>>> aft_list = new ConcurrentHashMap<String, Map<String,List<String>>>();
 	//设备ARP数据列表 {sourceIP,{infInx,[(MAC,destIP)]}}
-	Map<String, Map<String, List<Pair<String, String>>>> arp_list = new HashMap<String, Map<String,List<Pair<String,String>>>>();
+	private Map<String, Map<String, List<Pair<String, String>>>> arp_list = new ConcurrentHashMap<String, Map<String,List<Pair<String,String>>>>();
 	//设备OSPF邻居列表 {sourceIP,{infInx,[destIP]}}
-	Map<String, Map<String, List<String>>> ospfnbr_list = new HashMap<String, Map<String,List<String>>>();
-	List<Bgp> bgp_list = new ArrayList<Bgp>();
-	public Map<String,String> map_devType = new HashMap<String, String>();
+	private Map<String, Map<String, List<String>>> ospfnbr_list = new ConcurrentHashMap<String, Map<String,List<String>>>();
+	private volatile List<Bgp> bgp_list = new ArrayList<Bgp>();
+	public Map<String,String> map_devType = new ConcurrentHashMap<String, String>();
 	//设备路由表 {sourceIP,{infInx,[nextIP]}}
-	Map<String, Map<String, List<RouteItem>>> route_list = new HashMap<String, Map<String, List<RouteItem>>>();
-	List<Pair<SnmpPara,Pair<String,String>>> sproid_list = new ArrayList<Pair<SnmpPara,Pair<String,String>>>();
-	private Map<String, IDBody> devid_list_visited = new HashMap<String, IDBody>();
-	Map<String, DevicePro> dev_type_list = new HashMap<String,DevicePro>();
-	public List<String> ip_visited_list = new ArrayList<String>();
+	private Map<String, Map<String, List<RouteItem>>> route_list = new ConcurrentHashMap<String, Map<String, List<RouteItem>>>();
+	private volatile List<Pair<SnmpPara,Pair<String,String>>> sproid_list = new ArrayList<Pair<SnmpPara,Pair<String,String>>>();
+	private Map<String, IDBody> devid_list_visited = new ConcurrentHashMap<String, IDBody>();
+	private Map<String, DevicePro> dev_type_list = new ConcurrentHashMap<String,DevicePro>();
+	public volatile List<String> ip_visited_list = new ArrayList<String>();
 	private ThreadTaskPool pool ;
 	private ScanParam scanParam;
 	private AuxParam auxParam;
 	boolean isStop = false;
 	byte[] lock = new byte[0];
-	Map<String, RouterStandbyItem> routeStandby_list = new HashMap<String, RouterStandbyItem>();
-	Map<String, Map<String, String> > special_oid_list = new HashMap<String, Map<String,String>>();
-	Map<String, List<Directitem>> directdata_list = new HashMap<String, List<Directitem>>();
-	Map<String,List<String>> stp_list = new HashMap<String,List<String>>();
+	private Map<String, RouterStandbyItem> routeStandby_list = new ConcurrentHashMap<String, RouterStandbyItem>();
+	private Map<String, Map<String, String> > special_oid_list = new ConcurrentHashMap<String, Map<String,String>>();
+	private Map<String, List<Directitem>> directdata_list = new ConcurrentHashMap<String, List<Directitem>>();
+	private Map<String,List<String>> stp_list = new ConcurrentHashMap<String,List<String>>();
+	public void init(AuxParam auxParam){
+		this.auxParam = auxParam;
+	}
 	public ScanParam getScanParam() {
 		return scanParam;
 	}
@@ -93,7 +97,7 @@ public class ReadService {
 	public void setDevid_list_visited(Map<String, IDBody> devid_list_visited) {
 		this.devid_list_visited = devid_list_visited;
 	}
-	private Map<String, IDBody> devid_list_valid = new HashMap<String,IDBody>();
+	private Map<String, IDBody> devid_list_valid = new ConcurrentHashMap<String,IDBody>();
 	
 	public Map<String, IDBody> getDevid_list() {
 		return devid_list;
@@ -248,6 +252,7 @@ public class ReadService {
 //	                        pool tp(min(scan.thrdamount, sproid_list.size()));//by zhangyan 2008-12-29
 				
 //	                        for (list<pair<SnmpPara, pair<String,String> > >::const_iterator i = sproid_list.begin(); i != sproid_list.end(); ++i)
+				System.out.println("sproid_list  size  =  " + sproid_list.size());
 				for(final Pair<SnmpPara, Pair<String,String>> i : sproid_list)
 				{
 	                                if (isStop)
@@ -282,6 +287,8 @@ public class ReadService {
 	public void getOneDeviceData(SnmpPara spr, String devType, String sysOid)
 	{
 //	        SvLog::writeLog("Start read the data of " + spr.ip);
+		System.out.print(spr.getIp() + "开始     ");
+		System.out.println(Thread.currentThread().getName() + "======================================================开始   getOneDeviceData");
 		IDeviceHandler device = DeviceFactory.getInstance().createDevice(sysOid);//DeviceFactory::Instance()->CreateDevice(getFacOid(sysOid));
 		//device->Init(scanPara, auxPara); //by zhangyan 2008-10-28
 
@@ -314,7 +321,7 @@ public class ReadService {
 		inflist_cur = device.getInfProp(snmp, spr, oidIndexList, devType.equals(CommonDef.ROUTER));
 		drctdata_cur = device.getDirectData(snmp, spr);//->getDirectData(snmp, spr);
 		
-
+		
 		if(devType.equals(CommonDef.ROUTE_SWITCH) || devType.equals(CommonDef.FIREWALL))// == ROUTE_SWITCH  || devType == FIREWALL)
 		{//r-s
 			bAft = true;
@@ -324,17 +331,17 @@ public class ReadService {
 			arplist_cur = device.getArpData(snmp, spr, oidIndexList);
 			rttbl_cur = device.getRouteData(snmp, spr, oidIndexList);  // 去掉路由表的取数
 															// 恢复路由表
-			if(auxParam.getNbr_read_type().equals("1"))
+			if("1".equals(auxParam.getNbr_read_type()))
 			{
 				bNbr = true;
 				nbrlist_cur = device.getOspfNbrData(snmp, spr);
 			}
-			if(auxParam.getBgp_read_type().equals("1"))
+			if("1".equals(auxParam.getBgp_read_type()))
 			{
 				bBgp = true;
 				bgplist_cur = device.getBgpData(snmp, spr);
 			}
-			if(auxParam.getVrrp_read_type().equals("1"))
+			if("1".equals(auxParam.getVrrp_read_type()))
 			{
 				bVrrp = true;
 				vrrplist_cur = device.getVrrpData(snmp, spr);
@@ -645,7 +652,7 @@ public class ReadService {
 			}
 		}
 
-		if(aftlist_cur.isEmpty())
+		if(aftlist_cur == null || aftlist_cur.isEmpty())
 		{
 			if(bAft)
 			{
@@ -656,14 +663,13 @@ public class ReadService {
 		else
 		{
 //	                mutex::scoped_lock lock(m_data_mutex);
-			synchronized (lock) {
-				aftlist_cur.get(null);
+//			synchronized (lock) {
 				Utils.mapAddAll(aft_list, aftlist_cur);
 //				aft_list.insert(aftlist_cur.begin(), aftlist_cur.end());
-			}
+//			}
 			
 		}
-		if(arplist_cur.isEmpty())
+		if(arplist_cur == null || arplist_cur.isEmpty())
 		{
 			if(bArp)
 			{
@@ -674,13 +680,13 @@ public class ReadService {
 		else
 		{
 //	                mutex::scoped_lock lock(m_data_mutex);
-			synchronized (lock) {
+//			synchronized (lock) {
 				Utils.mapAddAll(arp_list, arplist_cur);
-			}
+//			}
 //			arp_list.insert(arplist_cur.begin(), arplist_cur.end());
 		}
 
-		if(inflist_cur.isEmpty())
+		if(inflist_cur == null || inflist_cur.isEmpty())
 		{
 			if(bInf)
 			{
@@ -691,9 +697,9 @@ public class ReadService {
 		else
 		{
 //	                mutex::scoped_lock lock(m_data_mutex);
-			synchronized (lock) {
+//			synchronized (lock) {
 				Utils.mapAddAll(ifprop_list, inflist_cur);
-			}
+//			}
 //			ifprop_list.insert(inflist_cur.begin(), inflist_cur.end());
 		}
 
@@ -708,9 +714,9 @@ public class ReadService {
 		else
 		{
 //	                mutex::scoped_lock lock(m_data_mutex);
-			synchronized (lock) {
+//			synchronized (lock) {
 				Utils.mapAddAll(ospfnbr_list, nbrlist_cur);
-			}
+//			}
 //			ospfnbr_list.insert(nbrlist_cur.begin(), nbrlist_cur.end());
 		}
 
@@ -726,12 +732,12 @@ public class ReadService {
 		{
 //	                mutex::scoped_lock lock(m_data_mutex);
 //			route_list.insert(rttbl_cur.begin(), rttbl_cur.end());
-			synchronized (lock) {
+//			synchronized (lock) {
 				Utils.mapAddAll(route_list, rttbl_cur);
-			}
+//			}
 		}
 
-		if(bgplist_cur.isEmpty())
+		if(bgplist_cur == null || bgplist_cur.isEmpty())
 		{
 			if(bBgp)
 			{
@@ -743,9 +749,9 @@ public class ReadService {
 		{
 //	                mutex::scoped_lock lock(m_data_mutex);
 //			bgp_list.insert(bgp_list.end(), bgplist_cur.begin(), bgplist_cur.end());
-			synchronized (lock) {
-				
-			}
+//			synchronized (lock) {
+				Utils.collectionCopyAll(bgp_list, bgplist_cur);
+//			}
 		}
 
 		if(vrrplist_cur.isEmpty())
@@ -760,12 +766,12 @@ public class ReadService {
 		{
 //	                mutex::scoped_lock lock(m_data_mutex);
 //			routeStandby_list.insert(vrrplist_cur.begin(), vrrplist_cur.end());
-			synchronized (lock) {
+//			synchronized (lock) {
 				Utils.mapAddAll(routeStandby_list, vrrplist_cur);
-			}
+//			}
 		}
 
-		if(drctdata_cur.isEmpty())
+		if(drctdata_cur==null || drctdata_cur.isEmpty())
 		{
 			if(bDirect)
 			{
@@ -777,9 +783,9 @@ public class ReadService {
 		{
 //	                mutex::scoped_lock lock(m_data_mutex);
 //			directdata_list.insert(drctdata_cur.begin(), drctdata_cur.end());
-			synchronized (lock) {
+//			synchronized (lock) {
 				Utils.mapAddAll(directdata_list, drctdata_cur);
-			}
+//			}
 			
 		}
 		if (stplist_cur.isEmpty())
@@ -789,18 +795,20 @@ public class ReadService {
 		{
 //	                mutex::scoped_lock lock(m_data_mutex);
 //			stp_list.insert(stplist_cur.begin(),stplist_cur.end());
-			synchronized (lock) {
+//			synchronized (lock) {
 				Utils.mapAddAll(stp_list, stplist_cur);
-			}
+//			}
 		}
 
 //		Sleep(500);
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 //	        SvLog::writeLog("End read the data of " + spr.ip);
+		System.out.print(spr.getIp() + "结束     ");
+		System.out.println(Thread.currentThread().getName() + "======================================================结束   getOneDeviceData");
 	}
 	public void getIpMaskList(SnmpPara spr, List<Pair<String, String>> ipcm_result)
 	{
@@ -855,7 +863,7 @@ public class ReadService {
 		if(testIP(spr))
 		{
 			IDBody devid = getOneSysInfo_NJ(spr);
-			if(devid.getSnmpflag().equals("1"))//add by wings 09-11-05
+			if("1".equals(devid.getSnmpflag()))//add by wings 09-11-05
 				addDevID(spr, devid);
 		}
 	}
@@ -926,6 +934,7 @@ public class ReadService {
 				latchgetSysinfo = new CountDownLatch(spr_list.size());
 				//pool tp(scanPara.thrdamount);
 	            // pool tp(min(scanPara.thrdamount, spr_list.size()));//by zhangyan 2008-12-29
+				
 				for(final SnmpPara sp : spr_list){
 					if(isNewIp(sp.getIp())){
 						if(isStop){
@@ -944,6 +953,7 @@ public class ReadService {
 				}
 				try {
 					latchgetSysinfo.await();
+					System.out.println("getOneSysInfo                   ==============================================is end");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -1077,7 +1087,7 @@ public class ReadService {
 			else if (spr.getSnmpver().equals("1"))
 			{
 				sysOid = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.2.0");
-				if(!sysOid.isEmpty())
+				if(sysOid!=null)//.isEmpty())
 				{
 					sysSvcs = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.7.0");
 					sysName = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.5.0");
@@ -1085,7 +1095,7 @@ public class ReadService {
 				else
 				{
 					sysOid = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.2.0");
-					if(!sysOid.isEmpty())
+					if(sysOid!=null)//.isEmpty())
 					{
 						sysSvcs = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.7.0");
 						sysName = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.5.0");
@@ -1103,7 +1113,7 @@ public class ReadService {
 				}
 			}
 
-			if(sysOid.isEmpty() && sysSvcs.isEmpty() && sysName.isEmpty())
+			if(Utils.isEmptyOrBlank(sysOid) && Utils.isEmptyOrBlank(sysSvcs) && Utils.isEmptyOrBlank(sysName))
 			{
 //	                        SvLog::writeLog("Can not get the ID of " + spr.ip);
 				return devid;

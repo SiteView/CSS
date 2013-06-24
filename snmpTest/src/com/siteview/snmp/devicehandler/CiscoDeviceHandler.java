@@ -33,7 +33,7 @@ public class CiscoDeviceHandler extends UnivDeviceHandler implements IDeviceHand
 		//cdp
 		Map<String, List<Directitem>> result= new HashMap<String,List<Directitem>>();
 		//PeerIP 1.3.6.1.4.1.9.9.23.1.2.1.1.4(localportindex,peerip)
-	        List<Pair<String,String> > peerIPs = snmp.getMibTable(spr,"1.3.6.1.4.1.9.9.23.1.2.1.1.4");
+	    List<Pair<String,String> > peerIPs = snmp.getMibTable(spr,"1.3.6.1.4.1.9.9.23.1.2.1.1.4");
 		if(!peerIPs.isEmpty())
 		{
 			//PeerPort 1.3.6.1.4.1.9.9.23.1.2.1.1.7(localportindex,peerport)
@@ -50,7 +50,7 @@ public class CiscoDeviceHandler extends UnivDeviceHandler implements IDeviceHand
 					{
 						continue;
 					}
-//	                                for(List<Pair<string,string> >::iterator iport = peerPorts.begin(); iport != peerPorts.end(); ++iport)
+//	                for(List<Pair<string,string> >::iterator iport = peerPorts.begin(); iport != peerPorts.end(); ++iport)
 					for(Pair<String,String> iport : peerPorts)
 					{
 						String[] pt_indexs = iport.getFirst().split("\\.");//tokenize(iport->first, ".");
@@ -146,7 +146,7 @@ public class CiscoDeviceHandler extends UnivDeviceHandler implements IDeviceHand
 	}
 	@Override
 	public List<Bgp> getBgpData(MibScan snmp, SnmpPara spr) {
-		return null;
+		return super.getBgpData(snmp, spr);
 	}
 	@Override
 	public Map<String, Pair<String, List<IfRec>>> getInfProp(MibScan snmp,

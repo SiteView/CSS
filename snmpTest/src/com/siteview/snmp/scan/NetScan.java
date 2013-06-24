@@ -1,11 +1,15 @@
 package com.siteview.snmp.scan;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.snmp4j.mp.SnmpConstants;
 
@@ -30,27 +34,31 @@ import com.siteview.snmp.util.Utils;
 
 
 public class NetScan implements Runnable{
-	private Map<String, Map<String, List<String>>> aft_list = new HashMap<String, Map<String, List<String>>>();
+	private Map<String, Map<String, List<String>>> aft_list = new ConcurrentHashMap<String, Map<String, List<String>>>();
 	// 设备ARP数据列表 {sourceIP,{infInx,[(MAC,destIP)]}}
-	private Map<String, Map<String, List<Pair<String, String>>>> arp_list = new HashMap<String, Map<String, List<Pair<String, String>>>>();
+	private Map<String, Map<String, List<Pair<String, String>>>> arp_list = new ConcurrentHashMap<String, Map<String, List<Pair<String, String>>>>();
 	// 设备接口属性列表
 	// {devIP,(ifAmount,[(ifindex,ifType,ifDescr,ifMac,ifPort,ifSpeed)])}
-	private Map<String, Pair<String, List<IfRec>>> ifprop_list = new HashMap<String, Pair<String, List<IfRec>>>();
+	private Map<String, Pair<String, List<IfRec>>> ifprop_list = new ConcurrentHashMap<String, Pair<String, List<IfRec>>>();
 	// 设备OSPF邻居列表 {sourceIP,{infInx,[destIP]}}
-	private Map<String, Map<String, List<String>>> ospfnbr_list = new HashMap<String, Map<String, List<String>>>();
+	private Map<String, Map<String, List<String>>> ospfnbr_list = new ConcurrentHashMap<String, Map<String, List<String>>>();
 	private List<Bgp> bgp_list = new ArrayList<Bgp>();
 	// 设备路由表 {sourceIP,{infInx,[nextIP]}}
-	private Map<String, Map<String, List<RouteItem>>> route_list = new HashMap<String, Map<String, List<RouteItem>>>();
-	private Map<String, Map<String, List<RouteItem>>> rttbl_list = new HashMap<String, Map<String, List<RouteItem>>>();
+	private Map<String, Map<String, List<RouteItem>>> route_list = new ConcurrentHashMap<String, Map<String, List<RouteItem>>>();
+	private Map<String, Map<String, List<RouteItem>>> rttbl_list = new ConcurrentHashMap<String, Map<String, List<RouteItem>>>();
 	private List<Pair<SnmpPara, Pair<String, String>>> sproid_list = new ArrayList<Pair<SnmpPara, Pair<String, String>>>();
-	private Map<String, RouterStandbyItem> routeStandby_list = new HashMap<String, RouterStandbyItem>();
-	private Map<String, Map<String, String>> special_oid_list = new HashMap<String, Map<String, String>>();
-	private Map<String, List<Directitem>> directdata_list = new HashMap<String, List<Directitem>>();
-	private Map<String, List<String>> stp_list = new HashMap<String, List<String>>();
+	private Map<String, RouterStandbyItem> routeStandby_list = new ConcurrentHashMap<String, RouterStandbyItem>();
+	private Map<String, Map<String, String>> special_oid_list = new ConcurrentHashMap<String, Map<String, String>>();
+	private Map<String, List<Directitem>> directdata_list = new ConcurrentHashMap<String, List<Directitem>>();
+	private Map<String, List<String>> stp_list = new ConcurrentHashMap<String, List<String>>();
 	private List<Edge> topo_edge_list = new ArrayList<Edge>();
+	//规范化后的设备AFT或ARP数据 {sourceIP,{infInx,[destIP]}}
+	private Map<String, Map<String, List<String>>> frm_aftarp_list = new ConcurrentHashMap<String, Map<String, List<String>>>();
+	private Map<String, Map<String, List<String>>> aft_list_frm = new ConcurrentHashMap<String, Map<String, List<String>>>();
 	public void init(ScanParam sp,AuxParam ap){
 		this.scanParam = sp;
 		this.myParam = ap;
+		siReader.init(ap);
 	}
 	@Override
 	public void run() {
@@ -58,15 +66,26 @@ public class NetScan implements Runnable{
 		scan();
 	}
 	public static void main(String[] args) {
+		String tmp = "1123";
+		String tmp1 = "000010101010";
+		tmp1.replaceAll("^(0+)", "");
+		System.out.println("tmp1 = " + tmp1);
+		System.out.println(tmp.indexOf("0"));
+		System.out.println(tmp.substring(tmp.indexOf("0")));
+	}
+	public static void maian(String[] args) {
 		AuxParam auxParam = new AuxParam();
 		auxParam.setScan_type("0");
 		auxParam.setPing_type("2");
 		auxParam.setSeed_type("0");
 		auxParam.setSnmp_version("1");
+		auxParam.setNbr_read_type("1");
+		auxParam.setBgp_read_type("1");
+		auxParam.setVrrp_read_type("1");
 		
 		ScanParam s = new ScanParam();
 		s.setCommunity_get_dft("public");
-		s.setDepth(5);
+		s.setDepth(1);
 		s.getScan_seeds().add("192.168.0.248");
 		s.getScan_seeds().add("192.168.0.251");
 		NetScan scan = new NetScan();
@@ -75,12 +94,14 @@ public class NetScan implements Runnable{
 		thread.setDaemon(true);
 		thread.start();
 		try {
-			thread.sleep(1000000);
+			thread.sleep(12000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 	public void scan(){
+		long start = System.currentTimeMillis();
+		System.out.println("scan start");
 		String msg = "";
 		if("1".equals(myParam.getScan_type()) || "2".equals(myParam.getScan_type()))
 		{//读取源数据，从保存的拓扑图
@@ -144,6 +165,9 @@ public class NetScan implements Runnable{
 			saveOriginData();//待实现
 //	                SvLog::writeLog("End Save.");
 		}
+		System.out.println("scan end");
+		long end = System.currentTimeMillis();
+		System.out.println("用时"+(end - start));
 		//delete by wings 2009-11-13
 		/*else
 		{//从文件获取数据
@@ -154,7 +178,7 @@ public class NetScan implements Runnable{
 //	        SvLog::writeLog("To Format data.");
 		formatData();//待实现
 //	        SvLog::writeLog("To save Format data.");
-		saveFormatData();//待实现
+		saveFormatData();//己实现 、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、、继续
 
 	        //SvLog::writeLog("Analyse data...", COMMON_MSG, m_callback);
 //			SvLog::writeLog("Analyse data...");
@@ -351,7 +375,7 @@ public class NetScan implements Runnable{
 			if((!bExcluded) && !m_ip_list_visited.contains(ipStr))
 			{
 	          ip_list_all.add(ipStr);
-	          break;//////////////////////////////////////////////////????????????????????????????调试用，，只扫描一个ip
+	         // break;//////////////////////////////////////////////////????????????????????????????调试用，，只扫描一个ip
 			}
 		}
 		if(!ip_list_all.isEmpty())
@@ -608,7 +632,7 @@ public class NetScan implements Runnable{
 			if(bGetla){//获取本机arp表
 				String communityStr = getCommunity_Get(localip);
 				
-				siReader.getOneArpData(new SnmpPara(localip, communityStr, scanParam.getTimeout(), scanParam.getRetrytimes()), localport_macs);//???????????localport_macs 是干什么的
+				siReader.getOneArpData(new SnmpPara(localip, communityStr, scanParam.getTimeout(), scanParam.getRetrytimes()), localport_macs);
 			}
 		}
 		
@@ -617,612 +641,489 @@ public class NetScan implements Runnable{
 	// 规范化数据文件
 	public boolean formatData()
 	{
-		//begin added by tgf 2008-09-22
 		//处理vrrp的数据:删除vrrp的ip-mac数据
-//		list<string> iplist_virtual;
-//		list<string> maclist_virtual;
-//		//by zhangyan 2009-01-09
-//		for(RouterStandby_LIST::iterator iter = routeStandby_list.begin(); iter != routeStandby_list.end(); ++iter)
-//		{		
-//			for(vector<string>::iterator ii = iter->second.virtualIps.begin(); ii != iter->second.virtualIps.end(); ++ii)
-//			{
-//				if(find(iplist_virtual.begin(), iplist_virtual.end(), *ii) == iplist_virtual.end())
-//				{
-//					iplist_virtual.push_back(*ii);
-//				}
-//			}
-//			for(vector<string>::iterator ii = iter->second.virtualMacs.begin(); ii != iter->second.virtualMacs.end(); ++ii)
-//			{
-//				if(find(maclist_virtual.begin(), maclist_virtual.end(), *ii) == maclist_virtual.end())
-//				{
-//					maclist_virtual.push_back(*ii);
-//				}
-//			}		
-//		}
-//
-//		//for(VRRP_LIST::iterator i = vrrp_list.begin(); i != vrrp_list.end(); ++i)
-//		//{
-//		//	for(vector<string>::iterator j = i->second.assoips.begin(); j !=  i->second.assoips.end(); ++j)
-//		//	{
-//		//		if(find(iplist_virtual.begin(), iplist_virtual.end(), *j) == iplist_virtual.end())
-//		//		{
-//		//			iplist_virtual.push_back(*j);
-//		//		}
-//		//	}
-//		//	for(vector<VRID>::iterator j = i->second.vrids.begin(); j !=  i->second.vrids.end(); ++j)
-//		//	{
-//		//		if(find(maclist_virtual.begin(), maclist_virtual.end(), j->virtualMac) == maclist_virtual.end())
-//		//		{
-//		//			maclist_virtual.push_back(j->virtualMac);
-//		//		}
-//		//	}
-//		//}
-//
-//		//format directdata	    
-//		DIRECTDATA_LIST drc_list_tmp;
-//		for(DIRECTDATA_LIST::iterator i = directdata_list.begin(); i != directdata_list.end(); ++i)
-//		{
-//			string left_ip = i->first;		
-//			for(DEVID_LIST::iterator s = devid_list.begin(); s != devid_list.end();	++s)
-//			{
-//				if(find(s->second.ips.begin(), s->second.ips.end(), left_ip) != s->second.ips.end())
-//				{
-//					left_ip = s->first;
-//					break;
-//				}
-//			}
-//			for(list<DIRECTITEM>::iterator j = i->second.begin(); j != i->second.end();)// ++j)
-//			{
-//				//add by zhangyan 2008-10-6
-//				string right_ip = j->PeerIP;			
-//				if (right_ip == "0.0.0.0")
-//				{
-//					i->second.erase(j++);
-//					continue;
-//				}
-//				if (right_ip.find(".") == string::npos)
-//				{
-//					bool bExist = false;
-//					for(DEVID_LIST::iterator iter = devid_list.begin(); iter != devid_list.end(); ++iter)
-//					{
-//						if (find(iter->second.macs.begin(), iter->second.macs.end(), right_ip) != iter->second.macs.end())
-//						{//mac-to-ip
-//							j->PeerIP = iter->first;
-//							bExist = true;
-//							break;
-//						}				
-//					}
-//					if(!bExist)
-//					{
-//						i->second.erase(j++);
-//					}
-//					else
-//						++j;
-//				}
-//				else
-//				{				
-//					for(DEVID_LIST::iterator s = devid_list.begin(); s != devid_list.end();	++s)
-//					{
-//						if(find(s->second.ips.begin(), s->second.ips.end(), right_ip) != s->second.ips.end())
-//						{						
-//							j->PeerIP = s->first;	
-//							break;
-//						}
-//					}
-//					++j;
-//				}			
-//			}
-//			drc_list_tmp[left_ip] = i->second;
-//		}
-//		directdata_list = drc_list_tmp;
-//		//end added by tgf 2008-09-22
-//
-//		// added by zhangyan 2008-10-30	
-//		if ((myParam.filter_type == "1") && (!scanParam.scan_scales_num.empty()))
-//		{
-//	                SvLog::writeLog("delete ips, while not in scan scales");
-//			for(ARP_LIST::iterator m_srcip = arp_list.begin(); m_srcip != arp_list.end(); ++m_srcip)
-//			{//对source ip 循环			
-//				for(std::map<std::string, std::list<pair<string,string> > >::iterator m_srcport = m_srcip->second.begin(); 
-//					m_srcport != m_srcip->second.end(); 
-//					++m_srcport)
-//				{//对source port 循环
-//	                                for(list<pair<string,string> >::iterator destip_mac = m_srcport->second.begin();
-//						destip_mac != m_srcport->second.end(); )					
-//					{//对destip-mac	循环
-//						bool bAllowed = false;					
-//						unsigned long ipnum = ntohl(inet_addr(destip_mac->first.c_str()));					
-//	                                        for (std::list<std::pair<unsigned long, unsigned long> >::iterator j = scanParam.scan_scales_num.begin();
-//							j != scanParam.scan_scales_num.end(); 
-//							++j)
-//						{//允许的范围
-//							if (ipnum <= j->second && ipnum >= j->first)
-//							{					
-//								bAllowed = true;
-//	                                                        for (std::list<std::pair<unsigned long, unsigned long> >::iterator k = scanParam.filter_scales_num.begin();
-//									k != scanParam.filter_scales_num.end(); 
-//									++k)
-//								{//排除的范围ip
-//									if (ipnum <= k->second && ipnum >= k->first)
-//									{					
-//										bAllowed = false;
-//										break;
-//									}
-//								}
-//								break;
-//							}
-//						}
-//						if (!bAllowed)
-//						{						
-//							//删除不在允许范围内的ip-mac
-//							m_srcport->second.erase(destip_mac++);
-//						}
-//						else
-//						{
-//							destip_mac++;
-//						}
-//					}
-//				}
-//			}
-//			
-//		} // end by zhangyan 2008-10-30	
-//
-//		//规范化接口, begin added by tgf 2008-07-04
-//		for(ARP_LIST::iterator i = arp_list.begin(); i != arp_list.end(); ++i)
-//		{//对source ip 循环
-//	                list<pair<string,list<pair<string,string> > > > infindex_list;//[<oldport,[ipmac]>]
-//			for(std::map<std::string, std::list<pair<string,string> > >::iterator m_it = i->second.begin(); 
-//				m_it != i->second.end(); 
-//				++m_it)
-//			{//对source port 循环
-//				string port = m_it->first;
-//				if(port.length() == 1 || (port.compare(0,1,"G") != 0 && port.compare(0,1,"E") != 0))
-//				{
-//					continue;
-//				}
-//				if(!(i->second.empty()))
-//				{
-//					bool bValidPort = false;
-//					for(std::list<pair<string,string> >::iterator pi = m_it->second.begin();
-//						pi != m_it->second.end();
-//						)
-//					{
-//						if(pi->second.length() != 12)
-//						{
-//							m_it->second.erase(pi++);
-//						}
-//						else
-//						{
-//							++pi;
-//							bValidPort = true;
-//						}
-//					}
-//					if(bValidPort)
-//					{
-//						port = port.substr(1);
-//						while(port.substr(0,1) == "0" && port.substr(0,2) != "0/")
-//						{
-//							port = port.substr(1);
-//						}
-//						infindex_list.push_back(make_pair(port, m_it->second));//delete G,E
-//					}
-//				}
-//			}
-//			if(!infindex_list.empty())
-//			{
-//				i->second.clear();
-//	                        for(list<pair<string,list<pair<string,string> > > >::iterator k = infindex_list.begin();
-//					k != infindex_list.end();
-//					++k)
-//				{
-//					i->second.insert(*k);
-//				}
-//			}
-//		}
-//
-//		for(AFT_LIST::iterator i = aft_list.begin(); i != aft_list.end(); ++i)
-//		{//对source ip 循环
-//	                list<pair<string,list<string> > > infindex_list;//[<oldport,[mac]>]
-//	                list<pair<string,list<string> > > Validinfindex_list;//[<validport,[mac]>]  // added by zhangyan 2008-12-05
-//			for(std::map<std::string, std::list<string> >::iterator m_it = i->second.begin(); 
-//				m_it != i->second.end(); 
-//				++m_it)
-//			{//对source port 循环: telnetport -> infPort
-//				string port = m_it->first;
-//				if(port.length() == 1 || (port.compare(0,1,"G") != 0 && port.compare(0,1,"E") != 0))
-//				{
-//					Validinfindex_list.push_back(make_pair(port, m_it->second)); // added by zhangyan 2008-12-05
-//					continue;
-//				}
-//				if(!(i->second.empty()))
-//				{
-//					bool bValidPort = false;
-//					for(std::list<string>::iterator pi = m_it->second.begin();
-//						pi != m_it->second.end();
-//						)
-//					{//mac
-//						if((*pi).length() != 12)
-//						{
-//							m_it->second.erase(pi++);
-//						}
-//						else
-//						{
-//							++pi;
-//							bValidPort = true;
-//						}
-//					}
-//					if(bValidPort)
-//					{
-//						/*port = port.substr(1);
-//						while(port.substr(0,1) == "0" && port.substr(0,2) != "0/")
-//						{
-//							port = port.substr(1);
-//						}*/
-//						infindex_list.push_back(make_pair(port, m_it->second));//delete G,E
-//					}
-//				}
-//			}
-//			if(!infindex_list.empty())
-//			{
-//				IFPROP_LIST::iterator iif = ifprop_list.find(i->first);
-//				if(iif != ifprop_list.end())
-//				{
-//					string myPrex = "";
-//					//list<string>str_list;//port
-//	                                //for(list<pair<string,list<string> > >::iterator k = infindex_list.begin();
-//					//	k != infindex_list.end();
-//					//	++k)
-//					//{
-//					//	str_list.push_back(k->first);
-//					//}
-//					//myPrex = getInfDescPrex(str_list, iif->second.second);
-//	                                for(list<pair<string,list<string> > >::iterator k = infindex_list.begin();
-//						k != infindex_list.end();
-//						++k)
-//					{
-//						list<string>str_list;//port
-//						str_list.push_back(k->first);
-//						myPrex = getInfDescPrex(str_list, iif->second.second);
-//						string port_inf = k->first;
-//						port_inf = port_inf.substr(1);
-//						while(port_inf.substr(0,1) == "0" && port_inf.substr(0,2) != "0/")
-//						{
-//							port_inf = port_inf.substr(1);
-//						}
-//						string myport = myPrex + port_inf;
-//						k->first = findInfPortFromDescr(iif->second.second, myport);
-//					}
-//					i->second.clear();
-//	                                for(list<pair<string,list<string> > >::iterator k = infindex_list.begin();
-//						k != infindex_list.end();
-//						++k)
-//					{
-//						i->second.insert(*k);
-//					}
-//					// begin added by zhangyan 2008-12-05
-//					//合并端口集
-//	                                for (list<pair<string,list<string> > >::iterator port_mac = Validinfindex_list.begin();
-//						port_mac != Validinfindex_list.end(); 
-//						++port_mac)
-//					{//port-macs
-//						if (i->second.find(port_mac->first) != i->second.end())
-//						{//存在该端口						
-//							for (list<string>::iterator idestmac = port_mac->second.begin(); 
-//								idestmac != port_mac->second.end(); 
-//								++idestmac)
-//							{
-//								if (find(i->second[port_mac->first].begin(), i->second[port_mac->first].end(), *idestmac) == i->second[port_mac->first].end())
-//								{//不存在该mac
-//									i->second[port_mac->first].push_back(*idestmac);
-//								}
-//							}
-//						}
-//						else
-//						{
-//							i->second.insert(*port_mac);
-//						}
-//					}
-//					// end added by zhangyan 2008-12-05
-//				}
-//			}
-//		}
-//		//规范化接口, end added by tgf 2008-07-04
-//
-//		//在arp中出现的新的ip-mac作为host加入到设备列表
-//	        list<std::pair<string,string> > ipmac_list;
-//		list<string> deleteIPS; // added by zhangyan 2008-12-04
-//		for(ARP_LIST::iterator i = arp_list.begin(); i != arp_list.end(); ++i)
-//		{//对source ip 循环
-//			for(std::map<std::string, std::list<pair<string,string> > >::iterator m_it = i->second.begin(); 
-//				m_it != i->second.end(); 
-//				++m_it)
-//			{//对source port 循环
-//				for(std::list<pair<string,string> >::iterator ip_mac_new = m_it->second.begin();
-//					ip_mac_new != m_it->second.end();
-//					++ip_mac_new)
-//				{//对dest ip 循环
-//					//begin added by tgf 2008-09-23
-//					if(find(maclist_virtual.begin(), maclist_virtual.end(), ip_mac_new->second) != maclist_virtual.end())
-//					{//忽略vrrp 虚拟ip-mac
-//						continue;
-//					}				
-//					//end added by tgf 2008-09-23
-//					
-//					// added by zhangyan 2008-12-04
-//					if((ip_mac_new->first.compare(0, 3, "127") == 0) 
-//						//add by wings 2009-11-13
-//						||(ip_mac_new->first.compare(0, 5, "0.255") == 0) 
-//						|| (find(deleteIPS.begin(), deleteIPS.end(), ip_mac_new->first) != deleteIPS.end()))
-//					{
-//						continue;
-//					}
-//
-//					bool bNew = true;
-//					for(std::list<pair<string,string> >::iterator ip_mac = ipmac_list.begin();
-//						ip_mac != ipmac_list.end();
-//						++ip_mac)
-//					{
-//						if(ip_mac_new->first == ip_mac->first && ip_mac_new->second == ip_mac->second)
-//						{
-//							bNew = false;
-//							break;
-//						}
-//						// added by zhangyan 2008-10-23
-//						if(ip_mac_new->first == ip_mac->first && ip_mac_new->second != ip_mac->second)
-//						{//删除此IP-MAC
-//							bNew = false;
-//							deleteIPS.push_back(ip_mac->first);
-//							//cout<<"deleteIPS;"<<ip_mac->first<<endl;
-//							ipmac_list.remove(*ip_mac);
-//							break;
-//						}
-//					}
-//					if(bNew)
-//					{
-//						ipmac_list.push_back(*ip_mac_new);
-//					}
-//				}
-//			}
-//		}
-//		for(std::list<pair<string,string> >::iterator i = ipmac_list.begin(); i != ipmac_list.end(); ++i)
-//		{
-//			bool bExist = false;
-//			DEVID_LIST::iterator iid;
-//			for(iid = devid_list.begin(); iid != devid_list.end(); ++iid)
-//			{
-//				if(find(iid->second.ips.begin(), iid->second.ips.end(), i->first) != iid->second.ips.end())
-//				{
-//					iid->second.baseMac = i->second;// added by zhangyan 2008-10-23
-//					bExist = true;
-//					break;
-//				}
-//			}
-//			if(!bExist)
-//			{//作为host加入
-//				IDBody id_tmp;
-//				id_tmp.snmpflag = "0";
-//				id_tmp.baseMac = i->second;
-//				id_tmp.devType = "5";//host
-//				id_tmp.devModel = "";
-//				id_tmp.devFactory = "";
-//				id_tmp.devTypeName = "";
-//				id_tmp.ips.push_back(i->first);
-//				id_tmp.msks.push_back("");
-//				id_tmp.infinxs.push_back("0");
-//				id_tmp.macs.push_back(i->second);
-//				devid_list.insert(make_pair(i->first, id_tmp));
-//			}
-//			else if(iid->second.macs.empty())
-//			{//将MAC地址加入设备的
-//				iid->second.macs.push_back(i->second);
-//				iid->second.baseMac = i->second;
-//			}
-//		}
-//		
-//		//规范化arp数据表
-//		arp_list_frm.clear();	
-//		for(ARP_LIST::iterator i = arp_list.begin(); i != arp_list.end(); ++i)
-//		{
-//			string src_ip = i->first;
-//			bool bDevice = false;
-//			for(DEVID_LIST::iterator j = devid_list.begin(); j != devid_list.end(); ++j)
-//			{
-//				if(find(j->second.ips.begin(), j->second.ips.end(), src_ip) != j->second.ips.end())
-//				{
-//					src_ip = j->first;
-//					bDevice = true;
-//					break;
-//				}
-//			}
-//			if(!bDevice)
-//			{
-//				continue;
-//			}
-//			if(arp_list_frm.find(src_ip) == arp_list_frm.end())
-//			{//忽略已经存在的src_ip
-//				string myPrex = "";
-//				list<string> infindex_list;
-//				if(!(i->second.empty()))
-//				{
-//					if( i->second.begin()->first.compare(0, 1, "G") == 0 ||
-//						i->second.begin()->first.compare(0, 1, "E") == 0)
-//					{
-//	                                        for(std::map<string,list<pair<string,string> > >::iterator j = i->second.begin();
-//							j != i->second.end();
-//							++j)
-//						{
-//							string str_tmp = j->first.substr(1);
-//							if(str_tmp.length() > 1 && str_tmp.substr(0,2) != "0/")
-//							{
-//								str_tmp = lTrim(lTrim(str_tmp),"0");
-//							}
-//							infindex_list.push_back(str_tmp);
-//						}
-//					}
-//				}
-//				IFPROP_LIST::iterator iinf = ifprop_list.find(src_ip);
-//				if(!infindex_list.empty() && iinf != ifprop_list.end())
-//				{
-//					myPrex = getInfDescPrex(infindex_list, iinf->second.second);
-//				}
-//
-//	                        std::map<string, list<string> > pset_tmp;
-//	                        for(std::map<string,list<pair<string,string> > >::iterator j = i->second.begin();
-//					j != i->second.end();
-//					++j)
-//				{				
-//					string myport = j->first;//缺省接口				
-//					list<string> destip_list;
-//					//dest_ip->dev_ip
-//	                                for(list<pair<string,string> >::iterator k = j->second.begin(); k != j->second.end(); ++k)
-//					{					
-//						//begin added by tgf 2008-09-23
-//						if(find(iplist_virtual.begin(), iplist_virtual.end(), k->first) != iplist_virtual.end())
-//						{//忽略vrrp 虚拟ip-mac
-//							continue;
-//						}
-//						//end added by tgf 2008-09-23
-//
-//						// added by zhangyan 2008-12-04
-//						if(find(deleteIPS.begin(), deleteIPS.end(), k->first) != deleteIPS.end())
-//						{
-//							continue;
-//						}
-//
-//						for(DEVID_LIST::iterator m = devid_list.begin(); m != devid_list.end(); ++m)
-//						{
-//							if(find(m->second.ips.begin(), m->second.ips.end(), k->first) != m->second.ips.end())
-//							{//忽略不在设备列表中的条目
-//								if(m->first == src_ip)
-//								{//忽略转发到自身的条目
-//									break;
-//								}
-//								if(find(destip_list.begin(), destip_list.end(), m->first) == destip_list.end())
-//								{
-//									destip_list.push_back(m->first); 
-//									break;
-//								}
-//							}
-//						}
-//					}
-//					if(!destip_list.empty() && pset_tmp.find(myport) == pset_tmp.end())
-//					{
-//						pset_tmp.insert(make_pair(myport,destip_list));
-//					}
-//				}
-//				if(!pset_tmp.empty())
-//				{
-//					arp_list_frm.insert(make_pair(src_ip, pset_tmp));
-//				}
-//			}
-//		}
-//
-//		//规范化aft数据表
-//		aft_list_frm.clear();
-//		for(AFT_LIST::iterator i = aft_list.begin(); i != aft_list.end(); ++i)
-//		{
-//			string src_ip = i->first;
-//			bool bDevice = false;
-//			for(DEVID_LIST::iterator j = devid_list.begin(); j != devid_list.end(); ++j)
-//			{//src_ip -> dev_ip
-//				if(find(j->second.ips.begin(), j->second.ips.end(), src_ip) != j->second.ips.end())
-//				{
-//					src_ip = j->first;
-//					bDevice = true;
-//					break;
-//				}
-//			}
-//			if(!bDevice)
-//			{
-//				continue;
-//			}
-//			if(aft_list_frm.find(src_ip) == aft_list_frm.end())
-//			{//忽略已经存在的src_ip
-//				string myPrex = "";
-//				list<string> infindex_list;
-//				if(!(i->second.empty()))
-//				{
-//	                                ////SvLog::writeLog(src_ip.c_str()+string("  ") + i->second.begin()->first.c_str());
-//					if( i->second.begin()->first.compare(0, 1, "G") == 0 ||
-//						i->second.begin()->first.compare(0, 1, "E") == 0)
-//					{
-//	                                        for(std::map<string,list<string> >::iterator j = i->second.begin();
-//							j != i->second.end();
-//							++j)
-//						{
-//							string str_tmp = j->first.substr(1);
-//	                                                ////SvLog::writeLog(string("str_tmp:")+str_tmp.c_str());
-//							/*if(str_tmp.length() > 1 && str_tmp.substr(1,2) != "/")
-//							{
-//								str_tmp = lTrim(lTrim(str_tmp),"0");
-//							}*/
-//							infindex_list.push_back(str_tmp);
-//						}
-//					}
-//				}
-//				IFPROP_LIST::iterator iinf = ifprop_list.find(src_ip);
-//				if(!infindex_list.empty() && iinf != ifprop_list.end())
-//				{
-//					myPrex = getInfDescPrex(infindex_list, iinf->second.second);
-//				}
-//
-//	                        std::map<string, list<string> > pset_tmp;
-//	                        for(std::map<string,list<string> >::iterator j = i->second.begin();
-//					j != i->second.end();
-//					++j)
-//				{//port -> infindex
-//					string myport = j->first;//缺省接口号
-//					
-//					if(iinf != ifprop_list.end())
-//					{
-//						for(list<IFREC>::iterator k = iinf->second.second.begin();
-//							k != iinf->second.second.end();
-//							++k)
-//						{//通过端口寻找对应的接口索引
-//							if(k->ifPort == myport && k->ifIndex != myport)
-//							{//需要修改端口
-//								myport = k->ifIndex;
-//								break;
-//							}
-//						}
-//					}
-//					
-//					list<string> destip_list;
-//					//mac->dev_ip
-//					for(list<string>::iterator k = j->second.begin(); k != j->second.end(); ++k)
-//					{
-//						//begin added by tgf 2008-09-23
-//						if(find(maclist_virtual.begin(), maclist_virtual.end(), *k) != maclist_virtual.end())
-//						{//忽略vrrp 虚拟ip-mac
-//							continue;
-//						}
-//						//end added by tgf 2008-09-23
-//	                                        std::transform((*k).begin(), (*k).end(), (*k).begin(), (int(*)(int))toupper);
-//						for(DEVID_LIST::iterator m = devid_list.begin(); m != devid_list.end(); ++m)
-//						{
-//							if(find(m->second.macs.begin(), m->second.macs.end(), *k) != m->second.macs.end())
-//							{//忽略不在设备列表中的条目
-//								if(m->first != src_ip && find(destip_list.begin(), destip_list.end(), m->first) == destip_list.end())
-//								{//忽略转发到自身的条目
-//									destip_list.push_back(m->first);
-//								}
-//								break;
-//							}
-//						}
-//					}
-//					
-//					if(!destip_list.empty() && pset_tmp.find(myport) == pset_tmp.end())
-//					{
-//						pset_tmp.insert(make_pair(myport, destip_list));
-//					}
-//				}
-//				if(!pset_tmp.empty())
-//				{
-//					aft_list_frm.insert(make_pair(src_ip, pset_tmp));
-//				}
-//			}
-//		}
+		List<String> iplist_virtual  = new ArrayList<String>();
+		List<String> maclist_virtual = new ArrayList<String>();
+		Set<Entry<String, RouterStandbyItem>> entrys = routeStandby_list.entrySet();
+		for(Entry<String, RouterStandbyItem> iter:entrys){
+			for(String ii : iter.getValue().getVirtualIps()){
+				if(!iplist_virtual.contains(ii)){
+					iplist_virtual.add(ii);
+				}
+			}
+			for(String ii : iter.getValue().getVirtualMacs()){
+				if(!maclist_virtual.contains(ii)){
+					maclist_virtual.add(ii);
+				}
+			}
+		}
+		Map<String, List<Directitem>> drc_list_tmp = new HashMap<String, List<Directitem>>();
+		Set<Entry<String, List<Directitem>>> direct_entrys = directdata_list.entrySet();
+		for(Entry<String, List<Directitem>> i : direct_entrys){
+			String left_ip = i.getKey();
+			for(Entry<String, IDBody> s : devid_list.entrySet()){
+				if(s.getValue().getIps().contains(left_ip)){
+					left_ip = s.getKey();
+					break;
+				}
+			}
+			//format direcdata
+			for(Iterator<Directitem> it = i.getValue().iterator();it.hasNext();){
+				Directitem j = it.next();
+				String right_ip = j.getPeerIp();
+				if(right_ip.equals("0.0.0.0")){
+					it.remove();
+				}
+				if(right_ip.indexOf("\\.") == -1){
+					boolean bExist = false;
+					for(Entry<String, IDBody> iter :devid_list.entrySet()){
+						if(iter.getValue().getMacs().contains(right_ip)){
+							j.setPeerIp(iter.getKey());
+							bExist =true;
+							break;
+						}
+					}
+					if(!bExist){
+						it.remove();
+					}
+				}else{
+					for(Entry<String, IDBody> s : devid_list.entrySet()){
+						if(s.getValue().getMacs().contains(right_ip)){
+							j.setPeerIp(s.getKey());
+						}
+					}
+				}
+			}
+			drc_list_tmp.put(left_ip, i.getValue());
+		}
+		directdata_list=drc_list_tmp;
+		
+		if(("1".equals(myParam.getFilter_type())) && (scanParam.getScan_scales_num()!=null && !scanParam.getScan_scales_num().isEmpty())){
+			for(Entry<String, Map<String, List<Pair<String, String>>>> m_srcip : arp_list.entrySet()){
+				for(Entry<String, List<Pair<String, String>>> m_srcport:m_srcip.getValue().entrySet()){
+					m_srcport.getValue().iterator();
+					for(Iterator<Pair<String,String>> destip_mac_iter=m_srcport.getValue().iterator();destip_mac_iter.hasNext();){
+						Pair<String, String> destip_mac = destip_mac_iter.next();
+						boolean bAllowed = false;
+						long ipnum = ScanUtils.ipToLong(destip_mac.getFirst());
+						for(Pair<Long,Long> j : scanParam.getScan_scales_num()){
+							//允许的范围
+							if (ipnum <= j.getSecond() && ipnum >= j.getFirst()){
+								for(Pair<Long, Long> k :scanParam.getFilter_scales_num()){
+									//排除的范围ip
+									if (ipnum <= k.getSecond() && ipnum >= k.getFirst())
+									{					
+										bAllowed = false;
+										break;
+									}
+								}
+								break;
+							}
+						}
+						if(!bAllowed){
+							destip_mac_iter.remove();
+						}
+					}
+				}
+			}
+		}
+		//规范化接口,
+		for(Entry<String, Map<String, List<Pair<String, String>>>> i :arp_list.entrySet()){
+			List<Pair<String, List<Pair<String, String>>>> infindex_list = new ArrayList<Pair<String, List<Pair<String, String>>>>();
+			//循环source ip
+			
+				for(Entry<String,List<Pair<String,String>>> m_it : i.getValue().entrySet()){
+					String port = m_it.getKey();
+					if(port.length() == 1 || (!port.startsWith("G") && !port.startsWith("E"))){
+						continue;
+					}
+					if(i.getValue() !=null && i.getValue().size()>0){
+						boolean bValidPort = false;
+						for(Iterator<Pair<String, String>> pi = m_it.getValue().iterator();pi.hasNext();){
+							Pair<String, String> pi_second = pi.next();
+							if(pi_second.getSecond().length() != 12){
+								pi.remove();
+							}else{
+								bValidPort = true;
+							}
+						}
+						if(bValidPort){
+							port = port.substring(1);
+							while(port.substring(0,1).equals("0") && !port.substring(0,2).equals("0/")){
+								port = port.substring(1);
+							}
+							infindex_list.add(new Pair<String, List<Pair<String, String>>>(port, m_it.getValue()));//delete G / E
+						}
+					}
+				}
+			if(infindex_list != null && !infindex_list.isEmpty()){
+				i.getValue().clear();
+				for(Pair<String, List<Pair<String,String>>> k:infindex_list){
+					i.getValue().put(k.getFirst(), k.getSecond());
+				}
+			}
+		}
+		for(Entry<String, Map<String, List<String>>> i :aft_list.entrySet()){
+			List<Pair<String,List<String>>> infindex_list = new ArrayList<Pair<String,List<String>>>();
+			List<Pair<String,List<String>>> validinfindex_list = new ArrayList<Pair<String,List<String>>>();
+			
+				for(Entry<String, List<String>> m_it : i.getValue().entrySet()){
+					String port = m_it.getKey();
+					if(port.length() == 1 || (!port.startsWith("G") && !port.startsWith("E"))){
+						validinfindex_list.add(new Pair<String, List<String>>(port, m_it.getValue()));
+						continue;
+					}
+					if(i.getValue()!=null&&i.getValue().size()>0){
+						boolean bValidPort = false;
+						for(Iterator<String> pi = m_it.getValue().iterator();pi.hasNext();){
+							String pi_next = pi.next();
+							if(pi_next.length()!=12){
+								pi.remove();
+							}else{
+								bValidPort = true;
+							}
+						}
+						if(bValidPort){
+							infindex_list.add(new Pair<String, List<String>>(port, m_it.getValue()));
+						}
+					}
+				}
+				if(!infindex_list.isEmpty()){
+					Pair<String, List<IfRec>> iif = ifprop_list.get(i.getKey());
+					if(ifprop_list.containsKey(i.getKey())){
+						String myPrex = "";
+						for(Pair<String, List<String>> k :infindex_list){
+							List<String> str_list = new ArrayList<String>();
+							str_list.add(k.getFirst());
+							myPrex = getInfDescPrex(str_list,iif.getSecond());
+							String port_inf = k.getFirst();
+							port_inf = port_inf.substring(1);
+							while(port_inf.substring(0,1).equals("0") && !port_inf.substring(0,2).equals("0/")){
+								port_inf = port_inf.substring(1);
+							}
+							String myport = myPrex + port_inf;
+							k.setFirst(findInfPortFromDescr(iif.getSecond(),myport));
+						}
+						i.getValue().clear();
+						for(Pair<String,List<String>> k : infindex_list){
+							i.getValue().put(k.getFirst(), k.getSecond());
+						}
+						//合并端口集
+						for(Pair<String,List<String>> port_mac : validinfindex_list){
+							//port-macs
+							if(i.getValue().containsKey(port_mac.getFirst())){//存在该端口
+								for(String idestmac : port_mac.getSecond()){
+									if(!i.getValue().get(port_mac.getFirst()).contains(port_mac.getFirst())){//不存在该mac
+										i.getValue().get(port_mac.getFirst()).add(idestmac);
+									}
+								}
+							}else{
+								i.getValue().put(port_mac.getFirst(), port_mac.getSecond());
+							}
+						}
+					}
+				}
+		}
+		//在arp中出现的新的ip-mac作为host加入到设备列表
+		List<Pair<String,String>> ipmac_list = new ArrayList<Pair<String,String>>();
+		List<String> deleteIPS = new ArrayList<String>();
+		for(Entry<String, Map<String, List<Pair<String, String>>>> i :arp_list.entrySet()){
+			for(Entry<String, List<Pair<String, String>>> m_it : i.getValue().entrySet()){
+				//对source port 循环
+				for(Pair<String,String> ip_mac_new : m_it.getValue()){
+					if(maclist_virtual.contains(ip_mac_new.getSecond())){
+						continue;//忽略vrrp 虚拟ip-mac
+					}
+					if(ip_mac_new.getFirst().substring(0, 3).equals("127")
+							|| ip_mac_new.getFirst().substring(0, 5).equals("0.255")
+							|| deleteIPS.contains(ip_mac_new.getFirst())){
+						continue;
+					}
+					boolean bNew = true;
+					for(Iterator<Pair<String, String>> ip_mac_Iter = ipmac_list.iterator();ip_mac_Iter.hasNext();){
+						Pair<String,String> ip_mac = ip_mac_Iter.next();
+						if(ip_mac.getFirst().equals(ip_mac_new.getFirst())
+								&& ip_mac.getSecond().equals(ip_mac_new.getSecond())){
+							bNew = false;
+							break;
+						}
+						if(ip_mac_new.getFirst().equals(ip_mac.getFirst())
+								&& !(ip_mac_new.getSecond().equals(ip_mac.getSecond()))){
+							bNew = false;
+							deleteIPS.add(ip_mac.getFirst());
+							ip_mac_Iter.remove();
+							break;
+						}
+					}
+					if(bNew){
+						ipmac_list.add(ip_mac_new);
+					}
+				}
+			}
+		}
+		for(Pair<String, String> i : ipmac_list){
+			boolean bExist = false;
+			IDBody iid = new IDBody();
+			for(Iterator<IDBody> iter = devid_list.values().iterator();iter.hasNext();){
+				iid = iter.next();
+				if(iid.getIps().contains(i.getFirst())){
+					iid.setBaseMac(i.getSecond());
+					bExist = true;
+					break;
+				}
+			}
+			if(!bExist){
+				IDBody id_tmp = new IDBody();
+				id_tmp.setSnmpflag("0");
+				id_tmp.setBaseMac(i.getSecond());
+				id_tmp.setDevType("5");
+				id_tmp.setDevModel("");
+				id_tmp.setDevFactory("");
+				id_tmp.getIps().add(i.getFirst());
+				id_tmp.getMsks().add("");
+				id_tmp.getInfinxs().add("0");
+				id_tmp.getMacs().add(i.getSecond());
+				devid_list.put(i.getFirst(), id_tmp);
+			}else if(iid.getMacs() == null || iid.getMacs().isEmpty()){
+				iid.getMacs().add(i.getSecond());
+				iid.setBaseMac(i.getSecond());
+			}
+		}
+		//规范化arp数据表
+		frm_aftarp_list.clear();	
+		for(Entry<String, Map<String, List<Pair<String, String>>>> i :arp_list.entrySet()){
+			String src_ip = i.getKey();
+			boolean bDevice = false;
+			for(Entry<String,IDBody> j : devid_list.entrySet()){
+				if(j.getValue().getIps().contains(src_ip)){
+					src_ip = j.getKey();
+					bDevice = true;
+					break;
+				}
+			}
+			if(!bDevice){
+				continue;
+			}
+			if(!frm_aftarp_list.containsKey(src_ip)){//忽略已经存在的src_ip
+				String myPrex = "";
+				List<String> infindex_list = new ArrayList<String>();
+				if(i.getValue()!=null){
+					String temp = i.getValue().entrySet().iterator().next().getKey();
+					if(temp.startsWith("G")
+							|| temp.startsWith("E")){
+						for(Entry<String, List<Pair<String, String>>> j:i.getValue().entrySet()){
+							String str_tmp = j.getKey().substring(1);
+							if(str_tmp.length() > 1 && !str_tmp.substring(0,2).equals("0/")){
+								if(str_tmp.indexOf("0") >0){
+									str_tmp = str_tmp.replaceAll("^(0+)", "");
+								}
+								infindex_list.add(str_tmp);
+							}
+							
+						}
+							
+					}
+				}
+				Pair<String, List<IfRec>> iinf = ifprop_list.get(src_ip);
+				if(infindex_list!=null && iinf !=null){
+					myPrex = getInfDescPrex(infindex_list, iinf.getSecond());
+				}
+				Map<String, List<String>> pset_tmp = new HashMap<String, List<String>>();
+				for(Entry<String, List<Pair<String,String>>> j : i.getValue().entrySet()){
+					String myport = j.getKey();
+					List<String> destip_list = new ArrayList<String>();
+					for(Pair<String, String> k :j.getValue()){
+						if(iplist_virtual.contains(k.getFirst())){
+							//忽略vrrp 虚拟ip-mac
+							continue;
+						}
+						if(deleteIPS.contains(k.getFirst())){
+							continue;
+						}
+						for(Entry<String, IDBody> m : devid_list.entrySet()){
+							if(m.getValue().getIps().contains(k.getFirst())){
+								//忽略不在设备列表中的条目
+								if(m.getKey().equals(src_ip)){
+									////忽略转发到自身的条目
+								}
+								if(!destip_list.contains(m.getKey())){
+									destip_list.add(m.getKey());
+									break;
+								}
+							}
+						}
+					}
+					if(!destip_list.isEmpty() && !pset_tmp.containsKey(myport)){
+						pset_tmp.put(myport, destip_list);
+					}
+				}
+				if(!pset_tmp.isEmpty()){
+					frm_aftarp_list.put(src_ip, pset_tmp);
+				}
+			}
+		}
+		//规范化aft数据表
+		aft_list_frm.clear();
+		for(Entry<String,Map<String,List<String>>> i : aft_list.entrySet()){
+			String src_ip = i.getKey();
+			boolean bDevice = false;
+			for(Entry<String,IDBody> j : devid_list.entrySet()){
+				if(j.getValue().getIps().contains(src_ip)){
+					src_ip = j.getKey();
+					bDevice = true;
+					break;
+				}
+			}
+			if(!bDevice){
+				continue;
+			}
+			if(!aft_list_frm.containsKey(src_ip)){
+				//忽略已经存在的src_ip
+				String myPrex = "";
+				List<String> infindex_list = new ArrayList<String>();
+				if(i.getValue()!=null && !i.getValue().isEmpty()){
+					String tmp_Myprex = i.getValue().entrySet().iterator().next().getKey();
+					if(tmp_Myprex.startsWith("G") || tmp_Myprex.startsWith("E")){
+						for(Entry<String, List<String>> j : i.getValue().entrySet()){
+							String str_tmp = j.getKey().substring(1);
+							infindex_list.add(str_tmp);
+						}
+					}
+				}
+				Pair<String,List<IfRec>> iinf = ifprop_list.get(src_ip);
+				if(!(ifprop_list.isEmpty()) && iinf!=null){
+					myPrex =getInfDescPrex(infindex_list, iinf.getSecond());
+				}
+				Map<String,List<String>> pset_tmp = new HashMap<String,List<String>>();
+				for(Entry<String, List<String>> j :i.getValue().entrySet()){
+					String myport = j.getKey();
+					if(iinf != null){
+						for(IfRec k : iinf.getSecond()){
+							//通过端口寻找对应的接口索引
+							if(k.getIfPort().equals(myport) && !k.getIfIndex().equals(myport)){
+								//需要修改端口
+								myport = k.getIfIndex();
+								break;
+							}
+						}
+					}
+					List<String> destip_list = new ArrayList<String>();
+					for(String k : j.getValue()){
+						if(maclist_virtual.contains(k)){
+							//忽略vrrp 虚拟ip-mac
+							continue;
+						}
+						String temp = k.toUpperCase();
+						for(Entry<String, IDBody> m: devid_list.entrySet()){
+							if(m.getValue().getMacs().contains(k)){
+								//忽略不在设备列表中的条目
+								if(m.getKey().equals(src_ip) && !destip_list.contains(m.getKey())){
+									//忽略转发到自身的条目
+									destip_list.add(m.getKey());
+								}
+								break;
+							}
+						}
+					}
+					if(!destip_list.isEmpty() && !pset_tmp.containsKey(myport)){
+						pset_tmp.put(myport, destip_list);
+					}
+				}
+				if(!pset_tmp.isEmpty()){
+					aft_list_frm.put(src_ip, pset_tmp);
+				}
+			}
+		}
 		return true;
+	}
+	public String findInfPortFromDescr(List<IfRec> inf_list, String port)
+	{
+		for(IfRec m : inf_list)
+		{//通过接口描述信息寻找对应的接口索引
+			int iPlace = m.getIfDesc().indexOf(port);//->ifDesc.find(port);
+			//remarked by zhangyan 2008-10-14
+			//if(iPlace > 0)
+			if(iPlace != -1)
+			{//需要修改端口
+				return m.getIfPort();//->ifPort;
+			}
+			else
+			{
+				String toport = port;
+				iPlace = m.getIfDesc().indexOf(toport.replaceAll("/", ":"));//m->ifDesc.find(replaceAll(toport,"/", ":"));
+				//remarked by zhangyan 2008-10-14
+				//if(iPlace > 0)
+				if(iPlace != -1)
+				{
+					return m.getIfPort();//->ifPort;
+				}
+			}
+		}
+		return port;
+	}
+	//根据接口索引列表与接口表,获取共同前缀
+	public String getInfDescPrex(List<String> infIndex_list, List<IfRec> inf_list)
+	{
+		String prex = "";
+		List<String> prex_list = new ArrayList<String>();
+		for(String i :infIndex_list)
+		{
+			String port = i;
+			String d=port.substring(0,1);
+			port = port.substring(1);
+			while(port.substring(0,1) == "0" && port.substring(0,2) != "0/")
+			{
+				port = port.substring(1);
+			}
+			
+
+			String prex_tmp = "";
+			for(IfRec j : inf_list)
+			{
+				String vlan = j.getIfDesc().toUpperCase();//->ifDesc;
+//	                        transform(vlan.begin(),vlan.end(),vlan.begin(),(int(*)(int))toupper);
+				
+				if (vlan.indexOf("VLAN")>0 || !vlan.startsWith(d) || (j.getIfDesc().indexOf("/")>=0 && port.indexOf("/")<0))//vlan.find("VLAN") != string::npos || vlan.compare(0,1,d) != 0 || (j->ifDesc.find("/")!=string::npos && port.find("/")==string::npos))
+				{
+					continue;
+				}
+				int iPlace = j.getIfDesc().indexOf(port);//->ifDesc.find(port);
+				//remarked by zhangyan 2008-10-14
+				//if(iPlace > 0)
+				if(iPlace != -1)
+				{
+					prex_tmp = j.getIfDesc().substring(0, iPlace);//j->ifDesc.substr(0, iPlace);
+					break;
+				}
+				else
+				{
+					iPlace = j.getIfDesc().indexOf(port.replaceAll(":", "/"));//j->ifDesc.find(replaceAll(port, ":", "/"));
+					//remarked by zhangyan 2008-10-14
+					//if(iPlace > 0)
+					if(iPlace != -1)
+					{
+						prex_tmp = j.getIfDesc().substring(0,iPlace);//->ifDesc.substr(0, iPlace);
+						break;
+					}
+				}
+			}
+			if(!Utils.isEmptyOrBlank(prex_tmp))//prex_tmp.empty())
+			{
+				prex_list.add(prex_tmp);//.push_back(prex_tmp);
+			}
+		}
+		int iMinLen = 100000;
+//		for(list<string>::iterator i = prex_list.begin(); i != prex_list.end(); ++i)
+		for(String i :prex_list)
+		{
+//			if((int)((*i).size()) < iMinLen)
+			if(i.length() < iMinLen)
+			{
+				iMinLen = i.length();//(int)((*i).size());
+				prex = i;
+			}
+		}
+		return prex;
 	}
 	private Map<String, List<Pair<String,String>>> localport_macs = new HashMap<String, List<Pair<String,String>>>();
 

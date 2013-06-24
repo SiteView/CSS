@@ -9,7 +9,7 @@ public class ThreadTaskPool {
 	
 	private static ThreadTaskPool instance= null;
 	
-	public static final int defaultCount = 5;
+	public static final int defaultCount = 50;
 	private ThreadTaskPool(){
 		
 	}
