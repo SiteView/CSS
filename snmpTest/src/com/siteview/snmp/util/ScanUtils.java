@@ -1,5 +1,7 @@
 package com.siteview.snmp.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.snmp4j.CommunityTarget;
@@ -13,6 +15,8 @@ import com.siteview.snmp.model.Pair;
 public class ScanUtils {
 
 	public static final int npos = -1;
+
+	private static Map<String, Integer> tbl = new HashMap<String, Integer>();
 
 	public static Pair<String, String> getScaleByIPMask(
 			Pair<String, String> ipMask) {
@@ -32,8 +36,8 @@ public class ScanUtils {
 		}
 	}
 
-	public static CommunityTarget buildGetPduCommunityTarget(String ip, int port, String community,
-			int timeout, int retry, int version) {
+	public static CommunityTarget buildGetPduCommunityTarget(String ip,
+			int port, String community, int timeout, int retry, int version) {
 		UdpAddress add = new UdpAddress(ip + "/" + port);
 		CommunityTarget target = new CommunityTarget();
 		target.setAddress(add);
@@ -91,38 +95,41 @@ public class ScanUtils {
 	}
 
 	public static void main(String[] args) {
-//		long i = ipToLong("192.168.0.248");
-//		System.out.println(i);
-//		System.out.println(longToIp(i));
-//		Vector<String> v1 = ScanUtils.tokenize(src, tok, trim, null_subst)ze("1.3.6.1.2.1.4.22.1.2.1.192.168.0.118".substring(21), ".", true,"asdfasdf");
+		// long i = ipToLong("192.168.0.248");
+		// System.out.println(i);
+		// System.out.println(longToIp(i));
+		// Vector<String> v1 = ScanUtils.tokenize(src, tok, trim,
+		// null_subst)ze("1.3.6.1.2.1.4.22.1.2.1.192.168.0.118".substring(21),
+		// ".", true,"asdfasdf");
 		String a = "1..123. .11.11";
 		String b[] = a.split("\\.");
-		for(int i=0;i<b.length;i++){
-			System.out.print (b[i] + "*");
+		for (int i = 0; i < b.length; i++) {
+			System.out.print(b[i] + "*");
 		}
 	}
-	public static boolean isScaleBInA(Pair<String,String> scaleA,Pair<String,String> scaleB){
+
+	public static boolean isScaleBInA(Pair<String, String> scaleA,
+			Pair<String, String> scaleB) {
 		long numMin0 = ipToLong(scaleA.getFirst());
 		long numMax0 = ipToLong(scaleA.getSecond());
 		long numMin1 = ipToLong(scaleB.getFirst());
 		long numMax1 = ipToLong(scaleB.getSecond());
 		return (numMin0 <= numMin1 && numMax1 <= numMax0);
 	}
-	//trim指示是否保留空串，默认为保留。
-	public static Vector<String> tokenize(String src, String tok, boolean trim, String null_subst)
-	{
+
+	// trim指示是否保留空串，默认为保留。
+	public static Vector<String> tokenize(String src, String tok, boolean trim,
+			String null_subst) {
 		Vector<String> v = new Vector<String>();
-		if( src.isEmpty() || tok.isEmpty() )
-		{
+		if (src.isEmpty() || tok.isEmpty()) {
 			return v;
 		}
 		int pre_index = 0, index = 0, len = 0;
-		if( (index = src.indexOf(tok, pre_index)) != npos )
-		{
+		if ((index = src.indexOf(tok, pre_index)) != npos) {
 			String[] ss = src.split(tok);
-			for(int i=0;i<ss.length;i++){
+			for (int i = 0; i < ss.length; i++) {
 				String temp = ss[i];
-				if(temp.isEmpty())
+				if (temp.isEmpty())
 					v.add(null_subst);
 				else
 					v.add(ss[i]);
@@ -130,5 +137,39 @@ public class ScanUtils {
 		}
 		return v;
 	}
+
+	public static String getSubnetByIPMask(String ip, String mask) {
+		long masknum = ScanUtils.ipToLong(mask);// ntohl(inet_addr(mask));
+		long subnet = ScanUtils.ipToLong(ip) & masknum;
+		int iLen = getMaskBitLen(mask);
+		// struct in_addr ipsubnet;
+		// ipsubnet.S_un.S_addr = htonl(subnet);
+		return ScanUtils.longToIp(subnet) + "/" + iLen;
+	}
+
+	// 获取mask的非0位数
+	public static int getMaskBitLen(String msk) {
+		if (tbl.isEmpty()) {
+			tbl.put("255", 8);
+			tbl.put("254", 7);
+			tbl.put("252", 6);
+			tbl.put("248", 5);
+			tbl.put("240", 4);
+			tbl.put("224", 3);
+			tbl.put("192", 2);
+			tbl.put("128", 1);
+			tbl.put("0", 0);
+		}
+
+		int len = 0;
+		String[] dest = msk.split("\\.");
+		if (dest.length != 4) {
+			// throw std::runtime_error("Bad Mask");
+		}
+		return tbl.get(dest[0]) + tbl.get(dest[1]) + tbl.get(dest[2])
+				+ tbl.get(dest[3]);
+	}
 	
+	
+
 }

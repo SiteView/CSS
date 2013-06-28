@@ -19,9 +19,9 @@ public class AuxParam {
 	private String bgp_read_type; 	// 是否读取BGP
 	private String snmp_version; 	// 指定特定SNMP Version的设备
 	private List<Pair<String, String>> SNMPV_list = new ArrayList<Pair<String,String>>();
-	private String tracert_type;		// 是否执行trace route
-	private String filter_type;		// 是否清除扫描范围外的ip
-	private String commit_pc;		// 是否提交PC到SVDB
+	private String tracert_type = "0";		// 是否执行trace route
+	private String filter_type = "0";		// 是否清除扫描范围外的ip
+	private String commit_pc = "0";			// 是否提交PC到SVDB
 	public String getScan_type() {
 		return scan_type;
 	}

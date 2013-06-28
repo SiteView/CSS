@@ -269,107 +269,64 @@ public class UnivDeviceHandler implements IDeviceHandler {
 	@Override
 	public Map<String, Map<String, List<Pair<String, String>>>> getArpData(
 			MibScan snmp, SnmpPara spr, Map<String, String> oidIndexList) {
-		// SvLog::writeLog("Start read " + spr.ip + " arp by " + spr.community);
+		// 日志
 		arp_list.clear();
 		inf_macs.clear();
 		// IP-端口索引1.3.6.1.2.1.4.22.1.1
-		// list<pair<String,String> > IpInfInx = snmp.getMibTable(spr,
-		// "1.3.6.1.2.1.4.22.1.1");
 
 		boolean isSpecial = false;
-		/*
-		 * if(IpInfInx.isEmpty() && (oidIndexList.find(ARP_INFINDEX_MACRO) !=
-		 * oidIndexList.end())) { IpInfInx = snmp.getMibTable(spr,
-		 * oidIndexList[ARP_INFINDEX_MACRO]); isSpecial = true; }
-		 * 
-		 * if(!IpInfInx.isEmpty()) {
-		 */
 		List<Pair<String, String>> i_pm = new ArrayList<Pair<String, String>>();
 		// IP-MAC地址1.3.6.1.2.1.4.22.1.2
 		List<Pair<String, String>> ipMacs = new ArrayList<Pair<String, String>>();
-		if (isSpecial && oidIndexList.containsKey(ARP_MAC_MACRO))// (oidIndexList.find(ARP_MAC_MACRO)
-																	// !=
-																	// oidIndexList.end()))
+		if (isSpecial && oidIndexList.containsKey(ARP_MAC_MACRO))
 		{
-			ipMacs = snmp.getMibTable(spr, oidIndexList.get(ARP_MAC_MACRO));// [ARP_MAC_MACRO]);
+			ipMacs = snmp.getMibTable(spr, oidIndexList.get(ARP_MAC_MACRO));
 		} else {
 			ipMacs = snmp.getMibTable(spr, "1.3.6.1.2.1.4.22.1.2");
 		}
-		// list<pair<String,String> > IpMacs = snmp.getMibTable(spr,
-		// "1.3.6.1.2.1.4.22.1.2");
-
-		// for(list<pair<String,String> imac = IpMacs.begin(); imac !=
-		// IpMacs.end(); ++imac)
 		for (Pair<String, String> imac : ipMacs) {
-			// cout<<"IpMacs:"<<IpMacs.size()<<endl;
-			if (imac.getFirst().length() <= 20)// ->first.size()<=20)
+			if (imac.getFirst().length() <= 20)
 			{
 				continue;
 			}
-			String v1[] = imac.getFirst().substring(21).split("\\.");// tvector<string>
-																		// v1 =
-																		// tokenize(imac->first.substr(21),
-																		// ".",
-																		// true);
-			int len = v1.length;// .size();
+			String v1[] = imac.getFirst().substring(21).split("\\.");
+			int len = v1.length;
 			if (len >= 4) {
 				String ip_tmp = v1[len - 4] + "." + v1[len - 3] + "."
 						+ v1[len - 2] + "." + v1[len - 1];
 				String mac_tmp = imac.getSecond().replaceAll(":", "");
 						
 				if(mac_tmp.length()>12){
-					mac_tmp = mac_tmp.substring(0, 12);// replaceAll(imac->second,
-				}else{
-					
+					mac_tmp = mac_tmp.substring(0, 12);
 				}
-				
-											// " ","").substr(0,12);
-				if (v1[len - 1] == "0" || v1[len - 1] == "255") {
+				if (v1[len - 1].equals("0") || v1[len - 1].equals("255")) {
 					continue;
 				}
 				String inf_tem = v1[len - 5];
-				i_pm = inf_macs.get(inf_tem);// .find(inf_tem);
+				i_pm = inf_macs.get(inf_tem);
 				if (i_pm != null) {// 存在该接口
 					boolean bExisted = false;
-					// for(list<pair<string,string> j = i_pm->second.begin();
-					//
-					// j != i_pm->second.end();
-					// ++j)
 					for (Pair<String, String> j : i_pm) {
-						if (j.getSecond().equals(mac_tmp))// ->second ==
-															// mac_tmp)
+						if (j.getSecond().equals(mac_tmp))
 						{
 							bExisted = true;
 							break;
 						}
 					}
 					if (!bExisted) {// 该接口的ARP中不存在该MAC
-									// i_pm->second.push_back(make_pair(ip_tmp,
-									// mac_tmp));
-						inf_macs.get(inf_tem).add(
-								new Pair<String, String>(ip_tmp, mac_tmp));
+						i_pm.add(new Pair<String,String>(ip_tmp,mac_tmp));
 					}
 				} else {// 新的接口
-						// list<pair<string,string> > ipmac_list;
 					List<Pair<String, String>> ipmac_list = new ArrayList<Pair<String, String>>();
-					// ipmac_list.push_back(make_pair(ip_tmp, mac_tmp));
 					ipmac_list.add(new Pair<String, String>(ip_tmp, mac_tmp));
-					// inf_macs.insert(make_pair(iInf->second, ipmac_list));
-					// inf_macs.insert(make_pair(inf_tem, ipmac_list));
 					inf_macs.put(inf_tem, ipmac_list);
 				}
-				// break;
-				// }
-				// }
 			}
 		}
-		if (!inf_macs.isEmpty())// .isEmpty())
+		if (!inf_macs.isEmpty())
 		{
-			// arp_list.insert(make_pair(spr.ip,inf_macs));
 			arp_list.put(spr.getIp(), inf_macs);
 		}
-		// }
-		// cout<<"end read "<<spr.ip<<" arp"<<endl;
 		return arp_list;
 	}
 

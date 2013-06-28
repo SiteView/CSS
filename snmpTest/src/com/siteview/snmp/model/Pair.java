@@ -1,6 +1,5 @@
 package com.siteview.snmp.model;
 
-
 public class Pair<K,V> {
 	
 	private K key;

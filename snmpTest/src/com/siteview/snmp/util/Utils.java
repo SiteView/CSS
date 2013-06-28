@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,18 @@ public class Utils {
 			target.add(v);
 		}
 	}
+	public static <T extends Comparable<T>> boolean compare(List<T> a, List<T> b) {  
+		  
+        if (a.size() != b.size())  
+            return false;  
+        Collections.sort(a);  
+        Collections.sort(b);  
+        for (int i = 0; i < a.size(); i++) {  
+            if (!a.get(i).equals(b.get(i)))  
+                return false;  
+        }  
+        return true;  
+    }
 	public static <K,V> void mapAddAll(Map<K,V> target,Map<K,V> source){
 		if(target == null || source == null) throw new NullPointerException();
 		if(source.size() == 0) return;

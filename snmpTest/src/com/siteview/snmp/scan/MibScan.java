@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.Vector;
 
 import org.snmp4j.CommunityTarget;
+import org.snmp4j.MessageException;
 import org.snmp4j.PDU;
 import org.snmp4j.Snmp;
 import org.snmp4j.event.ResponseEvent;
@@ -36,11 +36,16 @@ public class MibScan {
 		
 	}
 	public int getVersion(String snmpVer){
-		int version = defaultVersion;
-		if(!Utils.isEmptyOrBlank(snmpVer)){
-			version = Integer.parseInt(snmpVer);
+		if(snmpVer.equals(String.valueOf(SnmpConstants.version1))){
+			return SnmpConstants.version1;
 		}
-		return version;
+		if(snmpVer.equals(String.valueOf(SnmpConstants.version2c))){
+			return SnmpConstants.version2c;
+		}
+		if(snmpVer.equals(String.valueOf(SnmpConstants.version3))){
+			return SnmpConstants.version3;
+		}
+		return defaultVersion;
 	}
 	public List<Pair<String,String>> getMibTable(SnmpPara par,String oidStr){
 		return getMibTable(getVersion(par.getSnmpver()), par, oidStr);
@@ -138,7 +143,6 @@ public class MibScan {
 					temp.setFirst(vb.getOid().toString());
 					temp.setSecond(vb.getVariable().toString());
 					result.add(temp);
-//					System.out.println("oid = " + vb.getOid().toString() + " : value = " + vb.getVariable().toString());
 				}
 			}
 		} catch (IOException e) {
@@ -159,19 +163,18 @@ public class MibScan {
 				new SnmpPara("192.168.9.1", "public@0", 300, 2), "1.3.6.1.2.1.17.1.4.1.2");
 //				[public@9, public@4, public@0]
 	}
-	public static void maian(String[] args) {
+	public static void main(String[] args) {
 		MibScan scan = new MibScan();
 		SnmpPara sp = new SnmpPara();
 		sp.setCommunity("public");
 		sp.setIp("192.168.9.1");
 		sp.setRetry(2);
 		sp.setTimeout(300);
-//		scan.getMibTable(sp, "1.3.6.1.2.1.4.20.1.3");//[1.3.6.1.2.1.4.20.1.3
 		
-		String result = scan.getMibObject(sp, "1.3.6.1.2.1.17.1.1.0");//"1.3.6.1.2.1.2.1.0");
+		String result = scan.getMibObject(sp, "1.3.6.1.2.1.2.1.0");//"1.3.6.1.2.1.2.1.0");
 		System.out.println(result);
 	}
-	public static void main(String[] args) {
+	public static void maain(String[] args) {
 		Map<String, List<Directitem>> map = new HashMap<String, List<Directitem>>();
 		List<Directitem> l1 = new ArrayList<Directitem>();
 		l1.add(buildd("l1_1"));

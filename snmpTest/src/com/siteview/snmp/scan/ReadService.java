@@ -10,6 +10,8 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
+
 import org.snmp4j.Snmp;
 import org.snmp4j.mp.SnmpConstants;
 
@@ -55,8 +57,8 @@ public class ReadService {
 	private Map<String, DevicePro> dev_type_list = new ConcurrentHashMap<String,DevicePro>();
 	public volatile List<String> ip_visited_list = new ArrayList<String>();
 	private ThreadTaskPool pool ;
-	private ScanParam scanParam;
-	private AuxParam auxParam;
+	private ScanParam scanParam = new ScanParam();
+	private AuxParam auxParam = new AuxParam();
 	boolean isStop = false;
 	byte[] lock = new byte[0];
 	private Map<String, RouterStandbyItem> routeStandby_list = new ConcurrentHashMap<String, RouterStandbyItem>();
@@ -65,6 +67,35 @@ public class ReadService {
 	private Map<String,List<String>> stp_list = new ConcurrentHashMap<String,List<String>>();
 	public void init(AuxParam auxParam){
 		this.auxParam = auxParam;
+	}
+	public ReadService(){
+		
+	}
+	public ReadService(Map<String,DevicePro> devtypemap,ScanParam scanpr,AuxParam auxpr,Map<String,Map<String,String>> specialoidlist){
+		this.dev_type_list = devtypemap;
+		this.special_oid_list = specialoidlist;
+		scanParam.setCommunity_get_dft(scanpr.getCommunity_get_dft());
+		scanParam.setThreadCount(scanpr.getThreadCount());
+		scanParam.setRetrytimes(scanpr.getRetrytimes());
+		scanParam.setTimeout(scanpr.getTimeout());
+		
+		auxParam.setSeed_type(auxpr.getSeed_type());
+		auxParam.setArp_read_type(auxpr.getArp_read_type());
+		auxParam.setNbr_read_type(auxpr.getArp_read_type());
+		auxParam.setRt_read_type(auxpr.getRt_read_type());
+		auxParam.setVrrp_read_type(auxpr.getVrrp_read_type());
+		auxParam.setPing_type(auxpr.getPing_type());
+		auxParam.setBgp_read_type(auxpr.getBgp_read_type());
+		auxParam.setSnmp_version(auxpr.getSnmp_version());
+		auxParam.setSNMPV_list(auxpr.getSNMPV_list());
+		
+		map_devType.put("0", "ROUTE-SWITCH");
+		map_devType.put("1", "SWITCH");
+		map_devType.put("2", "ROUTER");
+		map_devType.put("3", "FIREWALL");
+		map_devType.put("4", "SERVER");
+		map_devType.put("5", "HOST");
+		map_devType.put("6", "OTHER");
 	}
 	public ScanParam getScanParam() {
 		return scanParam;
@@ -235,19 +266,17 @@ public class ReadService {
 		arp_list.clear();
 		ifprop_list.clear();
 		ospfnbr_list.clear();
-		route_list.clear(); //changed by zhang 2009-03-26 去掉路由表的取数
 		bgp_list.clear();
 		
 		if(sproid_list.size() > 0)
 		{
-////	                qDebug() << "sproid size : " << sproid_list.size();
 			if(sproid_list.size() == 1)
 			{
-				getOneDeviceData(sproid_list.get(0).getFirst(),sproid_list.get(0).getSecond().getFirst(),sproid_list.get(0).getSecond().getSecond());//->second.second);
+				getOneDeviceData(sproid_list.get(0).getFirst(),sproid_list.get(0).getSecond().getFirst(),sproid_list.get(0).getSecond().getSecond());
 			}
 			else
 			{
-				latch = new CountDownLatch(spr_list.size());
+				latch = new CountDownLatch(sproid_list.size());
 				//pool tp(scanPara.thrdamount);//(min(thrdAmount,ip_communitys.size()));
 //	                        pool tp(min(scan.thrdamount, sproid_list.size()));//by zhangyan 2008-12-29
 				
@@ -286,18 +315,17 @@ public class ReadService {
 	// 获取一台设备的普通数据
 	public void getOneDeviceData(SnmpPara spr, String devType, String sysOid)
 	{
-//	        SvLog::writeLog("Start read the data of " + spr.ip);
+		//	        日志
 		System.out.print(spr.getIp() + "开始     ");
 		System.out.println(Thread.currentThread().getName() + "======================================================开始   getOneDeviceData");
-		IDeviceHandler device = DeviceFactory.getInstance().createDevice(sysOid);//DeviceFactory::Instance()->CreateDevice(getFacOid(sysOid));
-		//device->Init(scanPara, auxPara); //by zhangyan 2008-10-28
+		IDeviceHandler device = DeviceFactory.getInstance().createDevice(sysOid);
 
 		Map<String, Map<String, List<String>>> aftlist_cur = new HashMap<String, Map<String, List<String>>>();
 		Map<String,Map<String, List<Pair<String, String>>>> arplist_cur = new HashMap<String, Map<String,List<Pair<String,String>>>>();
 		Map<String,Pair<String,List<IfRec>>> inflist_cur = new HashMap<String, Pair<String,List<IfRec>>>();;
 		Map<String, Map<String, List<String>>> nbrlist_cur = new HashMap<String, Map<String, List<String>>>();
-		Map<String,Map<String,List<RouteItem>>> rttbl_cur = new HashMap<String, Map<String,List<RouteItem>>>();			//changed by zhang 2009-03-26 去掉路由表数据
-		//changed again by wings 2009-11-13 恢复路由表
+		Map<String,Map<String,List<RouteItem>>> rttbl_cur = new HashMap<String, Map<String,List<RouteItem>>>();			
+		// 恢复路由表
 		List<Bgp> bgplist_cur = new ArrayList<Bgp>();
 		/*VRRP_LIST vrrplist_cur;*/
 		Map<String, RouterStandbyItem> vrrplist_cur = new HashMap<String, RouterStandbyItem>();
@@ -314,15 +342,15 @@ public class ReadService {
 		boolean bDirect = true;
 
 		MibScan snmp = new MibScan();
-		//获取oid索引 add by jiangshanwen
+		//获取oid索引 
 		Map<String, String> oidIndexList = new HashMap<String,String>();
 		getOidIndex(oidIndexList, sysOid);
 
 		inflist_cur = device.getInfProp(snmp, spr, oidIndexList, devType.equals(CommonDef.ROUTER));
-		drctdata_cur = device.getDirectData(snmp, spr);//->getDirectData(snmp, spr);
+		drctdata_cur = device.getDirectData(snmp, spr);
 		
 		
-		if(devType.equals(CommonDef.ROUTE_SWITCH) || devType.equals(CommonDef.FIREWALL))// == ROUTE_SWITCH  || devType == FIREWALL)
+		if(devType.equals(CommonDef.ROUTE_SWITCH) || devType.equals(CommonDef.FIREWALL))
 		{//r-s
 			bAft = true;
 			bArp = true;				
@@ -346,208 +374,32 @@ public class ReadService {
 				bVrrp = true;
 				vrrplist_cur = device.getVrrpData(snmp, spr);
 			}
-			//remarked by zhangyan 2008-11-28
-			//if(aftlist_cur.empty())  
-			//{
-	                //	map<string, list<string> > portmac_tmp = telnetReader->getAftData(getDeviceIps(spr.ip));
-			//	if(!portmac_tmp.empty())
-			//	{
-			//		aftlist_cur.insert(make_pair(spr.ip, portmac_tmp));
-			//	}
-			//}		
 			//再用telnet读数
 			//added by zhangyan 2009-01-13
 //			Vector<String> ips_tmp = devid_list_valid[spr.ip].ips;
 			Vector<String> ips_tmp = devid_list_valid.get(spr.getIp()).getIps();
 			String ip_tmp = "";
-//			for (vector<string>::iterator iter = ips_tmp.begin(); iter != ips_tmp.end(); ++iter)
 			for(String iter :ips_tmp)
 			{//
-//				if (find(telnetReader->telnetIPList_Aft.begin(), telnetReader->telnetIPList_Aft.end(), *iter) != telnetReader->telnetIPList_Aft.end())
-//				{
-//					ip_tmp = *iter;
-//					break;
-//				}
 			}
 			if (ip_tmp != "") //该IP配置了telnet读aft表
-//			{
-//				//用telnet读该IP的aft表
-//	                        map<string, list<string> > portmac_tmp = telnetReader->getAftData(ip_tmp);
-//				if(!portmac_tmp.empty())
-//				{
-//					if (aftlist_cur.empty())
-//					{
-//						aftlist_cur.insert(make_pair(spr.ip, portmac_tmp));
-//					}
-//					else
-//					{
-//						//合并端口集
-//	                                        for (map<string, list<string> >::iterator port_mac = portmac_tmp.begin(); port_mac != portmac_tmp.end(); ++port_mac)
-//						{//port-macs
-//							if (aftlist_cur[spr.ip].find(port_mac->first) != aftlist_cur[spr.ip].end())
-//							{//存在该端口
-//								//bexits = true;
-//								for (list<string>::iterator idestmac = port_mac->second.begin(); idestmac != port_mac->second.end(); ++idestmac)
-//								{
-//									if (find(aftlist_cur[spr.ip][port_mac->first].begin(), aftlist_cur[spr.ip][port_mac->first].end(), *idestmac) == aftlist_cur[spr.ip][port_mac->first].end())
-//									{//不存在该mac
-//										aftlist_cur[spr.ip][port_mac->first].push_back(*idestmac);
-//									}
-//								}
-//							}
-//							else
-//							{
-//								aftlist_cur[spr.ip].insert(make_pair(port_mac->first, port_mac->second));
-//							}
-//						}
-//					}
-//				}
-//			}
 			
-			/*if(arplist_cur.empty())
-			{*/
-				//added by zhangyan 2009-01-13
 				ip_tmp = "";
-//				for (vector<string>::iterator iter = ips_tmp.begin(); iter != ips_tmp.end(); ++iter)
-//				{
-//					if (find(telnetReader->telnetIPList_Arp.begin(), telnetReader->telnetIPList_Arp.end(), *iter) != telnetReader->telnetIPList_Arp.end())
-//					{
-//						ip_tmp = *iter;
-//						break;
-//					}
-//				}
-//				if (ip_tmp != "") //该IP配置了telnet读arp表
-//				{
-//					//用telnet读该IP的arp表
-//	                                map<string, list<pair<string,string> > > portipmac_tmp = telnetReader->getArpData(ip_tmp);
-//					//update by jiangshanwen 20100925
-//					if(!portipmac_tmp.empty())
-//					{
-//						if (arplist_cur.empty())
-//						{
-//							arplist_cur.insert(make_pair(spr.ip, portipmac_tmp));
-//						}
-//						else
-//						{
-//	                                                for (map<string,list<pair<string,string> > >::iterator iter = portipmac_tmp.begin();iter != portipmac_tmp.end();++iter)
-//							{
-//								if (arplist_cur[spr.ip].find(iter->first) != arplist_cur[spr.ip].end())
-//								{
-//	                                                                for (list<pair<string,string> >::iterator item = iter->second.begin();item != iter->second.end();++item)
-//									{
-//	                                                                        for (list<pair<string,string> >::iterator mac_ip = arplist_cur[spr.ip][iter->first].begin();mac_ip != arplist_cur[spr.ip][iter->first].end();++mac_ip)
-//										{
-//											if (item->first == mac_ip->first)
-//											{
-//												continue;
-//											}
-//											else
-//											{
-//												arplist_cur[spr.ip][iter->first].push_back(*item);
-//											}
-//										}
-//									}
-//								}
-//								else
-//								{
-//									arplist_cur[spr.ip].insert(make_pair(iter->first,iter->second));
-//								}
-//							}
-//						}
-//					}
-//				}
-			/*}*/
 		}
 		else if(devType.equals(CommonDef.SWITCH))
 		{//s
 			bAft = true;
 			aftlist_cur = device.getAftData(snmp, spr, oidIndexList);
-			//remarked by zhangyan 2008-11-28
-			//if(aftlist_cur.empty())  
-			//{
-	                //	map<string, list<string> > portmac_tmp = telnetReader->getAftData(getDeviceIps(spr.ip));
-			//	if(!portmac_tmp.empty())
-			//	{
-			//		aftlist_cur.insert(make_pair(spr.ip, portmac_tmp));
-			//	}
-			//}		
 			//再用telnet读数
-//			vector<string> ips_tmp = devid_list_valid[spr.ip].ips;
 			Vector<String> ips_tmp = devid_list_valid.get(spr.getIp()).getIps();
 			String ip_tmp = "";
-//			for (vector<string>::iterator iter = ips_tmp.begin(); iter != ips_tmp.end(); ++iter)
 			for(String iter : ips_tmp)
 			{
-//				if (find(telnetReader->telnetIPList_Aft.begin(), telnetReader->telnetIPList_Aft.end(), *iter) != telnetReader->telnetIPList_Aft.end())
-//				{
-//					ip_tmp = *iter;
-//					break;
-//				}
 			}
 			if (ip_tmp != "") //该IP配置了telnet读aft表
 			{
-				//用telnet读该IP的aft表
-//	                        map<string, list<string> > portmac_tmp = telnetReader->getAftData(ip_tmp);
-//				if(!portmac_tmp.empty())
-//				{
-//					if (aftlist_cur.empty())
-//					{
-//						aftlist_cur.insert(make_pair(spr.ip, portmac_tmp));
-//					}
-//					else
-//					{
-//						//合并端口集
-//	                                        for (map<string, list<string> >::iterator port_mac = portmac_tmp.begin(); port_mac != portmac_tmp.end(); ++port_mac)
-//						{//port-macs
-//							if (aftlist_cur[spr.ip].find(port_mac->first) != aftlist_cur[spr.ip].end())
-//							{//存在该端口
-//								//bexits = true;
-//								for (list<string>::iterator idestmac = port_mac->second.begin(); idestmac != port_mac->second.end(); ++idestmac)
-//								{
-//									if (find(aftlist_cur[spr.ip][port_mac->first].begin(), aftlist_cur[spr.ip][port_mac->first].end(), *idestmac) == aftlist_cur[spr.ip][port_mac->first].end())
-//									{//不存在该mac
-//										aftlist_cur[spr.ip][port_mac->first].push_back(*idestmac);
-//									}
-//								}
-//							}
-//							else
-//							{
-//								aftlist_cur[spr.ip].insert(make_pair(port_mac->first, port_mac->second));
-//							}
-//						}
-//					}
-//				}
 			}
-			//remarked by zhangyan 2009-01-16
-			//if(auxPara.arp_read_type == "1")
-			//{
-			//	bArp = true;
-			//	arplist_cur = device->getArpData(snmp, spr);
-			//	if(arplist_cur.empty())
-			//	{
-			//		//added by zhangyan 2009-01-13
-			//		ip_tmp = "";
-			//		for (vector<string>::iterator iter = ips_tmp.begin(); iter != ips_tmp.end(); ++iter)
-			//		{
-			//			if (find(telnetReader->telnetIPList_Arp.begin(), telnetReader->telnetIPList_Arp.end(), *iter) != telnetReader->telnetIPList_Arp.end())
-			//			{
-			//				ip_tmp = *iter;
-			//				break;
-			//			}
-			//		}
-			//		if (ip_tmp != "") //该IP配置了telnet读arp表
-			//		{
-			//			//用telnet读该IP的arp表
-	                //			map<string, list<pair<string,string> > > portipmac_tmp = telnetReader->getArpData(ip_tmp);
-			//			if(!portipmac_tmp.empty())
-			//			{
-			//				arplist_cur.insert(make_pair(spr.ip, portipmac_tmp));
-			//			}
-			//		}
-			//	}
-			//}
 
-			//add by jiangshanwen 20100825
 			if(auxParam.getSeed_type().equals("1"))//.seed_type == "1")
 			{
 				bArp = true;
@@ -555,83 +407,59 @@ public class ReadService {
 				if(arplist_cur.isEmpty())
 				{
 					ip_tmp = "";
-//					for (vector<string>::iterator iter = ips_tmp.begin(); iter != ips_tmp.end(); ++iter)
 					for(String iter : ips_tmp)
 					{
-//						if (find(telnetReader->telnetIPList_Arp.begin(), telnetReader->telnetIPList_Arp.end(), *iter) != telnetReader->telnetIPList_Arp.end())
-//						{
-//							ip_tmp = *iter;
-//							break;
-//						}
 					}
 					if (ip_tmp != "") //该IP配置了telnet读arp表
 					{
-						//用telnet读该IP的arp表
-//	                                        map<string, list<pair<string,string> > > portipmac_tmp = telnetReader->getArpData(ip_tmp);
-//						if(!portipmac_tmp.empty())
-//						{
-//							arplist_cur.insert(make_pair(spr.ip, portipmac_tmp));
-//						}
 					}
 				}
 			}
 		}
-		else if(devType.equals(CommonDef.ROUTER))// == ROUTER)
+		else if(devType.equals(CommonDef.ROUTER))
 		{//r
 			bArp = true;
 			bRoute = true;		
 			arplist_cur = device.getArpData(snmp, spr, oidIndexList);
-			rttbl_cur = device.getRouteData(snmp, spr, oidIndexList);		//changed again by wings 2009-11-13 恢复路由表
-			if(auxParam.getNbr_read_type().equals("1"))//.nbr_read_type == "1")
+			rttbl_cur = device.getRouteData(snmp, spr, oidIndexList);		
+			if(auxParam.getNbr_read_type().equals("1"))
 			{
 				bNbr = true;
 				nbrlist_cur = device.getOspfNbrData(snmp, spr);
 			}
-			if(auxParam.getBgp_read_type().equals("1"))//.bgp_read_type == "1")
+			if(auxParam.getBgp_read_type().equals("1"))
 			{
 				bBgp = true;
 				bgplist_cur = device.getBgpData(snmp, spr);
 			}
-			if(auxParam.getVrrp_read_type().equals("1"))//.vrrp_read_type == "1")
+			if(auxParam.getVrrp_read_type().equals("1"))
 			{
 				bVrrp = true;
 				vrrplist_cur = device.getVrrpData(snmp, spr);
 			}
 			if(arplist_cur.isEmpty())
 			{
-				Vector<String> ips_tmp = devid_list_valid.get(spr.getIp()).getIps();//[spr.ip].ips;
+				Vector<String> ips_tmp = devid_list_valid.get(spr.getIp()).getIps();
 				String ip_tmp = "";
-//				for (vector<string>::iterator iter = ips_tmp.begin(); iter != ips_tmp.end(); ++iter)
 				for(String iter : ips_tmp)
 				{
-//					if (find(telnetReader->telnetIPList_Arp.begin(), telnetReader->telnetIPList_Arp.end(), *iter) != telnetReader->telnetIPList_Arp.end())
-//					{
-//						ip_tmp = *iter;
-//						break;
-//					}
 				}
 				if (ip_tmp != "") //该IP配置了telnet读arp表
 				{
-					//用telnet读该IP的arp表
-//	                                map<string, list<pair<string,string> > > portipmac_tmp = telnetReader->getArpData(ip_tmp);
-//					if(!portipmac_tmp.empty())
-//					{
-//						arplist_cur.insert(make_pair(spr.ip, portipmac_tmp));
-//					}
+					
 				}
 			}
 		}
-		else if (devType.equals(CommonDef.SERVER)&& auxParam.getSeed_type().equals("1"))//.seed_type == "1")
+		else if (devType.equals(CommonDef.SERVER)&& auxParam.getSeed_type().equals("1"))
 		{
 			bArp = true;
 			bRoute = true;		
 			arplist_cur = device.getArpData(snmp, spr, oidIndexList);
-			rttbl_cur = device.getRouteData(snmp, spr, oidIndexList);		//changed again by wings 2009-11-13 恢复路由表
+			rttbl_cur = device.getRouteData(snmp, spr, oidIndexList);		
 			if(arplist_cur.isEmpty())
 			{
-				Vector<String> ips_tmp = devid_list_valid.get(spr.getIp()).getIps();//[spr.ip].ips;
+				Vector<String> ips_tmp = devid_list_valid.get(spr.getIp()).getIps();
 				String ip_tmp = "";
-//				for (vector<string>::iterator iter = ips_tmp.begin(); iter != ips_tmp.end(); ++iter)
 				for(String iter : ips_tmp)
 				{
 //					if (find(telnetReader->telnetIPList_Arp.begin(), telnetReader->telnetIPList_Arp.end(), *iter) != telnetReader->telnetIPList_Arp.end())
@@ -848,7 +676,7 @@ public class ReadService {
 	}
 	public void getOidIndex(Map<String, String> oidIndexList, String sysOid)
 	{
-		if(sysOid.split("\\.").length < 7) return;//ScanUtils.tokenize(sysOid, ".", true,"").size() < 7) return;
+		if(sysOid.split("\\.").length < 7) return;
 		if(special_oid_list.containsKey(sysOid))
 		{
 			oidIndexList = special_oid_list.get(sysOid);
@@ -863,50 +691,46 @@ public class ReadService {
 		if(testIP(spr))
 		{
 			IDBody devid = getOneSysInfo_NJ(spr);
-			if("1".equals(devid.getSnmpflag()))//add by wings 09-11-05
+			if("1".equals(devid.getSnmpflag()))
 				addDevID(spr, devid);
 		}
 	}
-	public void addDevID(SnmpPara spr,IDBody devid)
-	{
-		if(Utils.isEmptyOrBlank(devid.getSysOid()))
-		{
-			return;
-		}
-		//begin added by tgf 2008-09-23
-		if(!devid.getIps().contains(spr.getIp()))//find(devid.ips.begin(), devid.ips.end(), spr.ip) == devid.ips.end())
-		{//忽略vrrp的虚拟设备
-			return;
-		}
-		//end added by tgf 2008-09-23
 
-//	        mutex::scoped_lock lock(m_data_mutex);
+	public void addDevID(SnmpPara spr, IDBody devid) {
+		if (Utils.isEmptyOrBlank(devid.getSysOid())) {
+			return;
+		}
+		if (!devid.getIps().contains(spr.getIp())) {// 忽略vrrp的虚拟设备
+			return;
+		}
 		Set<String> set = CommonDef.DEVID_LIST.keySet();
-		for(String key : set)//DEVID_LIST::iterator i = devid_list_visited.begin(); i != devid_list_visited.end();	++i)
-		{
-			IDBody body = CommonDef.DEVID_LIST.get(key);
-			if(devid.getIps().containsAll(body.getIps()) && body.getIps().containsAll(devid.getIps()))
-			{
-				return;
+		synchronized (lock) {
+			for (String key : set) {
+				IDBody body = CommonDef.DEVID_LIST.get(key);
+				if (devid.getIps().containsAll(body.getIps())
+						&& body.getIps().containsAll(devid.getIps())) {
+					return;
+				}
+			}
+			Pair<String, IDBody> devid_cur = new Pair<String, IDBody>(
+					spr.getIp(), devid);
+			devid_list_valid.put(spr.getIp(), devid);
+			devid_list_visited.put(spr.getIp(), devid);
+			ip_visited_list.add(devid.getIps().get(0));
+			// 修改目的：将非网络设备不添加到sproid_list列表中
+			// 修将非网络设备不添加到sproid_list列表中
+			if (devid.getDevType().equals("0")
+					|| devid.getDevType().equals("1")
+					|| devid.getDevType().equals("2")
+					|| devid.getDevType().equals("3")) {
+				sproid_list.add(new Pair<SnmpPara, Pair<String, String>>(spr,
+						new Pair<String, String>(devid.getDevType(), devid
+								.getSysOid())));
 			}
 		}
-		Pair<String, IDBody> devid_cur = new Pair<String,IDBody>(spr.getIp(), devid);
-		devid_list_valid.put(spr.getIp(),devid);
-		devid_list_visited.put(spr.getIp(),devid);
-		ip_visited_list.add(devid.getIps().get(0));
-		//remarked by zhangyan 2008-12-29
-		//修改目的：将非网络设备不添加到sproid_list列表中
-		//sproid_list.push_back(make_pair(spr, make_pair(devid.devType, devid.sysOid)));
-		//修将非网络设备不添加到sproid_list列表中
-		if (devid.getDevType().equals("0") || devid.getDevType().equals("1") || devid.getDevType().equals("2") || devid.getDevType().equals("3"))
-		{
-//	            qDebug() << " devType : " << devid.devType.c_str();
-			sproid_list.add(new Pair<SnmpPara,Pair<String,String>>(spr, new Pair<String,String>(devid.getDevType(), devid.getSysOid())));
-		}
-		//记录日志
-//		String msg = spr.getIp() + ", " + map_devType[devid.devType]+ ", " + devid.devFactory;
-	        //SvLog::writeLog(msg, FOUND_DEVICE_MSG, m_callback);
-//	        SvLog::writeLog(msg);
+		String msg = spr.getIp() + ", " + map_devType.get(devid.getDevType())
+				+ ", " + devid.getDevFactory();
+		System.out.println(msg);
 	}
 	boolean testIP(SnmpPara spr)
 	{
@@ -932,8 +756,6 @@ public class ReadService {
 			else
 			{
 				latchgetSysinfo = new CountDownLatch(spr_list.size());
-				//pool tp(scanPara.thrdamount);
-	            // pool tp(min(scanPara.thrdamount, spr_list.size()));//by zhangyan 2008-12-29
 				
 				for(final SnmpPara sp : spr_list){
 					if(isNewIp(sp.getIp())){
@@ -1023,20 +845,17 @@ public class ReadService {
 	}
 	public IDBody getOneSysInfo_NJ(SnmpPara spr)
 	{
-//	        SvLog::writeLog("Start get ID of " + spr.ip + " " + spr.community);
 		MibScan snmp = new MibScan();
 		IDBody devid = new IDBody();
-	        //list<pair<string,string> > sysInfos = snmp.GetMibTable(spr, "1.3.6.1.2.1.1");
-	        List<Pair<String,String>> sysInfos = new ArrayList<Pair<String,String>>();
-//	        qDebug() << "snmpversion : " << spr.snmpver.c_str();
+	    List<Pair<String,String>> sysInfos = new ArrayList<Pair<String,String>>();
 		if (spr.getSnmpver().equals("2"))
 		{
 			sysInfos = snmp.getMibTable(SnmpConstants.version2c, spr, "1.3.6.1.2.1.1");
 
-			if(sysInfos.isEmpty())
+			if(sysInfos == null || sysInfos.isEmpty())
 			{
 				sysInfos = snmp.getMibTable(SnmpConstants.version1, spr, "1.3.6.1.2.1.1");
-				if (!sysInfos.isEmpty())
+				if (sysInfos!=null && !sysInfos.isEmpty())
 				{
 					spr.setSnmpver("1");
 				}
@@ -1046,37 +865,37 @@ public class ReadService {
 		{
 			sysInfos = snmp.getMibTable(SnmpConstants.version1, spr, "1.3.6.1.2.1.1");
 
-			if(sysInfos.isEmpty())
+			if(sysInfos == null || sysInfos.isEmpty())
 			{
 				sysInfos = snmp.getMibTable(SnmpConstants.version2c, spr, "1.3.6.1.2.1.1");
-				if (!sysInfos.isEmpty())
+				if (sysInfos != null && !sysInfos.isEmpty())
 				{
 					spr.setSnmpver("2");
 				}
 			}
 		}
-		else// if (spr.snmpver == "0")
+		else
 		{
 			sysInfos = snmp.getMibTable(spr, "1.3.6.1.2.1.1");
 		}
-		String sysOid = "";//snmp.GetMibObject("1.3.6.1.2.1.1.2");
-		String sysSvcs = "";//snmp.GetMibObject("1.3.6.1.2.1.1.7");
-		String sysName = "";//snmp.GetMibObject("1.3.6.1.2.1.1.5");
-		if(sysInfos.isEmpty())
+		String sysOid = "";
+		String sysSvcs = "";
+		String sysName = "";
+		if(sysInfos == null || sysInfos.isEmpty())
 		{
 			//修改oid重取一次 
 			if (spr.getSnmpver().equals("2"))
 			{
 				sysOid = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.2.0");
-				if(!sysOid.isEmpty())
+				if(sysOid !=null &&!sysOid.isEmpty())
 				{
 					sysSvcs = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.7.0");
-					sysName = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.5");
+					sysName = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.5.0");
 				}
 				else
 				{
 					sysOid = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.2.0");
-					if(!sysOid.isEmpty())
+					if(sysOid !=null &&!sysOid.isEmpty())
 					{
 						sysSvcs = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.7.0");
 						sysName = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.5.0");
@@ -1095,7 +914,7 @@ public class ReadService {
 				else
 				{
 					sysOid = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.2.0");
-					if(sysOid!=null)//.isEmpty())
+					if(sysOid!=null&&!sysOid.isEmpty())//.isEmpty())
 					{
 						sysSvcs = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.7.0");
 						sysName = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.5.0");
@@ -1106,7 +925,7 @@ public class ReadService {
 			else
 			{
 				sysOid = snmp.getMibObject(spr,"1.3.6.1.2.1.1.2.0");
-				if(!sysOid.isEmpty())
+				if(sysOid !=null &&!sysOid.isEmpty())
 				{
 					sysSvcs = snmp.getMibObject(spr,"1.3.6.1.2.1.1.7.0");
 					sysName = snmp.getMibObject(spr,"1.3.6.1.2.1.1.5.0");
@@ -1115,50 +934,34 @@ public class ReadService {
 
 			if(Utils.isEmptyOrBlank(sysOid) && Utils.isEmptyOrBlank(sysSvcs) && Utils.isEmptyOrBlank(sysName))
 			{
-//	                        SvLog::writeLog("Can not get the ID of " + spr.ip);
 				return devid;
 			}
-//	                SvLog::writeLog("newMethod**ip:"+spr.ip+" sysOid:"+sysOid+" sysSvcs:"+sysSvcs+" sysName:"+sysName);
 		}
 		else
 		{
-//	                for(List<pair<string,string> >::iterator i = sysInfos.begin();
-//				i != sysInfos.end();
-//				++i)
 			for(Pair<String, String> i : sysInfos)
 			{
-//	                        SvLog::writeLog("sysInfo**ip:"+spr.ip+" sysInfo->first:"+i->first);
-//				cout<<"i->first : "<<i->first.c_str()<<endl;
 				if(i.getFirst().equals("1.3.6.1.2.1.1.2.0")
-					//add by wings 2009-11-13
 					||i.getFirst().equals("1.3.6.1.2.1.1.2"))
 	                        {
 					sysOid = i.getSecond();
-	                                //qDebug() << sysOid.c_str();
 				}
 				else if(i.getFirst().equals("1.3.6.1.2.1.1.5.0")
-					//add by wings 2009-11-13
 					||i.getFirst().equals("1.3.6.1.2.1.1.5"))
 				{ 
 					sysName = i.getSecond();
-	                                //qDebug() << sysName.c_str();
 				}
 				else if(i.getFirst().equals("1.3.6.1.2.1.1.7.0")
-					//add by wings 2009-11-13
 					||i.getFirst().equals("1.3.6.1.2.1.1.7"))
 				{
 					sysSvcs = i.getSecond();
 				}
 			}
-//	                SvLog::writeLog("OldMethod**ip:"+spr.ip+" sysOid:"+sysOid+" sysSvcs:"+sysSvcs+" sysName:"+sysName);
 		}
-//	        SvLog::writeLog("get sysOid of " + spr.ip + ": " + sysOid);
-//		cout<<"sysOid : "<<sysOid.c_str()<<endl;
 
 		if(sysOid.equals("1.3.6.1.4.1.13742.1.1.1"))
 		{//KVM 流量分频器  1.3.6.1.4.1.13742.1.1.1
 			devid.setSysOid("1.3.6.1.4.1.13742.1.1.1");
-//			devid.ips.push_back(spr.ip);
 			devid.setDevType("6");//Other device
 			devid.setDevTypeName("KVM");
 		}
@@ -1187,135 +990,61 @@ public class ReadService {
 			devid.setDevModel(map_type.get("model"));
 			devid.setDevFactory(map_type.get("factory"));
 			devid.setDevTypeName(map_type.get("typename"));
-			//	devid.baseMac = baseMac;
 			devid.setSysSvcs(sysSvcs);
-	                //devid.sysName = Utf8ToString(sysName);	//update by jiang 20100602 编码转换
 	       devid.setSysName(sysName);	
 
-			/*update by jiang 20100602 如果没有读取到ip表，设备会被过滤掉
-			//add by wings 09-11-05
-			if(ipmsks.size() ==0)
-			{
-				return devid;
-			}
-			if((ipmsks.size() ==1)&&(ipmsks.begin()->second.compare(0,1,"0") == 0))
-			{
-				return devid;
-			}
-			*/
-			//devid.snmpflag = "1"; update by jiang 20100602 前面已经赋值，重复，注释掉
-	       if(!(ipmsks.size() == 0) && !(ipmsks.size() == 1) && (ipmsks.get(0).getSecond().substring(0,1).equals("0")) ){
-	    	   
-//	       }
-//			if(!(ipmsks.size() == 0) && !((ipmsks.size() ==1)&&(ipmsks.begin()->second.compare(0,1,"0") == 0))) //update by jiang 20100602
-//			{
-//	            for(list<pair<string,string> >::iterator i = ipmsks.begin(); i != ipmsks.end(); ++i)
-//				{
+	       if(!(ipmsks.size() == 0) && !((ipmsks.size() == 1) && (ipmsks.get(0).getSecond().substring(0,1).equals("0")))){
 	    	   for(Pair<String, String> ipmask : ipmsks) {
-//					cout<<"i->first : "<<i->first.c_str()<<" devid.sysOid:"<<devid.sysOid<<" devid.sysName:"<<devid.sysName<<" spr.ip:"<<spr.ip<<endl;
-					//if (i->first.length() < 22)
 	    		   if(ipmask.getFirst().length()<22)
 					{
 						continue;
 					}
-					//std::string ip_tmp = i->first.substr(21);
 	    		   String ip_tmp = ipmask.getFirst().substring(21);
-//					cout<<"ip_tmp:"<<ip_tmp<<endl;
-					//			if(ip_tmp != "" && ip_tmp != "0.0.0.0"    //remarked by zhangyan 2008-10-15
 	    		   if(!(ip_tmp.substring(0,6).equals("0.0.0."))
 	    				   && !(ip_tmp.substring(0,3).equals("127"))
 	    				   && !(ip_tmp.substring(0,5).equals("0.255")))
-//					if(ip_tmp.compare(0,6,"0.0.0.") != 0
-//						&& ip_tmp.compare(0,3,"127") != 0 //排除环回地址
-//						//add by wings 2009-11-13
-//						&& ip_tmp.compare(0,5,"0.255") != 0
-//						//				&& (ip_tmp.compare(0,3,"224") < 0 || ip_tmp.compare(0,3,"239") > 0) //排除组播地址  //remarked by zhangyan 2008-10-15
-//						)
 					{
-	    			   if(devid.getIps().contains(ip_tmp)){
+	    			   if(!devid.getIps().contains(ip_tmp)){
 	    				   for(Pair<String, String> p : infinxs){
 	    					   if(p.getFirst().length() >21 && (p.getFirst().substring(21).equals(ip_tmp))){
 	    						   devid.getInfinxs().add(p.getSecond());
 	    						   devid.getIps().add(ip_tmp);
 	    						   devid.getMsks().add(ipmask.getSecond());
+	    						   break;
 	    					   }
 	    				   }
 	    			   }
-//						if(find(devid.ips.begin(), devid.ips.end(), ip_tmp) == devid.ips.end())
-//						{
-//	                                                for(list<pair<string,string> >::iterator j = infinxs.begin();
-//								j != infinxs.end();
-//								++j)
-//							{
-//								if(j->first.length() > 21 && j->first.substr(21) == ip_tmp)
-//								{
-//									cout<<"ip_tmp : "<<ip_tmp.c_str()<<endl;
-//									devid.infinxs.push_back(j->second);
-//									devid.ips.push_back(ip_tmp);
-//									devid.msks.push_back(i->second);
-//									break;
-//								}
-//							}
-//						}
 					}
 				}
 			}
-			
-			// remarked by zhangyan 2008-10-23
-			////IP-MAC地址1.3.6.1.2.1.4.22.1.2
-	                //list<pair<string,string> > IpMacs = snmp.GetMibTable(spr, "1.3.6.1.2.1.4.22.1.2");
-			//if(!IpMacs.empty())
-			//{
-	                //	for(list<pair<string,string> >::iterator imac = IpMacs.begin(); imac != IpMacs.end(); ++imac)
-			//	{
-			//		vector<string> v1 = tokenize(imac->first.substr(21), ".", true);
-			//		size_t len = v1.size();
-			//		if(len < 4)	{	continue;	}
-			//		string ip_tmp  = v1[len-4] + "." + v1[len-3] + "." + v1[len-2] + "." + v1[len-1];
-			//		string mac_tmp = replaceAll(imac->second, " ","").substr(0,12);
-			//		if(find(devid.ips.begin(), devid.ips.end(), ip_tmp) != devid.ips.end())
-			//		{//(ip,mac) 中的 ip 地址 属于ip地址表
-			//			std::transform(mac_tmp.begin(), mac_tmp.end(), mac_tmp.begin(), toupper);
-			//			if(mac_tmp != "" && mac_tmp != "000000000000" && mac_tmp != "FFFFFFFFFFFF")
-			//			{
-			//				if(find(devid.macs.begin(), devid.macs.end(), mac_tmp) == devid.macs.end())
-			//				{
-			//					devid.macs.push_back(mac_tmp);
-			//					devid.baseMac = mac_tmp;//added by tgf 2008-09-22
-			//				}
-			//			}
-			//		}
-			//	}
-			//}
-
-			// added by zhangyan 2008-10-23		
 			// get base mac (ps:只对交换机有效)
 			if (devid.getDevType().equals("0") || devid.getDevType().equals("1"))
 			{
 				String mac_tmp = snmp.getMibObject(spr, "1.3.6.1.2.1.17.1.1.0");		
 				//noSuchObject, noSuchInstance, and endOfMibView
-				if (!mac_tmp.isEmpty() && !mac_tmp.equals("Null") && !mac_tmp.equals("endOfMibView") && !mac_tmp.equals("noSuchObject") && !mac_tmp.equals("noSuchInstance"))
+				if (mac_tmp != null && !mac_tmp.isEmpty()
+						&& !mac_tmp.equals("Null")
+						&& !mac_tmp.equals("endOfMibView")
+						&& !mac_tmp.equals("noSuchObject")
+						&& !mac_tmp.equals("noSuchInstance"))
 				{
 					String baseMac = mac_tmp.replaceAll(":", "").substring(0,12).toUpperCase();
-//							replaceAll(mac_tmp, " ","").substr(0,12);
-//	                                std::transform(baseMac.begin(), baseMac.end(), baseMac.begin(), (int(*)(int))toupper);
-					
-					if (baseMac != "" && baseMac != "000000000000" && baseMac != "FFFFFFFFFFFF")
+					if ((!"".equals(baseMac))
+							&& (!"000000000000".equals(baseMac))
+							&& (!"FFFFFFFFFFFF".equals(baseMac)))
 					{
-						devid.getMacs().add(baseMac);//.macs.push_back(baseMac);
-						devid.setBaseMac(baseMac);;//.baseMac = baseMac;
+						devid.getMacs().add(baseMac);
+						devid.setBaseMac(baseMac);
 					}
 				}
 			}
 		}
-		// added by zhangyan 2008-11-04
-		if (devid.getIps()==null || devid.getIps().size() == 0)//.isEmpty())
+		if (devid.getIps()==null || devid.getIps().size() == 0)
 		{
-			devid.getInfinxs().add("0");//.infinxs.push_back("0");
-			devid.getIps().add(spr.getIp());//.ips.push_back(spr.ip);
-			devid.getMsks().add("");//.msks.push_back("");
+			devid.getInfinxs().add("0");
+			devid.getIps().add(spr.getIp());
+			devid.getMsks().add("");
 		}
-//	        SvLog::writeLog("Success read the ID of " + spr.ip);
 		return devid;
 	}
 
@@ -1327,7 +1056,7 @@ public class ReadService {
 		String model_res = "";
 		String typeName_res = "";
 
-		//if(dev_type_list.find(sysOid) != dev_type_list.end())//DEVICE_TYPE_MAP {sysoid,<devType,devTypeName,devFac,devModel>}
+		//DEVICE_TYPE_MAP {sysoid,<devType,devTypeName,devFac,devModel>}
 		if(OIDTypeUtils.getInstance().containsKey(sysOid))//dev_type_list.containsKey(sysOid))
 		{
 			devtype_res  =  OIDTypeUtils.getInstance().getDevicePro(sysOid).getDevType();//dev_type_list[sysOid].devType;
@@ -1359,8 +1088,7 @@ public class ReadService {
 			}
 			else
 			{//
-//	                        SvLog::writeErrorLog(string(ip) + ":" + sysOid, ERR_OID_LOG);
-				int isvc = Integer.parseInt(sysSvcs);//str2int(sysSvcs);
+				int isvc = Integer.parseInt(sysSvcs);
 				if (isvc == 0)
 				{
 					devtype_res = "5";//host

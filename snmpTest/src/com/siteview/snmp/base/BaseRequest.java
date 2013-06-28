@@ -22,7 +22,7 @@ public class BaseRequest {
 	public Snmp snmp = null;
 	private static final String COMMUNITY248 = "public";
 	private String community = COMMUNITY248;
-	private transient String ip = "192.168.0.248";
+	private transient String ip = "192.168.4.1";
 	private int port = 161;
 	private int trapPort = 162;
 	private int version = SnmpConstants.version2c;
