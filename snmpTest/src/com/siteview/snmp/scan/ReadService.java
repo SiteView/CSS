@@ -257,17 +257,14 @@ public class ReadService {
 	//获取所有设备的普通数据
 	public boolean getDeviceData(Vector<SnmpPara> spr_list)
 	{
-	        if (!getSysInfos(spr_list))
-	        {
-	            return false;
-	        }
-		
+		if (!getSysInfos(spr_list)) {
+			return false;
+		}
 		aft_list.clear();
 		arp_list.clear();
 		ifprop_list.clear();
 		ospfnbr_list.clear();
 		bgp_list.clear();
-		
 		if(sproid_list.size() > 0)
 		{
 			if(sproid_list.size() == 1)
@@ -277,11 +274,6 @@ public class ReadService {
 			else
 			{
 				latch = new CountDownLatch(sproid_list.size());
-				//pool tp(scanPara.thrdamount);//(min(thrdAmount,ip_communitys.size()));
-//	                        pool tp(min(scan.thrdamount, sproid_list.size()));//by zhangyan 2008-12-29
-				
-//	                        for (list<pair<SnmpPara, pair<String,String> > >::const_iterator i = sproid_list.begin(); i != sproid_list.end(); ++i)
-				System.out.println("sproid_list  size  =  " + sproid_list.size());
 				for(final Pair<SnmpPara, Pair<String,String>> i : sproid_list)
 				{
 	                                if (isStop)
@@ -290,7 +282,6 @@ public class ReadService {
 	                                }
 	                                else
 	                                {
-//	                                    tp.schedule((boost::bind(&ReadService::getOneDeviceData,this, (*i).first, (*i).second.first, (*i).second.second)));
 	                                	ThreadTaskPool.getInstance().excute(new Runnable() {
 											
 											@Override
@@ -299,9 +290,8 @@ public class ReadService {
 												latch.countDown();
 											}
 										});
-	                                }
+	                               }
 				}
-//	            ThreadTaskPool.getInstance().wai();
 				try {
 					latch.await();//等待所有线程完成
 				} catch (InterruptedException e) {
@@ -309,27 +299,37 @@ public class ReadService {
 				}
 			}
 		}
-	        return true;
+	    return true;
 	}
 
-	// 获取一台设备的普通数据
+	/**
+	 * 获取一台设备的普通数据 <aft表,arp表,接口表,
+	 * @param spr
+	 * @param devType
+	 * @param sysOid
+	 */
 	public void getOneDeviceData(SnmpPara spr, String devType, String sysOid)
 	{
 		//	        日志
-		System.out.print(spr.getIp() + "开始     ");
 		System.out.println(Thread.currentThread().getName() + "======================================================开始   getOneDeviceData");
 		IDeviceHandler device = DeviceFactory.getInstance().createDevice(sysOid);
-
+		//设备AFT数据列表{sourceIP,[port,[MAC]]}
 		Map<String, Map<String, List<String>>> aftlist_cur = new HashMap<String, Map<String, List<String>>>();
+		//设备ARP数据列表{sourceIP,[infInx,[(MAC,destIP)]]}
 		Map<String,Map<String, List<Pair<String, String>>>> arplist_cur = new HashMap<String, Map<String,List<Pair<String,String>>>>();
+		//设备接口属性列表 {devIP,(ifAmount,[(ifindex,ifType,ifDescr,ifMac,portNum,ifSpeed)])}
 		Map<String,Pair<String,List<IfRec>>> inflist_cur = new HashMap<String, Pair<String,List<IfRec>>>();;
+		//设备的OSPF邻居表{sourceIP,{infInx,[destIP]}}
 		Map<String, Map<String, List<String>>> nbrlist_cur = new HashMap<String, Map<String, List<String>>>();
+		//设备的路由表{sourceIP,{infInx,[nextIP]}}
 		Map<String,Map<String,List<RouteItem>>> rttbl_cur = new HashMap<String, Map<String,List<RouteItem>>>();			
-		// 恢复路由表
+		//恢复路由表
 		List<Bgp> bgplist_cur = new ArrayList<Bgp>();
 		/*VRRP_LIST vrrplist_cur;*/
-		Map<String, RouterStandbyItem> vrrplist_cur = new HashMap<String, RouterStandbyItem>();
+		Map<String, RouterStandbyItem> vrrplist_cur = new HashMap<String, RouterStandbyItem>();//vrrp,hsrp等
+		//直接边数据列表{ip,(index,peerid,peerip,peerportdesc)}
 		Map<String,List<Directitem>> drctdata_cur = new HashMap<String, List<Directitem>>();
+		//设备stp列表
 		Map<String,List<String>> stplist_cur = new HashMap<String, List<String>>();
 
 		boolean bAft = false;
@@ -345,8 +345,11 @@ public class ReadService {
 		//获取oid索引 
 		Map<String, String> oidIndexList = new HashMap<String,String>();
 		getOidIndex(oidIndexList, sysOid);
-
+		
+		//查询接口表
 		inflist_cur = device.getInfProp(snmp, spr, oidIndexList, devType.equals(CommonDef.ROUTER));
+		
+		//查询直接边数据表
 		drctdata_cur = device.getDirectData(snmp, spr);
 		
 		
@@ -357,8 +360,7 @@ public class ReadService {
 			bRoute = true;	
 			aftlist_cur = device.getAftData(snmp, spr, oidIndexList);
 			arplist_cur = device.getArpData(snmp, spr, oidIndexList);
-			rttbl_cur = device.getRouteData(snmp, spr, oidIndexList);  // 去掉路由表的取数
-															// 恢复路由表
+			rttbl_cur = device.getRouteData(snmp, spr, oidIndexList);  
 			if("1".equals(auxParam.getNbr_read_type()))
 			{
 				bNbr = true;
@@ -375,15 +377,12 @@ public class ReadService {
 				vrrplist_cur = device.getVrrpData(snmp, spr);
 			}
 			//再用telnet读数
-			//added by zhangyan 2009-01-13
-//			Vector<String> ips_tmp = devid_list_valid[spr.ip].ips;
 			Vector<String> ips_tmp = devid_list_valid.get(spr.getIp()).getIps();
 			String ip_tmp = "";
 			for(String iter :ips_tmp)
 			{//
 			}
-			if (ip_tmp != "") //该IP配置了telnet读aft表
-			
+			if (!"".equals(ip_tmp)) //该IP配置了telnet读aft表
 				ip_tmp = "";
 		}
 		else if(devType.equals(CommonDef.SWITCH))
@@ -400,7 +399,7 @@ public class ReadService {
 			{
 			}
 
-			if(auxParam.getSeed_type().equals("1"))//.seed_type == "1")
+			if(auxParam.getSeed_type().equals("1"))
 			{
 				bArp = true;
 				arplist_cur = device.getArpData(snmp, spr, oidIndexList);
@@ -490,11 +489,9 @@ public class ReadService {
 		}
 		else
 		{
-//	                mutex::scoped_lock lock(m_data_mutex);
-//			synchronized (lock) {
+			synchronized (lock) {
 				Utils.mapAddAll(aft_list, aftlist_cur);
-//				aft_list.insert(aftlist_cur.begin(), aftlist_cur.end());
-//			}
+			}
 			
 		}
 		if(arplist_cur == null || arplist_cur.isEmpty())
@@ -507,11 +504,9 @@ public class ReadService {
 		}
 		else
 		{
-//	                mutex::scoped_lock lock(m_data_mutex);
-//			synchronized (lock) {
+			synchronized (lock) {
 				Utils.mapAddAll(arp_list, arplist_cur);
-//			}
-//			arp_list.insert(arplist_cur.begin(), arplist_cur.end());
+			}
 		}
 
 		if(inflist_cur == null || inflist_cur.isEmpty())
@@ -524,11 +519,9 @@ public class ReadService {
 		}
 		else
 		{
-//	                mutex::scoped_lock lock(m_data_mutex);
-//			synchronized (lock) {
+			synchronized (lock) {
 				Utils.mapAddAll(ifprop_list, inflist_cur);
-//			}
-//			ifprop_list.insert(inflist_cur.begin(), inflist_cur.end());
+			}
 		}
 
 		if(nbrlist_cur.isEmpty())
@@ -541,11 +534,9 @@ public class ReadService {
 		}
 		else
 		{
-//	                mutex::scoped_lock lock(m_data_mutex);
-//			synchronized (lock) {
+			synchronized (lock) {
 				Utils.mapAddAll(ospfnbr_list, nbrlist_cur);
-//			}
-//			ospfnbr_list.insert(nbrlist_cur.begin(), nbrlist_cur.end());
+			}
 		}
 
 		if(rttbl_cur.isEmpty())
@@ -558,11 +549,9 @@ public class ReadService {
 		}
 		else
 		{
-//	                mutex::scoped_lock lock(m_data_mutex);
-//			route_list.insert(rttbl_cur.begin(), rttbl_cur.end());
-//			synchronized (lock) {
+			synchronized (lock) {
 				Utils.mapAddAll(route_list, rttbl_cur);
-//			}
+			}
 		}
 
 		if(bgplist_cur == null || bgplist_cur.isEmpty())
@@ -575,11 +564,9 @@ public class ReadService {
 		}
 		else
 		{
-//	                mutex::scoped_lock lock(m_data_mutex);
-//			bgp_list.insert(bgp_list.end(), bgplist_cur.begin(), bgplist_cur.end());
-//			synchronized (lock) {
+			synchronized (lock) {
 				Utils.collectionCopyAll(bgp_list, bgplist_cur);
-//			}
+			}
 		}
 
 		if(vrrplist_cur.isEmpty())
@@ -592,11 +579,9 @@ public class ReadService {
 		}
 		else
 		{
-//	                mutex::scoped_lock lock(m_data_mutex);
-//			routeStandby_list.insert(vrrplist_cur.begin(), vrrplist_cur.end());
-//			synchronized (lock) {
+			synchronized (lock) {
 				Utils.mapAddAll(routeStandby_list, vrrplist_cur);
-//			}
+			}
 		}
 
 		if(drctdata_cur==null || drctdata_cur.isEmpty())
@@ -609,11 +594,9 @@ public class ReadService {
 		}
 		else
 		{
-//	                mutex::scoped_lock lock(m_data_mutex);
-//			directdata_list.insert(drctdata_cur.begin(), drctdata_cur.end());
-//			synchronized (lock) {
+			synchronized (lock) {
 				Utils.mapAddAll(directdata_list, drctdata_cur);
-//			}
+			}
 			
 		}
 		if (stplist_cur.isEmpty())
@@ -621,11 +604,9 @@ public class ReadService {
 		}
 		else
 		{
-//	                mutex::scoped_lock lock(m_data_mutex);
-//			stp_list.insert(stplist_cur.begin(),stplist_cur.end());
-//			synchronized (lock) {
+			synchronized (lock) {
 				Utils.mapAddAll(stp_list, stplist_cur);
-//			}
+			}
 		}
 
 //		Sleep(500);
@@ -645,53 +626,45 @@ public class ReadService {
 		//IP-MASK地址1.3.6.1.2.1.4.20.1.3
 	    List<Pair<String,String> > ipmsks = snmp.getMibTable(spr,"1.3.6.1.2.1.4.20.1.3");
 	    
-		if(!ipmsks.isEmpty())
-		{
-//	                for(list<pair<string,string> >::iterator i = ipmsks.begin();	i != ipmsks.end();	++i)
-			for(Pair<String,String> i : ipmsks)
-			{
-				String ip_cur = i.getFirst().substring(21);//->first.substr(21);
-				if(ip_cur != "" && ip_cur != "0.0.0.0" //排除任意匹配地址
-					&& !ip_cur.substring(0,3).equals("127")//.compare(0,3,"127") != 0  //排除环回地址
-					//add by wings 2009-11-13
-					&& !ip_cur.substring(0,5).equals("0.255")//.compare(0,5,"0.255") != 0
-//					&& (ip_cur.compare(0,3,"224") < 0 || ip_cur.compare(0,3,"239") > 0) //排除组播地址
-					)
-				{
-					//added by zhangyan 2009-01-15
-					if(i.getSecond().isEmpty())//->second.empty())
-					{
+		if (!ipmsks.isEmpty()) {
+			for (Pair<String, String> i : ipmsks) {
+				String ip_cur = i.getFirst().substring(21);// ->first.substr(21);
+				if (ip_cur != "" && ip_cur != "0.0.0.0" // 排除任意匹配地址
+						&& !ip_cur.substring(0, 3).equals("127")// .compare(0,3,"127")
+																// != 0 //排除环回地址
+						&& !ip_cur.substring(0, 5).equals("0.255")// .compare(0,5,"0.255")
+																	// != 0
+						// && (ip_cur.compare(0,3,"224") < 0 ||
+						// ip_cur.compare(0,3,"239") > 0) //排除组播地址
+				) {
+					if (i.getSecond().isEmpty()) {
 						continue;
 					}
-//					pair<string,string> ipm_tmp = make_pair(ip_cur, i->second);
-					Pair<String,String> ipm_tmp = new Pair<String,String>(ip_cur , i.getSecond());
-//					if(find(ipcm_result.begin(), ipcm_result.end(), ipm_tmp) == ipcm_result.end())
-					if(!ipcm_result.contains(ipm_tmp))
-					{
-						ipcm_result.add(ipm_tmp);//.push_back(ipm_tmp);
+					Pair<String, String> ipm_tmp = new Pair<String, String>(
+							ip_cur, i.getSecond());
+					if (!ipcm_result.contains(ipm_tmp)) {
+						ipcm_result.add(ipm_tmp);
 					}
 				}
 			}
 		}
 	}
-	public void getOidIndex(Map<String, String> oidIndexList, String sysOid)
-	{
-		if(sysOid.split("\\.").length < 7) return;
-		if(special_oid_list.containsKey(sysOid))
-		{
+
+	public void getOidIndex(Map<String, String> oidIndexList, String sysOid) {
+		if (sysOid.split("\\.").length < 7)
+			return;
+		if (special_oid_list.containsKey(sysOid)) {
 			oidIndexList = special_oid_list.get(sysOid);
-		}
-		else
-		{
-			getOidIndex(oidIndexList, sysOid.substring(0, sysOid.lastIndexOf(".")));//.find_last_of(".")));
+		} else {
+			getOidIndex(oidIndexList,
+					sysOid.substring(0, sysOid.lastIndexOf(".")));
 		}
 	}
-	public void getOneSysInfo(SnmpPara spr)
-	{
-		if(testIP(spr))
-		{
+
+	public void getOneSysInfo(SnmpPara spr) {
+		if (testIP(spr)) {
 			IDBody devid = getOneSysInfo_NJ(spr);
-			if("1".equals(devid.getSnmpflag()))
+			if ("1".equals(devid.getSnmpflag()))
 				addDevID(spr, devid);
 		}
 	}
@@ -717,8 +690,7 @@ public class ReadService {
 			devid_list_valid.put(spr.getIp(), devid);
 			devid_list_visited.put(spr.getIp(), devid);
 			ip_visited_list.add(devid.getIps().get(0));
-			// 修改目的：将非网络设备不添加到sproid_list列表中
-			// 修将非网络设备不添加到sproid_list列表中
+			// 将非网络设备不添加到sproid_list列表中
 			if (devid.getDevType().equals("0")
 					|| devid.getDevType().equals("1")
 					|| devid.getDevType().equals("2")
@@ -732,38 +704,33 @@ public class ReadService {
 				+ ", " + devid.getDevFactory();
 		System.out.println(msg);
 	}
-	boolean testIP(SnmpPara spr)
-	{
-		if(!ip_visited_list.contains(spr.getIp()))
+
+	boolean testIP(SnmpPara spr) {
+		if (!ip_visited_list.contains(spr.getIp()))
 			return false;
 		return true;
 	}
     CountDownLatch latchgetSysinfo = null;
-	public boolean getSysInfos(Vector<SnmpPara> spr_list)
-	{
+
+	public boolean getSysInfos(Vector<SnmpPara> spr_list) {
 		devid_list_valid.clear();
 		sproid_list.clear();
-		if(spr_list.size() > 0)
-		{
-			if(spr_list.size() == 1)
-			{
+		if (spr_list.size() > 0) {
+			if (spr_list.size() == 1) {
 				SnmpPara para = spr_list.get(0);
-				if(isNewIp(para.getIp()))
-				{
+				if (isNewIp(para.getIp())) {
 					getOneSysInfo(spr_list.get(0));
 				}
-			}
-			else
-			{
+			} else {
 				latchgetSysinfo = new CountDownLatch(spr_list.size());
-				
-				for(final SnmpPara sp : spr_list){
-					if(isNewIp(sp.getIp())){
-						if(isStop){
+
+				for (final SnmpPara sp : spr_list) {
+					if (isNewIp(sp.getIp())) {
+						if (isStop) {
 							return false;
-						}else{
+						} else {
 							ThreadTaskPool.getInstance().excute(new Runnable() {
-								
+
 								@Override
 								public void run() {
 									getOneSysInfo(sp);
@@ -775,13 +742,12 @@ public class ReadService {
 				}
 				try {
 					latchgetSysinfo.await();
-					System.out.println("getOneSysInfo                   ==============================================is end");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-	        return true;
+		return true;
 	}
 
 	public boolean isNewIp(String ip) {
@@ -843,204 +809,191 @@ public class ReadService {
 			 }
 		}
 	}
-	public IDBody getOneSysInfo_NJ(SnmpPara spr)
-	{
+
+	public IDBody getOneSysInfo_NJ(SnmpPara spr) {
 		MibScan snmp = new MibScan();
 		IDBody devid = new IDBody();
-	    List<Pair<String,String>> sysInfos = new ArrayList<Pair<String,String>>();
-		if (spr.getSnmpver().equals("2"))
-		{
-			sysInfos = snmp.getMibTable(SnmpConstants.version2c, spr, "1.3.6.1.2.1.1");
-
-			if(sysInfos == null || sysInfos.isEmpty())
-			{
-				sysInfos = snmp.getMibTable(SnmpConstants.version1, spr, "1.3.6.1.2.1.1");
-				if (sysInfos!=null && !sysInfos.isEmpty())
-				{
+		List<Pair<String, String>> sysInfos = new ArrayList<Pair<String, String>>();
+		if (spr.getSnmpver().equals("2")) {
+			sysInfos = snmp.getMibTable(SnmpConstants.version2c, spr,
+					"1.3.6.1.2.1.1");
+			if (sysInfos == null || sysInfos.isEmpty()) {
+				sysInfos = snmp.getMibTable(SnmpConstants.version1, spr,
+						"1.3.6.1.2.1.1");
+				if (sysInfos != null && !sysInfos.isEmpty()) {
 					spr.setSnmpver("1");
 				}
 			}
-		}
-		else if (spr.getSnmpver().equals("1"))
-		{
-			sysInfos = snmp.getMibTable(SnmpConstants.version1, spr, "1.3.6.1.2.1.1");
+		} else if (spr.getSnmpver().equals("1")) {
+			sysInfos = snmp.getMibTable(SnmpConstants.version1, spr,
+					"1.3.6.1.2.1.1");
 
-			if(sysInfos == null || sysInfos.isEmpty())
-			{
-				sysInfos = snmp.getMibTable(SnmpConstants.version2c, spr, "1.3.6.1.2.1.1");
-				if (sysInfos != null && !sysInfos.isEmpty())
-				{
+			if (sysInfos == null || sysInfos.isEmpty()) {
+				sysInfos = snmp.getMibTable(SnmpConstants.version2c, spr,
+						"1.3.6.1.2.1.1");
+				if (sysInfos != null && !sysInfos.isEmpty()) {
 					spr.setSnmpver("2");
 				}
 			}
-		}
-		else
-		{
+		} else {
 			sysInfos = snmp.getMibTable(spr, "1.3.6.1.2.1.1");
 		}
 		String sysOid = "";
 		String sysSvcs = "";
 		String sysName = "";
-		if(sysInfos == null || sysInfos.isEmpty())
-		{
-			//修改oid重取一次 
-			if (spr.getSnmpver().equals("2"))
-			{
-				sysOid = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.2.0");
-				if(sysOid !=null &&!sysOid.isEmpty())
-				{
-					sysSvcs = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.7.0");
-					sysName = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.5.0");
-				}
-				else
-				{
-					sysOid = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.2.0");
-					if(sysOid !=null &&!sysOid.isEmpty())
-					{
-						sysSvcs = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.7.0");
-						sysName = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.5.0");
+		if (sysInfos == null || sysInfos.isEmpty()) {
+			// 修改oid重取一次
+			if (spr.getSnmpver().equals("2")) {
+				sysOid = snmp.getMibObject(SnmpConstants.version2c, spr,
+						"1.3.6.1.2.1.1.2.0");
+				if (sysOid != null && !sysOid.isEmpty()) {
+					sysSvcs = snmp.getMibObject(SnmpConstants.version2c, spr,
+							"1.3.6.1.2.1.1.7.0");
+					sysName = snmp.getMibObject(SnmpConstants.version2c, spr,
+							"1.3.6.1.2.1.1.5.0");
+				} else {
+					sysOid = snmp.getMibObject(SnmpConstants.version1, spr,
+							"1.3.6.1.2.1.1.2.0");
+					if (sysOid != null && !sysOid.isEmpty()) {
+						sysSvcs = snmp.getMibObject(SnmpConstants.version1,
+								spr, "1.3.6.1.2.1.1.7.0");
+						sysName = snmp.getMibObject(SnmpConstants.version1,
+								spr, "1.3.6.1.2.1.1.5.0");
 						spr.setSnmpver("1");
 					}
 				}
-			}
-			else if (spr.getSnmpver().equals("1"))
-			{
-				sysOid = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.2.0");
-				if(sysOid!=null)//.isEmpty())
-				{
-					sysSvcs = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.7.0");
-					sysName = snmp.getMibObject(SnmpConstants.version1,spr,"1.3.6.1.2.1.1.5.0");
-				}
-				else
-				{
-					sysOid = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.2.0");
-					if(sysOid!=null&&!sysOid.isEmpty())//.isEmpty())
+			} else if (spr.getSnmpver().equals("1")) {
+				sysOid = snmp.getMibObject(SnmpConstants.version1, spr,
+						"1.3.6.1.2.1.1.2.0");
+				if (sysOid != null) {
+					sysSvcs = snmp.getMibObject(SnmpConstants.version1, spr,
+							"1.3.6.1.2.1.1.7.0");
+					sysName = snmp.getMibObject(SnmpConstants.version1, spr,
+							"1.3.6.1.2.1.1.5.0");
+				} else {
+					sysOid = snmp.getMibObject(SnmpConstants.version2c, spr,
+							"1.3.6.1.2.1.1.2.0");
+					if (sysOid != null && !sysOid.isEmpty())// .isEmpty())
 					{
-						sysSvcs = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.7.0");
-						sysName = snmp.getMibObject(SnmpConstants.version2c,spr,"1.3.6.1.2.1.1.5.0");
+						sysSvcs = snmp.getMibObject(SnmpConstants.version2c,
+								spr, "1.3.6.1.2.1.1.7.0");
+						sysName = snmp.getMibObject(SnmpConstants.version2c,
+								spr, "1.3.6.1.2.1.1.5.0");
 						spr.setSnmpver("2");
 					}
 				}
-			}
-			else
-			{
-				sysOid = snmp.getMibObject(spr,"1.3.6.1.2.1.1.2.0");
-				if(sysOid !=null &&!sysOid.isEmpty())
-				{
-					sysSvcs = snmp.getMibObject(spr,"1.3.6.1.2.1.1.7.0");
-					sysName = snmp.getMibObject(spr,"1.3.6.1.2.1.1.5.0");
+			} else {
+				sysOid = snmp.getMibObject(spr, "1.3.6.1.2.1.1.2.0");
+				if (sysOid != null && !sysOid.isEmpty()) {
+					sysSvcs = snmp.getMibObject(spr, "1.3.6.1.2.1.1.7.0");
+					sysName = snmp.getMibObject(spr, "1.3.6.1.2.1.1.5.0");
 				}
 			}
 
-			if(Utils.isEmptyOrBlank(sysOid) && Utils.isEmptyOrBlank(sysSvcs) && Utils.isEmptyOrBlank(sysName))
-			{
+			if (Utils.isEmptyOrBlank(sysOid) && Utils.isEmptyOrBlank(sysSvcs)
+					&& Utils.isEmptyOrBlank(sysName)) {
 				return devid;
 			}
-		}
-		else
-		{
-			for(Pair<String, String> i : sysInfos)
-			{
-				if(i.getFirst().equals("1.3.6.1.2.1.1.2.0")
-					||i.getFirst().equals("1.3.6.1.2.1.1.2"))
-	                        {
+		} else {
+			for (Pair<String, String> i : sysInfos) {
+				if (i.getFirst().equals("1.3.6.1.2.1.1.2.0")
+						|| i.getFirst().equals("1.3.6.1.2.1.1.2")) {
 					sysOid = i.getSecond();
-				}
-				else if(i.getFirst().equals("1.3.6.1.2.1.1.5.0")
-					||i.getFirst().equals("1.3.6.1.2.1.1.5"))
-				{ 
+				} else if (i.getFirst().equals("1.3.6.1.2.1.1.5.0")
+						|| i.getFirst().equals("1.3.6.1.2.1.1.5")) {
 					sysName = i.getSecond();
-				}
-				else if(i.getFirst().equals("1.3.6.1.2.1.1.7.0")
-					||i.getFirst().equals("1.3.6.1.2.1.1.7"))
-				{
+				} else if (i.getFirst().equals("1.3.6.1.2.1.1.7.0")
+						|| i.getFirst().equals("1.3.6.1.2.1.1.7")) {
 					sysSvcs = i.getSecond();
 				}
 			}
 		}
 
-		if(sysOid.equals("1.3.6.1.4.1.13742.1.1.1"))
-		{//KVM 流量分频器  1.3.6.1.4.1.13742.1.1.1
+		if (sysOid.equals("1.3.6.1.4.1.13742.1.1.1")) {// KVM 流量分频器
+														// 1.3.6.1.4.1.13742.1.1.1
 			devid.setSysOid("1.3.6.1.4.1.13742.1.1.1");
-			devid.setDevType("6");//Other device
+			devid.setDevType("6");
 			devid.setDevTypeName("KVM");
-		}
-		else
-		{		
-			if(Utils.isEmptyOrBlank(sysOid)&&Utils.isEmptyOrBlank(sysSvcs)&&Utils.isEmptyOrBlank(sysName)) return devid;
-			if (Utils.isEmptyOrBlank(sysOid))
-			{
-//				cout<<"sysOid is empty! "<<endl;
+		} else {
+			if (Utils.isEmptyOrBlank(sysOid) && Utils.isEmptyOrBlank(sysSvcs)
+					&& Utils.isEmptyOrBlank(sysName))
+				return devid;
+			if (Utils.isEmptyOrBlank(sysOid)) {
 				sysOid = "00";
 			}
-			//IP-MASK地址1.3.6.1.2.1.4.20.1.3
-	        List<Pair<String,String> > ipmsks = snmp.getMibTable(spr, "1.3.6.1.2.1.4.20.1.3");//[ipDes, mask]
-			//IP-InfInx 1.3.6.1.2.1.4.20.1.2
-	        List<Pair<String,String> > infinxs = snmp.getMibTable(spr, "1.3.6.1.2.1.4.20.1.2");//[ipDes, index]
+			// IP-MASK地址1.3.6.1.2.1.4.20.1.3
+			List<Pair<String, String>> ipmsks = snmp.getMibTable(spr,
+					"1.3.6.1.2.1.4.20.1.3");// [ipDes, mask]
+			// IP-InfInx 1.3.6.1.2.1.4.20.1.2
+			List<Pair<String, String>> infinxs = snmp.getMibTable(spr,
+					"1.3.6.1.2.1.4.20.1.2");// [ipDes, index]
 
-			Map<String,String> map_type = new HashMap<String,String>();
-			getDevTypeByOid(sysOid, sysSvcs, spr.getIp(), map_type);//填充map_type
-			
-//	                SvLog::writeLog("ip:"+spr.ip+"**map_type['devtype']:"+map_type["devtype"]); //add by jiang 20100602
+			Map<String, String> map_type = new HashMap<String, String>();
+			getDevTypeByOid(sysOid, sysSvcs, spr.getIp(), map_type);// 填充map_type
 
-			devid.setSysOid(sysOid);// = sysOid;
-			devid.setSnmpflag("1"); //snmp is enabled
+			devid.setSysOid(sysOid);
+			devid.setSnmpflag("1");
 			devid.setCommunity_get(spr.getCommunity());
 			devid.setDevType(map_type.get("devtype"));
 			devid.setDevModel(map_type.get("model"));
 			devid.setDevFactory(map_type.get("factory"));
 			devid.setDevTypeName(map_type.get("typename"));
 			devid.setSysSvcs(sysSvcs);
-	       devid.setSysName(sysName);	
+			devid.setSysName(sysName);
 
-	       if(!(ipmsks.size() == 0) && !((ipmsks.size() == 1) && (ipmsks.get(0).getSecond().substring(0,1).equals("0")))){
-	    	   for(Pair<String, String> ipmask : ipmsks) {
-	    		   if(ipmask.getFirst().length()<22)
-					{
+			if (!(ipmsks.size() == 0)
+					&& !((ipmsks.size() == 1) && (ipmsks.get(0).getSecond()
+							.substring(0, 1).equals("0")))) {
+				for (Pair<String, String> ipmask : ipmsks) {
+					if (ipmask.getFirst().length() < 22) {
 						continue;
 					}
-	    		   String ip_tmp = ipmask.getFirst().substring(21);
-	    		   if(!(ip_tmp.substring(0,6).equals("0.0.0."))
-	    				   && !(ip_tmp.substring(0,3).equals("127"))
-	    				   && !(ip_tmp.substring(0,5).equals("0.255")))
-					{
-	    			   if(!devid.getIps().contains(ip_tmp)){
-	    				   for(Pair<String, String> p : infinxs){
-	    					   if(p.getFirst().length() >21 && (p.getFirst().substring(21).equals(ip_tmp))){
-	    						   devid.getInfinxs().add(p.getSecond());
-	    						   devid.getIps().add(ip_tmp);
-	    						   devid.getMsks().add(ipmask.getSecond());
-	    						   break;
-	    					   }
-	    				   }
-	    			   }
+					String ip_tmp = ipmask.getFirst().substring(21);
+					if (!(ip_tmp.substring(0, 6).equals("0.0.0."))
+							&& !(ip_tmp.substring(0, 3).equals("127"))
+							&& !(ip_tmp.substring(0, 5).equals("0.255"))) {
+						if (!devid.getIps().contains(ip_tmp)) {
+							for (Pair<String, String> p : infinxs) {
+								if (p.getFirst().length() > 21
+										&& (p.getFirst().substring(21)
+												.equals(ip_tmp))) {
+									devid.getInfinxs().add(p.getSecond());
+									devid.getIps().add(ip_tmp);
+									devid.getMsks().add(ipmask.getSecond());
+									break;
+								}
+							}
+						}
 					}
 				}
 			}
 			// get base mac (ps:只对交换机有效)
-			if (devid.getDevType().equals("0") || devid.getDevType().equals("1"))
-			{
-				String mac_tmp = snmp.getMibObject(spr, "1.3.6.1.2.1.17.1.1.0");		
-				//noSuchObject, noSuchInstance, and endOfMibView
+			if (devid.getDevType().equals("0")
+					|| devid.getDevType().equals("1")) {
+				String mac_tmp = snmp.getMibObject(spr, "1.3.6.1.2.1.17.1.1.0");
+				// noSuchObject, noSuchInstance, and endOfMibView
 				if (mac_tmp != null && !mac_tmp.isEmpty()
 						&& !mac_tmp.equals("Null")
 						&& !mac_tmp.equals("endOfMibView")
 						&& !mac_tmp.equals("noSuchObject")
-						&& !mac_tmp.equals("noSuchInstance"))
-				{
-					String baseMac = mac_tmp.replaceAll(":", "").substring(0,12).toUpperCase();
+						&& !mac_tmp.equals("noSuchInstance")) {
+					String baseMac = "";
+					mac_tmp = mac_tmp.replaceAll(":", "");
+					if(mac_tmp.length() >=12){
+						mac_tmp = mac_tmp.substring(0, 12);
+					}
+					baseMac = mac_tmp.toUpperCase();
+					System.out.println("ip @@@@@@@@@@@@@@@@@@@@@@@@@@@ = @@@@@@@@@" + spr.getIp() + "@@@@ basemac is " +baseMac );
 					if ((!"".equals(baseMac))
 							&& (!"000000000000".equals(baseMac))
-							&& (!"FFFFFFFFFFFF".equals(baseMac)))
-					{
+							&& (!"FFFFFFFFFFFF".equals(baseMac))) {
 						devid.getMacs().add(baseMac);
 						devid.setBaseMac(baseMac);
 					}
 				}
 			}
 		}
-		if (devid.getIps()==null || devid.getIps().size() == 0)
-		{
+		if (devid.getIps() == null || devid.getIps().size() == 0) {
 			devid.getInfinxs().add("0");
 			devid.getIps().add(spr.getIp());
 			devid.getMsks().add("");
@@ -1049,78 +1002,63 @@ public class ReadService {
 	}
 
 	// 获取设备类型
-	public void getDevTypeByOid(String sysOid,String sysSvcs,String ip,  Map<String,String> map_res)
-	{
-		String devtype_res = "5";//default to host
+	public void getDevTypeByOid(String sysOid, String sysSvcs, String ip,
+			Map<String, String> map_res) {
+		String devtype_res = "5";// default to host
 		String factory_res = "";
 		String model_res = "";
 		String typeName_res = "";
 
-		//DEVICE_TYPE_MAP {sysoid,<devType,devTypeName,devFac,devModel>}
-		if(OIDTypeUtils.getInstance().containsKey(sysOid))//dev_type_list.containsKey(sysOid))
-		{
-			devtype_res  =  OIDTypeUtils.getInstance().getDevicePro(sysOid).getDevType();//dev_type_list[sysOid].devType;
-			factory_res  =  OIDTypeUtils.getInstance().getDevicePro(sysOid).getDevFac();//dev_type_list[sysOid].devFac;
-			model_res    =  OIDTypeUtils.getInstance().getDevicePro(sysOid).getDevModel();//dev_type_list[sysOid].devModel;
-			typeName_res =  OIDTypeUtils.getInstance().getDevicePro(sysOid).getDevTypeName();//dev_type_list[sysOid].devTypeName;
-		}
-		else
-		{
-			if (sysOid.substring(0,16).equals("1.3.6.1.4.1.311."))//enterprises节点:1.3.6.1.4.1
+		// DEVICE_TYPE_MAP {sysoid,<devType,devTypeName,devFac,devModel>}
+		if (OIDTypeUtils.getInstance().containsKey(sysOid)) {
+			devtype_res = OIDTypeUtils.getInstance().getDevicePro(sysOid)
+					.getDevType();
+			factory_res = OIDTypeUtils.getInstance().getDevicePro(sysOid)
+					.getDevFac();
+			model_res = OIDTypeUtils.getInstance().getDevicePro(sysOid)
+					.getDevModel();
+			typeName_res = OIDTypeUtils.getInstance().getDevicePro(sysOid)
+					.getDevTypeName();
+		} else {
+			if (sysOid.substring(0, 16).equals("1.3.6.1.4.1.311."))// enterprises节点:1.3.6.1.4.1
 			{
-				devtype_res = "5";//host
-			}
-			else if(sysOid.substring(0,17).equals("1.3.6.1.4.1.8072."))
-			{
+				devtype_res = "5";// host
+			} else if (sysOid.substring(0, 17).equals("1.3.6.1.4.1.8072.")) {
 				devtype_res = "4";// "SERVER"
-			}
-			//else if(sysOid.substr(0,17) == "1.3.6.1.4.1.9952.") //TOPSEC  added by zhangyan 2008-11-04
-			//{
-			//	devtype_res = "3";// "FIREWALL"
-			//}
-			else if(sysOid.substring(0,21).equals("1.3.6.1.4.1.6486.800."))
-			{
-				devtype_res = "0";//ROUTE-SWITCH
-			}
-			else if(sysOid.equals("1.3.6.1.4.1.13742.1.1.1"))
-			{//KVM 流量分频器  1.3.6.1.4.1.13742.1.1.1
-				devtype_res = "6"; //Other device
-			}
-			else
-			{//
+			} else if (sysOid.substring(0, 21).equals("1.3.6.1.4.1.6486.800.")) {
+				devtype_res = "0";// ROUTE-SWITCH
+			} else if (sysOid.equals("1.3.6.1.4.1.13742.1.1.1")) {// KVM 流量分频器
+																	// 1.3.6.1.4.1.13742.1.1.1
+				devtype_res = "6"; // Other device
+			} else {//
 				int isvc = Integer.parseInt(sysSvcs);
-				if (isvc == 0)
-				{
-					devtype_res = "5";//host
+				if (isvc == 0) {
+					devtype_res = "5";// host
+				} else if ((isvc & 6) == 6) {
+					devtype_res = "0"; // "ROUTE-SWITCH"
+				} else if ((isvc & 4) == 4) {
+					devtype_res = "2"; // ROUTER
+				} else if ((isvc & 2) == 2) {
+					devtype_res = "1"; // "SWITCH"
+				} else {
+					devtype_res = "5"; // host
+					// SvLog::writeLog("Can't identify oid=" + sysOid +
+					// ", services=" + sysSvcs + " (" + ip + ")");
 				}
-				else if((isvc & 6) == 6)
-				{
-					devtype_res = "0"; //"ROUTE-SWITCH"
-				}
-				else if((isvc & 4) == 4)
-				{
-					devtype_res = "2"; //ROUTER
-				}
-				else if((isvc & 2) == 2)
-				{
-					devtype_res = "1"; //"SWITCH"
-				}
-				else
-				{
-					devtype_res = "5"; //host
-//	                                SvLog::writeLog("Can't identify oid=" + sysOid + ", services=" + sysSvcs + " (" + ip + ")");
-				} 
 			}
 		}
 
-		if (devtype_res == "5")
-		{
-			devtype_res = "4"; //将开了SNMP的PC（或其它未被识别的设备）作为SERVER
+		if (devtype_res == "5") {
+			devtype_res = "4"; // 将开了SNMP的PC（或其它未被识别的设备）作为SERVER
 		}
-		map_res.put("devtype", devtype_res);//["devtype"] = devtype_res;
-		map_res.put("factory", factory_res);//["factory"] = factory_res;
-		map_res.put("model", model_res);//["model"] = model_res;
-		map_res.put("typename", typeName_res);//["typename"] = typeName_res;
+		map_res.put("devtype", devtype_res);// ["devtype"] = devtype_res;
+		map_res.put("factory", factory_res);// ["factory"] = factory_res;
+		map_res.put("model", model_res);// ["model"] = model_res;
+		map_res.put("typename", typeName_res);// ["typename"] = typeName_res;
+		System.out.print("ip = " + ip + " sysoid = " + sysOid + "\t");
+		System.out.println("devtype = " + devtype_res + "factory = "
+				+ factory_res + " model = " + model_res + " typename"
+				+ typeName_res);
 	}
 	
 }

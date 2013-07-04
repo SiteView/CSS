@@ -25,6 +25,11 @@ public class DeviceFactory {
 		
 		return callbackMap.containsKey(sysOid);
 	}
+	/**
+	 * 根据OId生成特定设备扫描器
+	 * @param sysOid 设备OID
+	 * @return 设备扫描器
+	 */
 	public IDeviceHandler createDevice(String sysOid){
 		if(callbackMap.containsKey(sysOid)){
 			return callbackMap.get(sysOid);

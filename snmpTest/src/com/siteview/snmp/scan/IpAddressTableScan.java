@@ -8,17 +8,13 @@ import java.util.Set;
 
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.Snmp;
-import org.snmp4j.Target;
 import org.snmp4j.TransportMapping;
-import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.OID;
-import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TableEvent;
 import org.snmp4j.util.TableUtils;
 
-import com.siteview.snmp.base.BaseTableRequest;
 import com.siteview.snmp.common.SnmpPara;
 import com.siteview.snmp.constants.OIDConstants;
 import com.siteview.snmp.model.Pair;
@@ -64,6 +60,11 @@ public class IpAddressTableScan {
 		}
 		return result;
 	}
+	/**
+	 * 获取ipaddress表 掩码列数据
+	 * @param spr
+	 * @param ipcm_result
+	 */
 	public void getIpMaskList(SnmpPara spr, List<Pair<String, String>> ipcm_result){
 		Map<String, IpAddressTable> tables = getIpAddressTables(spr);
 		Set<String> keys = tables.keySet();
@@ -76,6 +77,11 @@ public class IpAddressTableScan {
 				}
 		}
 	}
+	/**
+	 * 获取ipaddress表数据
+	 * @param spr
+	 * @return
+	 */
 	public Map<String,IpAddressTable> getIpAddressTables(SnmpPara spr){
 		Map<String,IpAddressTable> result = new HashMap<String, IpAddressTable>();
 		CommunityTarget target = ScanUtils.buildGetPduCommunityTarget(spr.getIp(), 161, spr.getCommunity(), spr.getTimeout(), spr.getRetry(), Integer.parseInt(spr.getSnmpver()));

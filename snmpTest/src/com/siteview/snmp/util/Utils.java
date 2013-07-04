@@ -92,7 +92,7 @@ public class Utils {
 			target.put(k, source.get(k));
 		}
 	}
-	public static void main(String[] args) {
+	public static void msain(String[] args) {
 		Map<String, Pair<String, String>> target = new HashMap<String, Pair<String, String>>(); 
 		Map<String, Pair<String, String>> src = new HashMap<String, Pair<String, String>>();
 		
@@ -143,6 +143,16 @@ public class Utils {
 //			}
 //		}
 		return vbs;
+	}
+	public static String parseToHexString(String value){
+		if("".equals(value) || "0".equals(value)){
+			return "00";
+		}
+		String hexStr =  Integer.toHexString(Integer.parseInt(value));
+		if(hexStr.length() == 1){
+			hexStr = "0" + hexStr;
+		}
+		return hexStr;
 	}
 	
 }

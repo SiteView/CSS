@@ -1,23 +1,12 @@
 package com.siteview.snmp.scan;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
 
-import org.snmp4j.PDU;
-import org.snmp4j.Snmp;
-import org.snmp4j.Target;
-import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.smi.OID;
-import org.snmp4j.smi.VariableBinding;
 
 import com.siteview.snmp.base.BaseRequest;
 import com.siteview.snmp.model.Pair;
-import com.siteview.snmp.pojo.IpAddressTable;
 
 public class ScanMibData extends BaseRequest {
 

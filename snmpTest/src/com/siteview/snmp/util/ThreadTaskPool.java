@@ -10,11 +10,11 @@ public class ThreadTaskPool {
 	private static ThreadTaskPool instance= null;
 	
 	public static final int defaultCount = 50;
-	private ThreadTaskPool(){
-		
-	}
+	
+	private ThreadTaskPool(){}
+	
 	private ThreadTaskPool(int threadCount){
-		this.pool = Executors.newFixedThreadPool(threadCount);
+		pool = Executors.newFixedThreadPool(threadCount);
 	}
 	public static synchronized ThreadTaskPool getInstance(int threadCount){
 		if(instance == null){
@@ -22,11 +22,8 @@ public class ThreadTaskPool {
 		}
 		return instance;
 	}
-	public static synchronized ThreadTaskPool getInstance(){
-		if(instance == null){
-			instance = new ThreadTaskPool(defaultCount);
-		}
-		return instance;
+	public static ThreadTaskPool getInstance(){
+		return getInstance(defaultCount);
 	}
 	public void excute(Runnable task){
 		pool.execute(task);

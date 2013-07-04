@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.snmp4j.CommunityTarget;
-import org.snmp4j.MessageException;
 import org.snmp4j.PDU;
 import org.snmp4j.Snmp;
 import org.snmp4j.event.ResponseEvent;
@@ -24,7 +23,6 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 import com.siteview.snmp.common.SnmpPara;
 import com.siteview.snmp.model.Pair;
 import com.siteview.snmp.pojo.Directitem;
-import com.siteview.snmp.util.Utils;
 
 public class MibScan {
 

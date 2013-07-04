@@ -17,7 +17,12 @@ public class ScanUtils {
 	public static final int npos = -1;
 
 	private static Map<String, Integer> tbl = new HashMap<String, Integer>();
-
+	
+	/**
+	 * 根据子网掩码 获取IP地址范围
+	 * @param ipMask
+	 * @return
+	 */
 	public static Pair<String, String> getScaleByIPMask(
 			Pair<String, String> ipMask) {
 		long ipnum = ipToLong(ipMask.getFirst());
@@ -35,7 +40,16 @@ public class ScanUtils {
 			return new Pair<String, String>(ipStrMin, ipStrMax);
 		}
 	}
-
+	/**
+	 * 构造snmpPDU
+	 * @param ip 		IP地址
+	 * @param port 		端口号
+	 * @param community 共同体
+	 * @param timeout 	超时时间
+	 * @param retry   	重试时间
+	 * @param version 	snmp版本
+	 * @return
+	 */
 	public static CommunityTarget buildGetPduCommunityTarget(String ip,
 			int port, String community, int timeout, int retry, int version) {
 		UdpAddress add = new UdpAddress(ip + "/" + port);
@@ -47,7 +61,11 @@ public class ScanUtils {
 		target.setCommunity(new OctetString(community));
 		return target;
 	}
-
+	/**
+	 * IP地址转换成数字long
+	 * @param ip 
+	 * @return
+	 */
 	public static long ipToLong(String ip) {
 		String[] ips = ip.split("\\.");
 		long[] ipLong = new long[4];
@@ -58,7 +76,11 @@ public class ScanUtils {
 		return (ipLong[0] << 24) + (ipLong[1] << 16) + (ipLong[2] << 8)
 				+ ipLong[3];
 	}
-
+	/**
+	 * long 转换成点分十进制ip地址
+	 * @param value
+	 * @return
+	 */
 	public static String longToIp(long value) {
 		StringBuffer sb = new StringBuffer("");
 		sb.append(String.valueOf(value >>> 24));// 直接右移24位
@@ -101,13 +123,14 @@ public class ScanUtils {
 		// Vector<String> v1 = ScanUtils.tokenize(src, tok, trim,
 		// null_subst)ze("1.3.6.1.2.1.4.22.1.2.1.192.168.0.118".substring(21),
 		// ".", true,"asdfasdf");
-		String a = "1..123. .11.11";
-		String b[] = a.split("\\.");
-		for (int i = 0; i < b.length; i++) {
-			System.out.print(b[i] + "*");
-		}
 	}
 
+	/**
+	 * 判断 scaleB 是否在　scaleA　的范围内
+	 * @param scaleA
+	 * @param scaleB
+	 * @return　yes: true no:false;
+	 */
 	public static boolean isScaleBInA(Pair<String, String> scaleA,
 			Pair<String, String> scaleB) {
 		long numMin0 = ipToLong(scaleA.getFirst());

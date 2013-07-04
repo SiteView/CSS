@@ -16,7 +16,6 @@ import com.siteview.snmp.common.AuxParam;
 import com.siteview.snmp.common.ScanParam;
 import com.siteview.snmp.common.SnmpPara;
 import com.siteview.snmp.constants.CommonDef;
-import com.siteview.snmp.model.In_Addr;
 import com.siteview.snmp.model.Pair;
 import com.siteview.snmp.pojo.Bgp;
 import com.siteview.snmp.pojo.DevicePro;
@@ -80,20 +79,20 @@ public class NetScan implements Runnable {
 		myParam = new AuxParam();
 		// myParam.scan_type = "1"; //扫描类型
 		myParam.setScan_type("0"); // 扫描类型
-		myParam.setSeed_type("0");// 种子方式 add by wings 2009-12-15
+		myParam.setSeed_type("0");// 种子方式 
 		myParam.setPing_type("1");// 执行ping
 		myParam.setComp_type("1");// 补充类型
 		// myParam.dumb_type = "0"; //生成dumb
 		myParam.setDumb_type("1"); // 生成dumb
 		myParam.setArp_read_type("0");// 不读取2层交换机的arp数据
 		myParam.setNbr_read_type("0");// 不读取邻居表
-		myParam.setRt_read_type("0");// 不读取路由表 恢复路由表 add by wings 2009-11-12
-		myParam.setVrrp_read_type("0");// 不读取VRRP,HSRP // by zhangyan 2009-01-16
+		myParam.setRt_read_type("0");// 不读取路由表 恢复路由表 
+		myParam.setVrrp_read_type("0");// 不读取VRRP,HSRP 
 		myParam.setBgp_read_type("0");
 		myParam.setSnmp_version("0");// 自适应SNMP版本
 		myParam.setTracert_type("0");// 不执行trace route
-		myParam.setFilter_type("0"); // 不清除扫描范围外的ip //add by zhangyan 2008-10-30
-		myParam.setCommit_pc("1"); // 提交PC到SVDB //add by zhangyan 2009-07-15
+		myParam.setFilter_type("0"); // 不清除扫描范围外的ip 
+		myParam.setCommit_pc("1"); // 提交PC到SVDB 
 
 		PropertiesUtils.load("scanconfig.properties");
 		myParam.setScan_type(PropertiesUtils.getValue("SCAN_TYPE"));
@@ -163,7 +162,7 @@ public class NetScan implements Runnable {
 	public void scanByIplist() {
 		Vector<String> aliveIp_list = new Vector<String>();
 		if ((!IoUtils.readDeviceIpList(aliveIp_list)) || aliveIp_list.isEmpty()) {
-			// SvLog::writeLog(string("There none device ip: File DeviceIps.txt is not existed or No ips."));
+			System.out.println("There none device ip: File DeviceIps.txt is not existed or No ips.");
 			return;
 		}
 		scanByIps(aliveIp_list, false);
@@ -201,46 +200,35 @@ public class NetScan implements Runnable {
 					}
 				}
 			}
-			// SvLog::writeLog("End Scan.");
 
 			// 将接口表中的MAC添加到设备的mac地址表中
 			Set<String> keys = devid_list.keySet();
 			for (String key : keys) {
+				System.out.print("\t key is " + key);
 				Pair<String, List<IfRec>> iinf = ifprop_list.get(key);// .find(i->first);
 				IDBody i = devid_list.get(key);
-				if (iinf != null)// ifprop_list.end())
+				if (iinf != null)
 				{
 					List<IfRec> ifrec = iinf.getSecond();
-					// for(list<IFREC> j = iinf->second.second.begin();
-					// j != iinf->second.second.end();
-					// ++j)
 					for (IfRec j : ifrec) {
 						if (!Utils.isEmptyOrBlank(j.getIfMac())
 								&& !j.getIfMac().equals("000000000000")
-								&& !j.getIfMac().equals("FFFFFFFFFFFF"))
-						{
-							if (!i.getMacs().contains(j.getIfMac()))
-							{
+								&& !j.getIfMac().equals("FFFFFFFFFFFF")) {
+							if (!i.getMacs().contains(j.getIfMac())) {
 								i.getMacs().add(j.getIfMac());
 							}
 						}
 					}
 				}
 			}
-			// SvLog::writeLog("To Save.");
 			saveOriginData();
-			// SvLog::writeLog("End Save.");
 		}
 		System.out.println("scan end");
 		long end = System.currentTimeMillis();
 		System.out.println("用时" + (end - start));
-		// SvLog::writeLog("To Format data.");
 		formatData();
-		// SvLog::writeLog("To save Format data.");
 		saveFormatData();
 
-		// SvLog::writeLog("Analyse data...", COMMON_MSG, m_callback);
-		// SvLog::writeLog("Analyse data...");
 
 		if (devid_list.isEmpty()) {
 			topo_edge_list.clear();
@@ -257,7 +245,7 @@ public class NetScan implements Runnable {
 							30);
 					traceR.tracePrepare();
 					if ("0".equals(myParam.getScan_type())) {
-						rtpath_list = traceR.getTraceRouteByIPs();// ////////////////等实现
+						rtpath_list = traceR.getTraceRouteByIPs();
 						// 将trace path 保存到文件
 						IoUtils.saveTracertList(rtpath_list);
 						TraceAnalyse traceA = new TraceAnalyse(devid_list,
@@ -278,7 +266,7 @@ public class NetScan implements Runnable {
 				generateDumbDevice(topo_edge_list, devid_list);
 				topo_entity_list = devid_list;// 己添加了哑设备
 			} else {
-				// 发析失败日志
+				// 分析失败日志
 			}
 		}
 		long theend = System.currentTimeMillis();
@@ -430,19 +418,18 @@ public class NetScan implements Runnable {
 	// 保存扫描后的原始数据
 	public boolean saveOriginData() // 不再保存扫描后的原始文件
 	{
-		// StreamData myfile;//扫描数据文件处理器
-		// if(myParam.ping_type != "2")
-		// myfile.savaDevidIps(devid_list);
-		// myfile.saveIDBodyData(devid_list);
-		// myfile.saveAftList(aft_list);
-		// myfile.saveArpList(arp_list);
-		// myfile.saveInfPropList(ifprop_list);
-		// myfile.saveOspfNbrList(ospfnbr_list);
-		// myfile.saveRouteList(rttbl_list);
-		// myfile.saveBgpList(bgp_list);
-		// myfile.saveVrrpList(routeStandby_list);
-		// myfile.saveDirectData(directdata_list);
-		// myfile.saveConfigData(scanParam);// added by zhangyan 2008-10-30
+		if(!myParam.getPing_type().equals("2"))
+			IoUtils.savaDevidIps(devid_list);
+		IoUtils.saveIDBodyData(devid_list,"");
+		IoUtils.saveAftList(aft_list);
+		IoUtils.saveArpList(arp_list);
+		IoUtils.saveInfPropList(ifprop_list,"");
+		// IoUtils.saveOspfNbrList(ospfnbr_list);
+		// IoUtils.saveRouteList(rttbl_list);
+		// IoUtils.saveBgpList(bgp_list);
+		// IoUtils.saveVrrpList(routeStandby_list);
+		IoUtils.saveDirectData(directdata_list);
+		// IoUtils.saveConfigData(scanParam);
 
 		return true;
 	}
@@ -455,18 +442,13 @@ public class NetScan implements Runnable {
 		// 从种子发现子网
 		for (String seedIp : seedList) {
 			List<Pair<String, String>> maskList = new ArrayList<Pair<String, String>>();
-			// maskList = new ScanMibData().scanMasks(
-			// seedIp, 161, scanParam.getCommunity_get_dft(),
-			// scanParam.getTimeout(), scanParam.getRetrytimes(),
-			// SnmpConstants.version2c);
-			// siReader.getIpMaskList(new SnmpPara(seedIp,
-			// getCommunity_Get(seedIp), scanParam.getTimeout(),
-			// scanParam.getRetrytimes()), maskList);
+			/* 查询掩码 */
 			new IpAddressTableScan()
 					.getIpMaskList(new SnmpPara(seedIp,
 							getCommunity_Get(seedIp), scanParam.getTimeout(),
 							scanParam.getRetrytimes()), maskList);
 			for (int i = 0; i < maskList.size(); i++) {
+				// 分析子网
 				Pair<String, String> scale_cur = ScanUtils
 						.getScaleByIPMask(maskList.get(i));
 				boolean bExist = false;
@@ -570,7 +552,6 @@ public class NetScan implements Runnable {
 
 	public String getCommunity_Get(String ip) {
 		String community_ret = scanParam.getCommunity_get_dft();
-		List<Pair<Pair<Long, Long>, Pair<String, String>>> list = new ArrayList<Pair<Pair<Long, Long>, Pair<String, String>>>();
 		long ipnum = ScanUtils.ipToLong(ip);
 		for (Pair<Pair<Long, Long>, Pair<String, String>> i : scanParam
 				.getCommunitys_num()) {
@@ -605,6 +586,7 @@ public class NetScan implements Runnable {
 				String snmpVer = getSNMPVersion(aliveIp);// "2" or "1" or "0"
 				spr_list.add(new SnmpPara(aliveIp, ipCmt, scanParam
 						.getTimeout(), scanParam.getRetrytimes(), snmpVer));
+				System.out.println("++++++++++++++++++++++++++++++++++++++++++++++"  + aliveIp);
 			}
 		}
 		siReader.setIp_visited_list(m_ip_list_visited);
@@ -612,6 +594,13 @@ public class NetScan implements Runnable {
 			return false;
 		}
 		m_ip_list_visited = siReader.getIp_visited_list();// 更新后的已访问ip地址表
+		System.out
+				.println("m_ip_list_visited size() is +++++++++++++++++++++++++++++++++++++++++++++++++++++"
+						+ m_ip_list_visited.size());
+		for (String x : m_ip_list_visited)
+			System.out
+					.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+							+ x);
 		Map<String, IDBody> devlist_cur = siReader.getDevid_list_valid();// 在当前范围中发现的新设备
 
 		Map<String, Map<String, List<String>>> aftlist_cur = siReader
@@ -810,8 +799,7 @@ public class NetScan implements Runnable {
 				for (Entry<String, List<Pair<String, String>>> m_srcport : m_srcip
 						.getValue().entrySet()) {// 对source port 循环
 					for (Iterator<Pair<String, String>> destip_mac_iter = m_srcport
-							.getValue().iterator(); destip_mac_iter.hasNext();) {// 对destip-mac
-																					// 循环
+							.getValue().iterator(); destip_mac_iter.hasNext();) {// 对destip-mac循环
 						Pair<String, String> destip_mac = destip_mac_iter
 								.next();
 						boolean bAllowed = false;
@@ -883,18 +871,11 @@ public class NetScan implements Runnable {
 				}
 			}
 		}
-		for (Entry<String, Map<String, List<String>>> i : aft_list.entrySet()) {// 对source
-																				// ip
-																				// 循环
+		for (Entry<String, Map<String, List<String>>> i : aft_list.entrySet()) {// 对source ip循环
 			List<Pair<String, List<String>>> infindex_list = new ArrayList<Pair<String, List<String>>>();// [<oldport,[mac]>]
 			List<Pair<String, List<String>>> validinfindex_list = new ArrayList<Pair<String, List<String>>>();// [<validport,[mac]>]
 
-			for (Entry<String, List<String>> m_it : i.getValue().entrySet()) {// 对source
-																				// port
-																				// 循环:
-																				// telnetport
-																				// ->
-																				// infPort
+			for (Entry<String, List<String>> m_it : i.getValue().entrySet()) {
 				String port = m_it.getKey();
 				if (port.length() == 1
 						|| (!port.startsWith("G") && !port.startsWith("E"))) {
@@ -926,7 +907,7 @@ public class NetScan implements Runnable {
 					for (Pair<String, List<String>> k : infindex_list) {
 						List<String> str_list = new ArrayList<String>();// port
 						str_list.add(k.getFirst());
-						myPrex = getInfDescPrex(str_list, iif.getSecond());// //////////////////////////////////??????????????????????????
+						myPrex = getInfDescPrex(str_list, iif.getSecond());
 						String port_inf = k.getFirst();
 						port_inf = port_inf.substring(1);
 						while (port_inf.substring(0, 1).equals("0")
@@ -934,7 +915,7 @@ public class NetScan implements Runnable {
 							port_inf = port_inf.substring(1);
 						}
 						String myport = myPrex + port_inf;
-						k.setFirst(findInfPortFromDescr(iif.getSecond(), myport));// ////////////////////////???????????????????
+						k.setFirst(findInfPortFromDescr(iif.getSecond(), myport));
 					}
 					i.getValue().clear();
 					for (Pair<String, List<String>> k : infindex_list) {
@@ -966,9 +947,7 @@ public class NetScan implements Runnable {
 				.entrySet()) {// 对source ip 循环
 			for (Entry<String, List<Pair<String, String>>> m_it : i.getValue()
 					.entrySet()) {// 对source port 循环
-				for (Pair<String, String> ip_mac_new : m_it.getValue()) {// 对dest
-																			// ip
-																			// 循环
+				for (Pair<String, String> ip_mac_new : m_it.getValue()) {
 					if (maclist_virtual.contains(ip_mac_new.getSecond())) {
 						continue;// 忽略vrrp 虚拟ip-mac
 					}
@@ -1071,7 +1050,7 @@ public class NetScan implements Runnable {
 				Pair<String, List<IfRec>> iinf = ifprop_list.get(src_ip);
 				if (infindex_list != null && !infindex_list.isEmpty()
 						&& iinf != null) {
-					myPrex = getInfDescPrex(infindex_list, iinf.getSecond());// /////////////////////////////////////////////////////???????????????????????
+					myPrex = getInfDescPrex(infindex_list, iinf.getSecond());
 				}
 				Map<String, List<String>> pset_tmp = new HashMap<String, List<String>>();
 				for (Entry<String, List<Pair<String, String>>> j : i.getValue()
@@ -1115,8 +1094,7 @@ public class NetScan implements Runnable {
 		for (Entry<String, Map<String, List<String>>> i : aft_list.entrySet()) {
 			String src_ip = i.getKey();
 			boolean bDevice = false;
-			for (Entry<String, IDBody> j : devid_list.entrySet()) {// src_ip ->
-																	// dev_ip
+			for (Entry<String, IDBody> j : devid_list.entrySet()) {
 				if (j.getValue().getIps().contains(src_ip)) {
 					src_ip = j.getKey();
 					bDevice = true;
@@ -1143,14 +1121,12 @@ public class NetScan implements Runnable {
 				}
 				Pair<String, List<IfRec>> iinf = ifprop_list.get(src_ip);
 				if (!(ifprop_list.isEmpty()) && iinf != null) {
-					myPrex = getInfDescPrex(infindex_list, iinf.getSecond());// //////////////////???????????????????
+					myPrex = getInfDescPrex(infindex_list, iinf.getSecond());
 				}
 				Map<String, List<String>> pset_tmp = new HashMap<String, List<String>>();
-				for (Entry<String, List<String>> j : i.getValue().entrySet()) {// port
-																				// ->
-																				// infindex
+				for (Entry<String, List<String>> j : i.getValue().entrySet()) {
 					String myport = j.getKey();// 缺省接口号
-					if (iinf != null) {
+					if (iinf != null && !iinf.isEmpty()) {
 						for (IfRec k : iinf.getSecond()) {
 							// 通过端口寻找对应的接口索引
 							if (k.getIfPort().equals(myport)
@@ -1228,14 +1204,7 @@ public class NetScan implements Runnable {
 				if (vlan.indexOf("VLAN") > 0
 						|| !vlan.startsWith(d)
 						|| (j.getIfDesc().indexOf("/") >= 0 && port
-								.indexOf("/") < 0))// vlan.find("VLAN") !=
-													// string::npos ||
-													// vlan.compare(0,1,d) != 0
-													// ||
-													// (j->ifDesc.find("/")!=string::npos
-													// &&
-													// port.find("/")==string::npos))
-				{
+								.indexOf("/") < 0)) {
 					continue;
 				}
 				int iPlace = j.getIfDesc().indexOf(port);

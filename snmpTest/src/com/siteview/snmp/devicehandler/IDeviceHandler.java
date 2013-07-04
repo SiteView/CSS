@@ -73,7 +73,7 @@ public interface  IDeviceHandler {
 																// "1.3.6.1.2.1.68.1.3.1.2"
 	public static final String VRRP_VIRTUALIP_MACRO 	= "15020";// VRRP表：虚拟IP
 																// "1.3.6.1.2.1.17.7.1.2.2.1.2"
-	public static Map<String, Map<String, List<IfRec>>> ifprop_List = new ConcurrentHashMap<String, Map<String, List<IfRec>>>();
+	public static Map<String, Pair<String, List<IfRec>>> ifprop_List = new ConcurrentHashMap<String, Pair<String, List<IfRec>>>();
 
 	public abstract Map<String, List<Directitem>> getDirectData(MibScan snmp,
 			SnmpPara spr);

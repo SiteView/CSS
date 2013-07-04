@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.snmp4j.smi.OID;
-import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.util.TableEvent;
 
 
