@@ -1,4 +1,4 @@
-package com.xinnan.patientims.dialogs;
+package com.siteview.css.topo.wizard.scan;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.*;
@@ -8,7 +8,8 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 /**
- * æ‰«æå‚æ•°å‘å¯¼
+ * É¨Ãè²ÎÊıÏòµ¼
+ * 
  * @author zhangxinnan
  * 
  */
@@ -16,51 +17,53 @@ public class ScanParameterWizard extends WizardPage {
 	private Label parallelThreads;
 	private Label retryCount;
 	private Label timeOut;
-	/** çº¢è‰² */
+	/** ºìÉ« */
 	private Color COLOR_SYSTEM_RED = null;
 	private Display display = null;
 
 	protected ScanParameterWizard() {
-		super("Some wizard Page");
-		setTitle("æ‰«æå‚æ•° -->" + "æ‰«æèŒƒå›´ -->" + "æ’é™¤èŒƒå›´ -->" + "å…±åŒä½“è®¾ç½® -->" + "æ‰«æç§å­");
-		setMessage("æ‰«æé…ç½®åŒ…æ‹¬æ‰«æå‚æ•°å’Œæ‰«æèŒƒå›´ä¸¤éƒ¨åˆ†");
+		super("ScanParameterWizard");
+		setTitle("É¨Ãè²ÎÊı -->" + "É¨Ãè·¶Î§ -->" + "ÅÅ³ı·¶Î§ -->" + "¹²Í¬ÌåÉèÖÃ -->" + "É¨ÃèÖÖ×Ó");
+		setMessage("É¨ÃèÅäÖÃ°üÀ¨É¨Ãè²ÎÊıºÍÉ¨Ãè·¶Î§Á½²¿·Ö");
 	}
 
+	/**
+	 * ´´½¨ÊÓÍ¼
+	 */
 	public void createControl(Composite parent) {
-		// è®¾ç½®é¢œè‰²
+		// ÉèÖÃÑÕÉ«
 		display = parent.getDisplay();
 		COLOR_SYSTEM_RED = display.getSystemColor(SWT.COLOR_RED);
-		// ç¾¤ç»„
+		// Èº×é
 		Group group = new Group(parent, SWT.NONE);
-		group.setText("æ‰«æå‚æ•°");
+		group.setText("É¨Ãè²ÎÊı");
 		group.setLayout(new GridLayout(2, true));
 		GridData layoutData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
 		layoutData.verticalIndent = 15;
 		group.setLayoutData(layoutData);
 
-		// æ”¶ç´¢æ·±åº¦
+		// ÊÕË÷Éî¶È
 		Label searchDepth = new Label(group, SWT.NONE);
-		searchDepth.setText("\t\tæ”¶ç´¢æ·±åº¦ï¼š");
+		searchDepth.setText("\t\tÊÕË÷Éî¶È£º");
 		GridData layoutD = new GridData();
 		layoutD.verticalIndent = 15;
-		creatSpinner(group);// ä¸‹æ‹‰è°ƒæ•´
-
-		// å¹¶è¡Œçº¿ç¨‹æ•°
+		creatSpinner(group, 5, "ÊÕË÷Éî¶È");// ÏÂÀ­µ÷Õû
+		// ²¢ĞĞÏß³ÌÊı
 		parallelThreads = new Label(group, SWT.NONE);
-		parallelThreads.setText("\t\tå¹¶è¡Œçº¿ç¨‹æ•°ï¼š");
-		creatSpinner(group);
+		parallelThreads.setText("\t\t²¢ĞĞÏß³ÌÊı£º");
+		creatSpinner(group, 50, "²¢ĞĞÏß³ÌÊı");
 
-		// é‡è¯•æ¬¡æ•°
+		// ÖØÊÔ´ÎÊı
 		retryCount = new Label(group, SWT.NONE);
-		retryCount.setText("\t\té‡è¯•æ¬¡æ•°ï¼š");
-		creatSpinner(group);
+		retryCount.setText("\t\tÖØÊÔ´ÎÊı£º");
+		creatSpinner(group, 3, "ÖØÊÔ´ÎÊı");
 
-		// è¶…æ—¶
+		// ³¬Ê±
 		timeOut = new Label(group, SWT.NONE);
-		timeOut.setText("\t\tè¶…æ—¶æ—¶é—´ï¼š");
-		creatSpinner(group);
+		timeOut.setText("\t\t³¬Ê±Ê±¼ä£º");
+		creatSpinner(group, 100, "³¬Ê±Ê±¼ä");
 		/*
-		 * ç®€å•ç¤ºä¾‹ Spinner spinner4 = new Spinner (group, SWT.BORDER);
+		 * ¼òµ¥Ê¾Àı Spinner spinner4 = new Spinner (group, SWT.BORDER);
 		 * spinner4.setMinimum(0); spinner4.setMaximum(1000);
 		 * spinner4.setSelection(5); spinner4.setIncrement(1);
 		 * spinner4.setPageIncrement(100); spinner4.setLayoutData(new
@@ -72,25 +75,25 @@ public class ScanParameterWizard extends WizardPage {
 	}
 
 	/**
-	 * åˆ›å»ºä¸‹æ‹‰é€‰é¡¹è°ƒè¯•å™¨
+	 * ´´½¨ÏÂÀ­Ñ¡Ïîµ÷ÊÔÆ÷
 	 * 
 	 * @param group
 	 */
-	public void creatSpinner(Composite group) {
+
+	public void creatSpinner(Composite group, int init, final String key) {
+
 		final Spinner spinner = new Spinner(group, SWT.BORDER);
-		spinner.setValues(5, 0, 100, 0, 1, 10);// åˆå§‹å€¼,æœ€å°å€¼,æœ€å¤§å€¼,å°æ•¸é»,é»æ“Šå¢åŠ çš„å¤šå°‘,ã€‚ã€‚
+		spinner.setValues(init, 0, 99, 0, 1, 10);// ³õÊ¼Öµ,×îĞ¡Öµ,×î´óÖµ,Ğ¡”µüc,üc“ôÔö¼ÓµÄ¶àÉÙ,¡£¡£
 		spinner.setLayoutData(new GridData(120, SWT.DEFAULT));
-		final ToolTip toolTip = new ToolTip(new Shell(), SWT.BALLOON
-				| SWT.ICON_WARNING);
 		spinner.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				String string = spinner.getText();
-				// String string2 =
-				// String.valueOf(spinner.getSelection());//test
+				String string = ((Spinner) e.getSource()).getText();
 				String message = null;
 				try {
 					int value = Integer.parseInt(string);
-					System.out.println(value);
+					// °ÑÊı¾İÍ³Ò»½»¸øwizardÀïÃæµÄÍ¨ÓÃ´æ´¢Æ÷DialogSettingsÀ´´æÖµ´¢
+					ScanParameterWizard.this.getWizard().getDialogSettings()
+							.put(key, value);
 					int maximum = spinner.getMaximum();
 					int minimum = spinner.getMinimum();
 					if (value > maximum) {
@@ -103,18 +106,13 @@ public class ScanParameterWizard extends WizardPage {
 				} catch (Exception ex) {
 					message = "Current input is not numeric";
 				}
-				if (message != null) {// å¦‚æœæœ‰é”™è¯¯æ¶ˆæ¯
-					spinner.setForeground(COLOR_SYSTEM_RED);// ä¸‹é¢ä»£ç å¯ä»¥çœç•¥
+				if (message != null) {// Èç¹ûÓĞ´íÎóÏûÏ¢
+					spinner.setForeground(COLOR_SYSTEM_RED);// ÏÂÃæ´úÂë¿ÉÒÔÊ¡ÂÔ
 					Rectangle rect = spinner.getBounds();
 					GC gc = new GC(spinner);
 					Point pt = gc.textExtent(string);
 					gc.dispose();
-					toolTip.setLocation(display.map(new Shell(), null, rect.x
-							+ pt.x, rect.y + rect.height));
-					toolTip.setMessage(message);
-					toolTip.setVisible(true);
 				} else {
-					toolTip.setVisible(false);
 					spinner.setForeground(null);
 				}
 			}

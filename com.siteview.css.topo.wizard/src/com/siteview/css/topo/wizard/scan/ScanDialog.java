@@ -1,4 +1,4 @@
-package com.xinnan.patientims.dialogs;
+package com.siteview.css.topo.wizard.scan;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.wizard.WizardDialog;

@@ -1,4 +1,4 @@
-package com.xinnan.patientims.dialogs;
+package com.siteview.css.topo.wizard.scan;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.*;
@@ -7,19 +7,14 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * ç•Œé¢2
+ * É¨Ãè²ÎÊı½çÃæ
  * 
  * @author zhangxinnan
  * 
@@ -28,93 +23,113 @@ public class ScanScopeWizard extends WizardPage {
 
 	private Table table;
 	private TableEditor editor = null;
+	private TableItem item;
 
 	protected ScanScopeWizard() {
-		super("Some wizard Page");
-		setTitle("æ‰«æå‚æ•° -->" + "æ‰«æèŒƒå›´ -->" + "æ’é™¤èŒƒå›´ -->" + "å…±åŒä½“è®¾ç½® -->" + "æ‰«æç§å­");
-		setMessage("ç”¨èµ·å§‹ipåœ°å€æŒ‡å®šæ‰«æèŒƒå›´ï¼Œä¸è®¾ç½®è¡¨ç¤ºå…¨èŒƒå›´æ‰«æ");
+		super("ScanScopeWizard");
+		setTitle("É¨Ãè²ÎÊı -->" + "É¨Ãè·¶Î§ -->" + "ÅÅ³ı·¶Î§ -->" + "¹²Í¬ÌåÉèÖÃ -->" + "É¨ÃèÖÖ×Ó");
+		setMessage("ÓÃÆğÊ¼ipµØÖ·Ö¸¶¨É¨Ãè·¶Î§£¬²»ÉèÖÃ±íÊ¾È«·¶Î§É¨Ãè");
 	}
 
+	/**
+	 * ´´½¨½çÃæÊÓÍ¼
+	 */
 	public void createControl(Composite parent) {
-		// è®¾ç½®é¢œè‰²
-		// display = parent.getDisplay();
-		// COLOR_SYSTEM_RED = display.getSystemColor(SWT.COLOR_RED);
-		// ç¾¤ç»„
+		// Èº×é
 		Group group = new Group(parent, SWT.NONE);
-		group.setText("æ‰«æèŒƒå›´");
+		group.setText("É¨Ãè·¶Î§");
 		group.setLayout(new FillLayout());
 		GridData layoutData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
 		layoutData.verticalIndent = 15;
 		group.setLayoutData(layoutData);
-		// tabelè®¾ç½®
+		// tabelÉèÖÃ
 		table = new Table(group, SWT.BORDER | SWT.NONE | SWT.FULL_SELECTION
-				| SWT.HIDE_SELECTION | SWT.VIRTUAL);
-		table.setHeaderVisible(true);// æ ‡é¢˜
-		table.setLinesVisible(true);// è¡¨æ ¼çº¿å¯è§
-		// ç¼–è¾‘å™¨è®¾ç½®
+				| SWT.VIRTUAL);
+		table.setHeaderVisible(true);// ±êÌâ
+		table.setLinesVisible(true);// ±í¸ñÏß¿É¼û
+		// ±à¼­Æ÷ÉèÖÃ
 		editor = new TableEditor(table);
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
-		// åˆ›å»ºåˆ—
+		// ´´½¨ÁĞ
 		TableColumn col1 = new TableColumn(table, SWT.LEFT);
-		col1.setText("èµ·å§‹IPåœ°å€");
+		col1.setText("ÆğÊ¼IPµØÖ·");
 		col1.setWidth(300);
 		TableColumn col2 = new TableColumn(table, SWT.LEFT);
-		col2.setText("ç»ˆæ­¢IPåœ°å€");
+		col2.setText("ÖÕÖ¹IPµØÖ·");
 		col2.setWidth(300);
 
-		// æ·»åŠ è¡¨æ ¼æ•°æ®
+		// Ìí¼Ó±í¸ñÊı¾İ
 		final TableColumn[] columns = table.getColumns();
-		for (int i = 0; i < columns.length; i++) {
-			TableItem item = new TableItem(table, SWT.NONE);
+
+		for (int i = 0; i < 1; i++) {
+			item = new TableItem(table, SWT.NONE);
 			for (int j = 0; j < columns.length; j++) {
-				// item.setText(j,""+i);//è®¾ç½®é»˜è®¤å€¼
+				// item.setText(j,""+i);//ÉèÖÃÄ¬ÈÏÖµtestÊı¾İ
 			}
 		}
 
-		// ä¿®æ”¹table
+		// ĞŞ¸Ätable
 		{
 			table.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					try {
-						// æ¸…ç©ºç¼–è¾‘å™¨
+						// Çå¿Õ±à¼­Æ÷
 						Control c = editor.getEditor();
 						if (c != null) {
 							c.dispose();
 						}
-						// å¾—åˆ°é€‰ä¸­çš„è¡Œ
+						// µÃµ½Ñ¡ÖĞµÄĞĞ
 						Point point = new Point(e.x, e.y);
 						final TableItem tableitem = table.getItem(point);
-						// // å¾—åˆ°é€‰ä¸­çš„åˆ—
+						// // µÃµ½Ñ¡ÖĞµÄÁĞ
 						int column = -1;
 						for (int i = 0; i < table.getColumnCount(); i++) {
 							Rectangle rec = tableitem.getBounds(i);
 							if (rec.contains(point)) {
 								column = i;
-							} else {// å¦‚æœç‚¹å‡»çš„æ˜¯ä¸å­˜åœ¨çš„è¡Œã€‚é‚£ä¹ˆæ–°å¢ä¸€è¡Œ
-								TableItem item = new TableItem(table, SWT.NONE);
-								TableItem[] items = table.getItems();
+							} else {// Èç¹ûµã»÷µÄÊÇ²»´æÔÚµÄĞĞ¡£ÄÇÃ´ĞÂÔöÒ»ĞĞ
+								new TableItem(table, SWT.NONE);
 							}
 						}
-						final int col1 = column;
-						System.out.println(col1);
 
-						// å…¶ä»–çš„ä¿®æ”¹éƒ½æ˜¯ç”¨æ–‡æœ¬æ¡†
+						// System.out.println("±í¸ñÊı" + table.getItems().length);
+						final int col1 = column;
+
+						// ÆäËûµÄĞŞ¸Ä¶¼ÊÇÓÃÎÄ±¾¿ò
 						final Text txt = new Text(table, SWT.NONE);
-						txt.setText(tableitem.getText(col1));// å–å¾—å½“å‰å•å…ƒæ ¼é‡Œçš„å€¼
-						txt.forceFocus();
+						txt.setText(tableitem.getText(col1));// È¡µÃµ±Ç°µ¥Ôª¸ñÀïµÄÖµ
 						editor.setEditor(txt, tableitem, col1);
+						final String[] strArray = new String[5];
 						txt.addModifyListener(new ModifyListener() {
 							@Override
 							public void modifyText(ModifyEvent e) {
-								// Text text = (Text)editor.getEditor();
-								System.out.println(txt.getText());
-								tableitem.setText(col1, txt.getText());
+								// Èç¹ûcol1==0ÎªµÚÒ»ÁĞ
+								tableitem.setText(col1, txt.getText());// ÄÄÒ»ÁĞÊäÈë
+																		// µÄÎÄ×Ö
+								// System.out.println(tableitem.getText(0)+"----"+tableitem.getText(1));
+								for (int i = 0; i < strArray.length; i++) {
+									strArray[i] = tableitem.getText(0);
+									ScanScopeWizard.this.getWizard()
+											.getDialogSettings()
+											.put("Array", strArray);
+								}
 
+								// ¿ÉÒÔ´æÊı×é
+								ScanScopeWizard.this.getWizard()
+										.getDialogSettings()
+										.put("ÆğÊ¼ID", tableitem.getText(0));
+								ScanScopeWizard.this.getWizard()
+										.getDialogSettings()
+										.put("ÖÕÖ¹ID", tableitem.getText(1));
 							}
+
 						});
-						// åœ¨tableæ›´æ–°æ—¶text editoræ¶ˆå¤± å®ç°åˆ·æ–°æ•ˆæœ
+						txt.selectAll();
+						txt.forceFocus();
+
+						// ÔÚtable¸üĞÂÊ±text editorÏûÊ§ ÊµÏÖË¢ĞÂĞ§¹û
 						tableitem
 								.addDisposeListener(new org.eclipse.swt.events.DisposeListener() {
 									public void widgetDisposed(
@@ -122,27 +137,34 @@ public class ScanScopeWizard extends WizardPage {
 										txt.dispose();
 									}
 								});
+						// »ñÈ¡±í¸ñÀïÃæµÄÖµ
+						// TableItem[] tables = table.getItems();
+						// for (int i = 0; i < tables.length; i++) {
+						// System.out.println(tables[i].getText(0)+"-------------"+tables[i].getText(1));
+						// // °ÑÊı¾İÍ³Ò»½»¸øwizardÀïÃæµÄÍ¨ÓÃ´æ´¢Æ÷DialogSettingsÀ´´æÖµ´¢
+						// ScanScopeWizard.this.getWizard().getDialogSettings().put("",
+						// "");
+						// }
 					} catch (Exception e2) {
 						e2.getStackTrace();
 					}
-					;
 				}
 			});
 		}
 
-		// å³é”®åˆ é™¤èœå•
+		// ÓÒ¼üÉ¾³ı²Ëµ¥
 		{
 			Menu menu1 = new Menu(group);
 			table.setMenu(menu1);
 			MenuItem menuitem1 = new MenuItem(menu1, SWT.PUSH);
-			menuitem1.setText("åˆ é™¤");
+			menuitem1.setText("É¾³ı");
 
 			menuitem1.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event event) {
 					MessageBox mbox = new MessageBox(new Shell(),
 							SWT.DIALOG_TRIM | SWT.ICON_INFORMATION);
-					mbox.setText("åˆ é™¤æˆåŠŸ");
-					mbox.setMessage("åˆ é™¤äº†" + table.getSelectionCount() + "æ¡è®°å½•");
+					mbox.setText("É¾³ı³É¹¦");
+					mbox.setMessage("É¾³ıÁË" + table.getSelectionCount() + "Ìõ¼ÇÂ¼");
 					table.remove(table.getSelectionIndices());
 					mbox.open();
 				}
