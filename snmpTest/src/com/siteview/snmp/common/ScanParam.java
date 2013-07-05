@@ -25,7 +25,7 @@ public class ScanParam {
 	// <种子IP>
 	private List<String> scan_seeds = new ArrayList<String>();
 	// <起始IP,结束IP>
-	private Pair<String, String> scan_scales = new Pair<String, String>();
+	private List<Pair<String, String>> scan_scales = new ArrayList<Pair<String, String>>();
 	private List<Pair<Long, Long>> scan_scales_num = new ArrayList<Pair<Long,Long>>();
 	// <<范围>,<读写共同体名> >
 	private List<Pair<Pair<String, String>, Pair<String, String>>> communitys = new ArrayList<Pair<Pair<String,String>,Pair<String,String>>>();
@@ -95,16 +95,14 @@ public class ScanParam {
 		this.scan_seeds = scan_seeds;
 	}
 
-	public Pair<String, String> getScan_scales() {
+	public List<Pair<String, String>> getScan_scales() {
 		return scan_scales;
 	}
 
-	public void setScan_scales(Pair<String, String> scan_scales) {
+	public void setScan_scales(List<Pair<String, String>> scan_scales) {
 		this.scan_scales = scan_scales;
 	}
 
-	
-	
 	public List<Pair<Long, Long>> getScan_scales_num() {
 		return scan_scales_num;
 	}

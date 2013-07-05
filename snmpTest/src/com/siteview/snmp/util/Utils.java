@@ -3,6 +3,7 @@ package com.siteview.snmp.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
@@ -72,6 +74,13 @@ public class Utils {
 			target.add(v);
 		}
 	}
+	/**
+	 * 比较两个集合的内容是否相等，按顺序比较。
+	 * 集合中的对象必须实现 Comparable接口
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	public static <T extends Comparable<T>> boolean compare(List<T> a, List<T> b) {  
 		  
         if (a.size() != b.size())  
@@ -153,6 +162,11 @@ public class Utils {
 			hexStr = "0" + hexStr;
 		}
 		return hexStr;
+	}
+	public static <K,V> void addAllMap(Map<K,V> target,Map<K,V> src){
+		for(Entry<K,V> i : src.entrySet()){
+			target.put(i.getKey(), i.getValue());
+		}
 	}
 	
 }

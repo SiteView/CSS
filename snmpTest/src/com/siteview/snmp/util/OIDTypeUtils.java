@@ -12,6 +12,12 @@ import com.siteview.snmp.constants.CommonDef;
 import com.siteview.snmp.pojo.DevicePro;
 
 
+/**
+ * 设备类型工具类
+ * 从sqlite内置数据库中读取设备类型信息
+ * @author haiming.wang
+ *
+ */
 public class OIDTypeUtils {
 
 	private  String dbName = "DeviceType.db";

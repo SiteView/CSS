@@ -30,6 +30,11 @@ import com.siteview.snmp.util.PropertiesUtils;
 import com.siteview.snmp.util.ScanUtils;
 import com.siteview.snmp.util.Utils;
 
+/**
+ * 拓扑扫描
+ * @author haiming.wang
+ *
+ */
 public class NetScan implements Runnable {
 	private Map<String, Map<String, List<String>>> aft_list = new ConcurrentHashMap<String, Map<String, List<String>>>();
 	// 设备ARP数据列表 {sourceIP,{infInx,[(MAC,destIP)]}}
@@ -174,9 +179,17 @@ public class NetScan implements Runnable {
 		long start = System.currentTimeMillis();
 		System.out.println("scan start");
 		String msg = "";
+		devid_list.clear();
+		ifprop_list.clear();
+		aft_list_frm.clear();
+		frm_aftarp_list.clear();
+		ospfnbr_list.clear();
+		rttbl_list.clear();
+		directdata_list.clear();
+		m_ip_list_visited.clear();
 		if ("1".equals(myParam.getScan_type())
 				|| "2".equals(myParam.getScan_type())) {// 读取源数据，从保存的拓扑图
-
+			readOriginData();
 		}
 		if ("0".equals(myParam.getScan_type())
 				|| "2".equals(myParam.getScan_type())) {// 进行全新扫描
@@ -424,13 +437,12 @@ public class NetScan implements Runnable {
 		IoUtils.saveAftList(aft_list);
 		IoUtils.saveArpList(arp_list);
 		IoUtils.saveInfPropList(ifprop_list,"");
-		// IoUtils.saveOspfNbrList(ospfnbr_list);
-		// IoUtils.saveRouteList(rttbl_list);
-		// IoUtils.saveBgpList(bgp_list);
-		// IoUtils.saveVrrpList(routeStandby_list);
+		IoUtils.saveOspfNbrList(ospfnbr_list);
+		IoUtils.saveRouteList(rttbl_list);
+		IoUtils.saveBgpList(bgp_list);
+		IoUtils.saveVrrpList(routeStandby_list);
 		IoUtils.saveDirectData(directdata_list);
-		// IoUtils.saveConfigData(scanParam);
-
+		IoUtils.saveConfigData(scanParam);
 		return true;
 	}
 
@@ -1250,20 +1262,80 @@ public class NetScan implements Runnable {
 		localport_macs.clear();
 		return true;
 	}
+	/**
+	 * 读取格式化之前的原始数据
+	 * @return
+	 */
+	public boolean readOriginData(){
+		if(!devid_list.isEmpty()){
+			devid_list.clear();
+		}
+		if(!aft_list.isEmpty()){
+			aft_list.clear();
+		}
+		if(!arp_list.isEmpty()){
+			arp_list.clear();
+		}
+		if(!ifprop_list.isEmpty()){
+			ifprop_list.clear();
+		}
+		if(!ospfnbr_list.isEmpty()){
+			ospfnbr_list.clear();
+		}
+		if(!rttbl_list.isEmpty()){
+			rttbl_list.clear();
+		}
+		if(!bgp_list.isEmpty()){
+			bgp_list.clear();
+		}
+		if(!routeStandby_list.isEmpty()){
+			routeStandby_list.clear();
+		}
+		if(!rtpath_list.isEmpty()){
+			rtpath_list.clear();
+		}
+		if(!directdata_list.isEmpty()){
+			directdata_list.clear();
+		}
+		IoUtils.readIdBodyData(devid_list,"");
+		if(devid_list.isEmpty()){
+			for(Entry<String,IDBody> i : devid_list.entrySet()){
+				IDBody devid = i.getValue();
+				Utils.collectionCopyAll(m_ip_list_visited, devid.getIps());
+			}
+			if(myParam.getScan_type().equals("2")){
+				siReader.setDevid_list_visited(devid_list);
+				siReader.setIp_visited_list(m_ip_list_visited);
+			}
+		}
+		IoUtils.readAftList(aft_list);
+		IoUtils.readArpList(arp_list);
+		IoUtils.readInfPropList(ifprop_list);
+		IoUtils.readOspfNbrList(ospfnbr_list);
+		IoUtils.readRouteList(rttbl_list);
+		IoUtils.readBgpList(bgp_list);
+		IoUtils.readVrrpList(routeStandby_list);
+		IoUtils.readTracertList(rtpath_list);
+		IoUtils.readDirectData(directdata_list);
+		if(myParam.getScan_type().equals("1")){
+			IoUtils.readConfigDate(scanParam);
+		}
+		return true;
+	}
 
 	private Map<String, List<Pair<String, String>>> localport_macs = new HashMap<String, List<Pair<String, String>>>();
 
-	private ScanParam scanParam;
+	private ScanParam scanParam = new ScanParam();
 
 	// 扫描补充参数
-	AuxParam myParam;
+	AuxParam myParam = new AuxParam();
 	// 己扫描子网；
 	private List<Pair<String, String>> scaned = new ArrayList<Pair<String, String>>();
-
-	private List<Pair<String, String>> toscan = new ArrayList<Pair<String, String>>();// 待扫描子网;
+	// 待扫描子网 
+	private List<Pair<String, String>> toscan = new ArrayList<Pair<String, String>>();
 	// 已访问ip
 	private List<String> m_ip_list_visited = new ArrayList<String>();
-
+	
 	private ReadService siReader = new ReadService();
 	// 本地主机ip地址列表
 	private List<String> localip_list = new ArrayList<String>();
