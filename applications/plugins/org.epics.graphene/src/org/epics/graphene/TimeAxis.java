@@ -6,12 +6,8 @@ package org.epics.graphene;
 
 import java.math.BigDecimal;
 import java.text.*;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.epics.util.array.ListDouble;
-import org.epics.util.time.TimeInterval;
-import org.epics.util.time.Timestamp;
 
 /**
  *
@@ -19,32 +15,32 @@ import org.epics.util.time.Timestamp;
  */
 public class TimeAxis {
     
-    private TimeInterval timeInterval;
-    private List<Timestamp> timeStamps;
-    private ListDouble normalizedValues;
-    private List<String> tickLabels;
+    private double minValue;
+    private double maxValue;
+    private double[] tickValues;
+    private String[] tickStrings;
 
-    public TimeAxis(TimeInterval timeInterval, List<Timestamp> timeStamps, ListDouble normalizedValues, List<String> tickLabels) {
-        this.timeInterval = timeInterval;
-        this.timeStamps = timeStamps;
-        this.normalizedValues = normalizedValues;
-        this.tickLabels = tickLabels;
+    public TimeAxis(double minValue, double maxValue, double[] tickValues, String[] tickStrings) {
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        this.tickValues = tickValues;
+        this.tickStrings = tickStrings;
     }
 
-    public TimeInterval getTimeInterval() {
-        return timeInterval;
+    public double getMinValue() {
+        return minValue;
     }
 
-    public List<Timestamp> getTimestamps() {
-        return timeStamps;
+    public double getMaxValue() {
+        return maxValue;
     }
 
-    public ListDouble getNormalizedValues() {
-        return normalizedValues;
+    public double[] getTickValues() {
+        return tickValues;
     }
 
-    public List<String> getTickLabels() {
-        return tickLabels;
+    public String[] getTickLabels() {
+        return tickStrings;
     }
 
     public static TimeAxis createAutoAxis(double minValue, double maxValue, int maxTicks) {
@@ -112,8 +108,7 @@ public class TimeAxis {
             double value = ticks[i];
             labels[i] = format(value, format, exponent, normalization);
         }
-        //return new TimeAxis(minValue, maxValue, ticks, labels);
-        return null;// new TimeAxis(minValue, maxValue, ticks, labels);
+        return new TimeAxis(minValue, maxValue, ticks, labels);
     }
     
     static String format(double number, DecimalFormat format, String exponent, double normalization) {

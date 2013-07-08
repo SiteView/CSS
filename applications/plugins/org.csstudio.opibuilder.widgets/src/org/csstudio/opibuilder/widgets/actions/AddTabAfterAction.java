@@ -32,6 +32,7 @@ public class AddTabAfterAction extends AbstractWidgetTargetAction {
 	 * 
 	 * @return a list with all widget models that are currently selected
 	 */
+	
 	protected final TabEditPart getSelectedTabWidget() {
 		return (TabEditPart)selection.getFirstElement();
 	}

@@ -9,6 +9,7 @@ package org.csstudio.swt.widgets.figures;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 import org.csstudio.swt.widgets.Activator;
@@ -31,12 +32,6 @@ import org.eclipse.swt.graphics.RGB;
  *
  */
 public class AbstractBoolFigure extends Figure implements Introspectable{
-	
-	public enum TotalBits {
-		BITS_16,
-		BITS_32,
-		BITS_64
-	}
 	
 	public enum BoolLabelPosition{
 		
@@ -69,8 +64,6 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
 			return descripion;
 		}
 	}
-	
-	private TotalBits totalBits = TotalBits.BITS_64;
 
 	protected Label boolLabel;
 
@@ -363,7 +356,12 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
 		if(bit < 0)
 			booleanValue = (this.value != 0);
 		else if(bit >=0) {
-			booleanValue = ((value>>bit)&1L) >0;
+			char[] binArray = Long.toBinaryString(this.value).toCharArray();
+			if(bit >= binArray.length)
+				booleanValue = false;
+			else {
+				booleanValue = (binArray[binArray.length - 1 - bit] == '1');
+			}
 		}
 		//change boolLabel text
 		if(booleanValue)
@@ -381,37 +379,34 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
 		if(bit < 0)
 			setValue(booleanValue ? 1 : 0);
 		else if(bit >=0) {
+			char[] binArray = Long.toBinaryString(value).toCharArray();
 			if(bit >= 64) {
 			    // Log with exception to obtain call stack
                 Activator.getLogger().log(Level.WARNING, "Bit " + bit + "can not exceed 63.", new Exception());
 			}
 			else {
-				switch (totalBits) {
-				case BITS_16:
-					setValue(booleanValue? value | ((short)1<<bit) : value & ~((short)1<<bit));
-				break;				
-				case BITS_32:
-					setValue(booleanValue? value | ((int)1<<bit) : value & ~((int)1<<bit));
-				break;
-				default:				
-					setValue(booleanValue? value | (1L<<bit) : value & ~(1L<<bit));
-					break;
-				}			
+				char[] bin64Array = new char[64];
+				Arrays.fill(bin64Array, '0');
+				for(int i=0; i<binArray.length; i++){
+					bin64Array[64-binArray.length + i] = binArray[i];
+				}
+				bin64Array[63-bit] = booleanValue? '1' : '0';
+				String binString = new String(bin64Array);
+
+				if( binString.indexOf('1') <= -1){
+					binArray = new char[]{'0'};
+				}else {
+					binArray = new char[64 - binString.indexOf('1')];
+					for(int i=0; i<binArray.length; i++){
+						binArray[i] = bin64Array[i+64-binArray.length];
+					}
+				}
+
+				binString = new String(binArray);
+				setValue(Long.parseLong(binString, 2));
 			}
 		}
 	}
-	
-	public TotalBits getTotalBits() {
-		return totalBits;
-	}
-
-	/**
-	 * @param totalBits number of total bits
-	 */
-	public void setTotalBits(TotalBits totalBits) {
-		this.totalBits = totalBits;
-	}
-
 
 	public BeanInfo getBeanInfo() throws IntrospectionException {
 		return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());

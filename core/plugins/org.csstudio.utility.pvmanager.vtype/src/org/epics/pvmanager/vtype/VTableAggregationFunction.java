@@ -11,13 +11,10 @@ import org.epics.vtype.VTable;
 import org.epics.vtype.Scalar;
 import org.epics.vtype.VDouble;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.epics.pvmanager.ReadFunction;
-import org.epics.util.array.ArrayDouble;
-import org.epics.util.array.ArrayInt;
 import org.epics.vtype.ValueFactory;
 
 /**
@@ -45,11 +42,6 @@ class VTableAggregationFunction implements ReadFunction<VTable> {
                 if (value != null)
                    ((String[]) array)[pos] = ((VString) value).getValue();
             }
-
-            @Override
-            public Object finalizeData(Object data) {
-                return Arrays.asList((String[]) data);
-            }
         });
         arrayAdders.put(Double.TYPE, new ArrayAdder() {
 
@@ -61,28 +53,17 @@ class VTableAggregationFunction implements ReadFunction<VTable> {
                     converted = ((Number) ((Scalar) value).getValue()).doubleValue();
                 ((double[]) array)[pos] = converted;
             }
-
-            @Override
-            public Object finalizeData(Object data) {
-                return new ArrayDouble((double[]) data);
-            }
         });
         arrayAdders.put(Integer.TYPE, new ArrayAdder() {
 
             @Override
             @SuppressWarnings("unchecked")
-            public void addValue(Object data, int pos, Object value) {
+            public void addValue(Object array, int pos, Object value) {
                 int converted = 0;
                 if (value != null)
                     converted = ((Number) ((Scalar) value).getValue()).intValue();
-                ((int[]) data)[pos] = converted;
+                ((int[]) array)[pos] = converted;
             }
-
-            @Override
-            public Object finalizeData(Object data) {
-                return new ArrayInt((int[]) data);
-            }
-            
         });
     }
 
@@ -114,22 +95,21 @@ class VTableAggregationFunction implements ReadFunction<VTable> {
                 columnType = String.class;
             
             // Prepare column array
-            Object data = java.lang.reflect.Array.newInstance(columnType, columnValues.size());
+            Object array = java.lang.reflect.Array.newInstance(columnType, columnValues.size());
             for (int i = 0; i < columnValues.size(); i++) {
-                arrayAdders.get(columnType).addValue(data, i, columnValues.get(i));
+                arrayAdders.get(columnType).addValue(array, i, columnValues.get(i));
             }
             
             // Done with this column
             types.add(columnType);
-            values.add(arrayAdders.get(columnType).finalizeData(data));
+            values.add(array);
         }
         
         return ValueFactory.newVTable(types, names, values);
     }
     
     private static interface ArrayAdder {
-        void addValue(Object data, int pos, Object value);
-        Object finalizeData(Object data);
+        void addValue(Object array, int pos, Object value);
     }
     
     private Class<?> validateType(Object value, Class<?> oldType, String columnName) {

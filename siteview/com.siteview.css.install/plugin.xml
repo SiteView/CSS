@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+  
+ <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="com.siteview.css.install.topologyAction"
+            label="Topology"
+            description="生成拓扑图"
+            visible="true">
+            
+         <action
+               class="com.siteview.css.install.actions.OpenTopologyAction"
+               icon="icons/OPIBuilder.png"
+               id="com.siteview.css.install.openTopoAction"
+               label="open topology"
+               menubarPath="css/display/"
+               style="push">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         id="com.siteview.css.install.import"
+         name="import topology"
+         point="org.eclipse.ui.importWizards">
+      <category
+            id="com.siteview.css.install.category.topology"
+            name="topology">
+      </category>
+      <wizard
+            category="com.siteview.css.install.category.topology"
+            class="com.siteview.css.install.actions.ImportWizard"
+            icon="icons/OPIBuilder.png"
+            id="com.siteview.css.install.topology.wizard"
+            name="import topology">
+      </wizard>
+   </extension>
+</plugin>

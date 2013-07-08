@@ -15,8 +15,6 @@ import org.epics.vtype.VNumberArray;
 import org.epics.pvmanager.expression.DesiredRateExpression;
 import org.epics.pvmanager.expression.DesiredRateExpressionListImpl;
 import org.epics.pvmanager.expression.SourceRateExpression;
-import org.epics.vtype.VString;
-import org.epics.vtype.VTable;
 
 /**
  *
@@ -66,14 +64,6 @@ public class ExpressionLanguage {
 		yNumberArray.getFunction(), xNumberArray.getFunction()),
 		"Scatter Graph");
 
-    }
-
-    public static ScatterGraph2DExpression scatterGraphOf(
-	    DesiredRateExpression<? extends VTable> tableData,
-	    DesiredRateExpression<? extends VString> xColumnName,
-	    DesiredRateExpression<? extends VString> yColumnName,
-	    DesiredRateExpression<? extends VString> tooltipColumnName) {
-	return new ScatterGraph2DExpression(tableData, xColumnName, yColumnName, tooltipColumnName);
     }
 
 }

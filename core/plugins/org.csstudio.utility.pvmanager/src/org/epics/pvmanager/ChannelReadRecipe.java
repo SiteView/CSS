@@ -66,10 +66,5 @@ public class ChannelReadRecipe {
         }
         return true;
     }
-
-    @Override
-    public String toString() {
-        return "[ChannelReadRecipe for " + channelName + ": " + readSubscription + "]";
-    }
     
 }

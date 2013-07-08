@@ -58,7 +58,6 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart{
 		}
 
 		public void pvDisconnected(PV pv) {
-			lastWriteAccess = null;
 		}
 
 		public void pvValueUpdate(PV pv) {

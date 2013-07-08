@@ -67,10 +67,10 @@ public class PVFieldToVEnum extends AlarmTimeDisplayExtractor implements VEnum {
 	 */
 	@Override
 	public String getValue() {
-		if (labels != null && index >= 0 && index < labels.size())
+		if (labels != null && index != -1)
 			return labels.get(index);
 		else
-			return Integer.toString(index);		// return integer as string as fallback
+			return null;
 	}
 
 	/* (non-Javadoc)

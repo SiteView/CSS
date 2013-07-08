@@ -5,22 +5,15 @@
          point="org.eclipse.ui.views">
       <view
             class="org.csstudio.utility.pvmanager.ui.toolbox.ToolboxView"
-            icon="icons/datasource-viewer-16.png"
+            icon="icons/toolbox.png"
             id="org.csstudio.utility.pvmanager.ui.toolbox.ToolboxView"
-            name="Datasources">
+            name="PVManager Toolbox">
       </view>
       <view
             class="org.csstudio.utility.pvmanager.ui.toolbox.ServicesView"
-            icon="icons/service-viewer-16.png"
+            icon="icons/toolbox.png"
             id="org.csstudio.utility.pvmanager.ui.toolbox.ServicesView"
-            name="Services"
-            restorable="true">
-      </view>
-      <view
-            class="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"
-            icon="icons/formula-viewer-16.png"
-            id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"
-            name="Formula Functions"
+            name="PVManager Services"
             restorable="true">
       </view>
    </extension>
@@ -31,8 +24,8 @@
             locationURI="menu:debugging">
          <command
                commandId="org.eclipse.ui.views.showView"
-               icon="icons/datasource-viewer-16.png"
-               label="Datasources"
+               icon="icons/toolbox.png"
+               label="PVManager Toolbox"
                style="push"
                tooltip="Show open channels in PVManager">
             <parameter
@@ -42,22 +35,11 @@
          </command>
          <command
                commandId="org.eclipse.ui.views.showView"
-               icon="icons/service-viewer-16.png"
-               label="Services"
+               icon="icons/toolbox.png"
                style="push">
             <parameter
                   name="org.eclipse.ui.views.showView.viewId"
                   value="org.csstudio.utility.pvmanager.ui.toolbox.ServicesView">
-            </parameter>
-         </command>
-         <command
-               commandId="org.eclipse.ui.views.showView"
-               icon="icons/formula-viewer-16.png"
-               label="Formula Functions"
-               style="push">
-            <parameter
-                  name="org.eclipse.ui.views.showView.viewId"
-                  value="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView">
             </parameter>
          </command>
       </menuContribution>

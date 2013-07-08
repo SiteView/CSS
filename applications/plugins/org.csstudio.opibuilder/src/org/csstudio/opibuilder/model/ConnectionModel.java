@@ -173,7 +173,7 @@ public class ConnectionModel extends AbstractWidgetModel {
 		addProperty(new ColorProperty(PROP_LINE_COLOR, "Line Color",
 				WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_BLACK));
 		addProperty(new ComboProperty(PROP_ROUTER, "Router",
-				WidgetPropertyCategory.Display, RouterType.stringValues(), 0));
+				WidgetPropertyCategory.Display, RouterType.stringValues(), 1));
 		addProperty(new ComboProperty(PROP_ARROW_TYPE, "Arrows",
 				WidgetPropertyCategory.Display, ArrowType.stringValues(), 0));
 		addProperty(new BooleanProperty(PROP_FILL_ARROW, "Fill Arrow",

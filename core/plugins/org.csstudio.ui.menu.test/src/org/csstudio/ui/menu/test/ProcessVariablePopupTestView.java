@@ -186,6 +186,7 @@ public class ProcessVariablePopupTestView extends ViewPart {
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
+	
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */

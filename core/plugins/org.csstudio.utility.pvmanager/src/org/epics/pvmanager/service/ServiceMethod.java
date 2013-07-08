@@ -16,8 +16,7 @@ import static org.epics.pvmanager.service.Service.namePattern;
  * @author carcassi
  */
 public abstract class ServiceMethod {
-    private final String name;
-    private final String description;
+    private String name;
     private final Map<String, Class<?>> argumentTypes;
     private final Map<String, String> argumentDescriptions;
     private final Map<String, Class<?>> resultTypes;
@@ -25,7 +24,6 @@ public abstract class ServiceMethod {
 
     public ServiceMethod(ServiceMethodDescription serviceMethodDescription) {
         this.name = serviceMethodDescription.name;
-        this.description = serviceMethodDescription.description;
         this.argumentTypes = Collections.unmodifiableMap(new HashMap<>(serviceMethodDescription.argumentTypes));
         this.argumentDescriptions = Collections.unmodifiableMap(new HashMap<>(serviceMethodDescription.argumentDescriptions));
         this.resultTypes = Collections.unmodifiableMap(new HashMap<>(serviceMethodDescription.resultTypes));
@@ -34,10 +32,6 @@ public abstract class ServiceMethod {
 
     public final String getName() {
         return name;
-    }
-
-    public final String getDescription() {
-        return description;
     }
 
     public final Map<String, Class<?>> getArgumentTypes() {

@@ -3,14 +3,11 @@
  */
 package org.csstudio.utility.pvmanager.ui.toolbox;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.epics.pvmanager.service.Service;
@@ -54,27 +51,14 @@ public class ServiceTreeContentProvider implements ITreeContentProvider {
     @Override
     public Object[] getChildren(Object parentElement) {
 	if (parentElement instanceof Service) {
-	    List<ServiceMethod> serviceMethods = new ArrayList<ServiceMethod>(
-		    ((Service) parentElement).getServiceMethods().values());
-	    Collections.sort(serviceMethods, new Comparator<ServiceMethod>() {
-
-		@Override
-		public int compare(ServiceMethod o1, ServiceMethod o2) {
-		    return o1.getName().compareTo(o2.getName());
-		}
-	    });
-	    return serviceMethods.toArray();
+	    return ((Service) parentElement).getServiceMethods().values()
+		    .toArray();
 	} else if (parentElement instanceof ServiceMethod) {
-	    SortedMap<String, String> argumentDescriptionMap = new TreeMap<String, String>();
-	    argumentDescriptionMap.putAll(((ServiceMethod) parentElement)
+	    SortedMap<String, String> map = new TreeMap<String, String>();
+	    map.putAll(((ServiceMethod) parentElement)
 		    .getArgumentDescriptions());
-	    SortedMap<String, String> resultDescriptionMap = new TreeMap<String, String>();
-	    resultDescriptionMap.putAll(((ServiceMethod) parentElement)
-		    .getResultDescriptions());
-	    List<Entry<String, String>> descriptionList = new ArrayList<Entry<String, String>>();
-	    descriptionList.addAll(argumentDescriptionMap.entrySet());
-	    descriptionList.addAll(resultDescriptionMap.entrySet());
-	    return descriptionList.toArray();
+	    map.putAll(((ServiceMethod) parentElement).getResultDescriptions());
+	    return map.entrySet().toArray();
 	}
 	return null;
     }

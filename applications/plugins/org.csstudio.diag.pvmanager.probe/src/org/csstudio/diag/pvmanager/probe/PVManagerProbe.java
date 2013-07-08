@@ -372,7 +372,6 @@ public class PVManagerProbe extends ViewPart {
 					.writeListener(changeValuePanel.getWriterListener())
 					.notifyOn(swtThread(this))
 					.asynchWriteAndMaxReadRate(ofHertz(25));
-			changeValuePanel.setPvWriter(pv);
 			// Show the PV name as the title
 			setPartName(pvFormula);
 			detailsPanel.changeValue(expression, pvFormula);

@@ -1,20 +1,15 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.ui.menu.app;
 
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
@@ -48,11 +43,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor
 
 	private IWorkbenchAction lock_toolbar, edit_actionsets, save;
 
+	private OpenAction navigatorAction;
+	
+	private IWorkbenchAction preferenceAction;
+	public final String ID = "org.csstudio.ui.menu.app.PreferencePage";
 	/** Initialize */
     public ApplicationActionBarAdvisor(final IActionBarConfigurer configurer)
     {
         super(configurer);
         window = configurer.getWindowConfigurer().getWindow();
+        
     }
 
     /** Create actions.
@@ -85,14 +85,34 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor
             register(ActionFactory.INTRO.create(window));
 
         register(ActionFactory.HELP_CONTENTS.create(window));
+        
+        //定义操作对象
+        navigatorAction = new OpenAction(window);
+        
+		// 工作台操作工厂对象，定义打开"首选项"对话框操作
+		preferenceAction = ActionFactory.PREFERENCES.create(window);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void fillMenuBar(final IMenuManager menubar)
     {
-        // Placeholder for possible additions, rest filled from plugin.xml
+/*        // Placeholder for possible additions, rest filled from plugin.xml
         menubar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+        //定义MenuManager对象，即定义一个“Window”菜单
+        MenuManager windowMenu = new MenuManager("&拓扑",IWorkbenchActionConstants.M_WINDOW);
+        //在“Window”菜单下添加菜单项及其操作
+        windowMenu.add((IAction) navigatorAction);
+        //在菜单栏添加菜单
+        menubar.add(windowMenu);*/
+		// 定义Window菜单
+		MenuManager windowMenu = new MenuManager("&Window",
+				"IWorkbenchActionConstants.M_WINDOW");
+		// 为Window添加"打开首选项"操作菜单项
+		windowMenu.add(preferenceAction);
+		// 将Window菜单添加到菜单栏
+		menubar.add(windowMenu);
+        
     }
 
     /** {@inheritDoc} */
@@ -118,4 +138,26 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor
         file_bar.add(save);
         file_bar.add(new CoolItemGroupMarker(IWorkbenchActionConstants.FILE_END));
     }
+	   //判断用户名和密码是否已经存在。
+		public boolean preOpen() {
+			// 调用登录对话框
+			LoginDialog ld = new LoginDialog(null);
+			//定义Dcctor对象
+//	    	Doctor doctor = new Doctor();
+//			ld.setDoctor(doctor);
+			//打开登录对话框
+			if (ld.open() == IDialogConstants.OK_ID) {
+				//到数据库中去验证信息
+				//doctor = DataBaseOperate.getLoginInfor(doctor);
+//				if (doctor == null) {
+//					MessageDialog.openInformation(null, null, "请正确填写信息！！！！");
+//					return false;
+//				}
+//				if (doctor != null) {
+//					return true;
+//				}
+				return true;
+			}
+			return false;
+		}
 }

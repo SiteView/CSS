@@ -726,6 +726,7 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 	
 	public void setBackgroundColor(RGB color){
 		setPropertyValue(PROP_COLOR_BACKGROUND, color);
+		System.out.println("yanse="+color);
 	}
 	
 	public void setEnabled(boolean enable){

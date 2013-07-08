@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.csstudio.opibuilder.wizards"
+            name="BOY">
+      </category>
+      <wizard
+      		canFinishEarly="false"
+            category="org.csstudio.opibuilder.wizards"
+            hasPages="true"
+            class="com.siteview.css.topo.wizard.NewTopoFileWizard"
+            icon="icons/OPIBuilder.png"
+            id="com.siteview.css.topo.wizard.NewTopoFileWizard"
+            name="Topology File">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.csstudio.ui.menu.actionSet"
+            label="Sample Action Set"
+            visible="true">
+         <menu
+               id="sampleMenu"
+               label="拓扑扫描(&amp;M)">
+            <separator
+                  name="sampleGroup">
+            </separator>
+         </menu>
+         <action
+               class="com.siteview.css.topo.wizard.actions.SampleAction"
+               icon="icons/css16.png"
+               id="com.siteview.css.topo.wizard.actions.SampleAction"
+               label="扫描配置(&amp;S)"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Hello, Eclipse world">
+         </action>
+      </actionSet>
+   </extension>
+</plugin>

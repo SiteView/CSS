@@ -298,4 +298,13 @@
             name="%FileRestart">
       </command>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.csstudio.ui.menu.app.PreferencePage1"
+            id="org.csstudio.ui.menu.app.PreferencePage"
+            name="修改用户密码">
+      </page>
+   </extension>
+
 </plugin>

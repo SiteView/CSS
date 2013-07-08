@@ -1,9 +1,9 @@
-// $ANTLR 3.4 org\\epics\\pvmanager\\formula\\Formula.g 2013-05-07 11:27:12
+// $ANTLR 3.4 org\\epics\\pvmanager\\formula\\Formula.g 2013-03-27 15:15:49
 
   package org.epics.pvmanager.formula;
   import org.epics.pvmanager.expression.*;
   import static org.epics.pvmanager.ExpressionLanguage.*;
-  import static org.epics.util.text.StringUtil.*;
+  import static org.epics.pvmanager.util.StringUtil.*;
   import static org.epics.pvmanager.vtype.ExpressionLanguage.*;
   import static org.epics.pvmanager.formula.ExpressionLanguage.*;
 
@@ -371,7 +371,7 @@ public class FormulaParser extends Parser {
             	    state._fsp--;
 
 
-            	    result = remainderCast(result, op2);
+            	    result = reminderCast(result, op2);
 
             	    }
             	    break;

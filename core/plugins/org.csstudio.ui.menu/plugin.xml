@@ -50,11 +50,7 @@
             <menu
                   id="test"
                   label="%Test">
-            </menu>
-            <menu
-                  id="other"
-                  label="%Other">
-            </menu>
+            </menu>u>
          </menu>
       </menuContribution>
       <menuContribution
