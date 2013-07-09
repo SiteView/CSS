@@ -93,6 +93,11 @@ public class Utils {
         }  
         return true;  
     }
+	/**
+	 * 添加数据到Map集合
+	 * @param target
+	 * @param source
+	 */
 	public static <K,V> void mapAddAll(Map<K,V> target,Map<K,V> source){
 		if(target == null || source == null) throw new NullPointerException();
 		if(source.size() == 0) return;
@@ -163,10 +168,4 @@ public class Utils {
 		}
 		return hexStr;
 	}
-	public static <K,V> void addAllMap(Map<K,V> target,Map<K,V> src){
-		for(Entry<K,V> i : src.entrySet()){
-			target.put(i.getKey(), i.getValue());
-		}
-	}
-	
 }
