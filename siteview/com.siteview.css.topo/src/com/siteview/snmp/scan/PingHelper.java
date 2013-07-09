@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,14 +17,20 @@ import com.siteview.snmp.util.ThreadTaskPool;
 
 public class PingHelper {
 
+	/**
+	 * 可以ping通的IP地址列表　	
+	 */
 	private Vector<String> alive_list = new Vector<String>();
-	
+	/**
+	 * 是否停止的标志
+	 */
 	public static boolean isStop = false;
 
 	public Vector<String> getAliveIpList() {
 		return alive_list;
 	}
-
+	//异步执行计数器
+	private CountDownLatch multPingLatch;
 	/**
 	 * 异步执行ping
 	 * 
@@ -37,12 +44,19 @@ public class PingHelper {
 		if (to_ping_ips.isEmpty()) {
 			return true;
 		}
+		//初始化计数器
+		multPingLatch = new CountDownLatch(to_ping_ips.size());
 		for (String ip : to_ping_ips) {
 			if (isStop) {
 				return false;
 			} else {
 				ThreadTaskPool.getInstance().excute(new Task(ip, retrys, timeout));
 			}
+		}
+		try {
+			multPingLatch.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		return true;
 	}
@@ -56,39 +70,28 @@ public class PingHelper {
 	 */
 	public boolean singlePing(String ip, int timeout)
 			throws UnknownHostException, IOException {
-		return InetAddress.getByName(ip).isReachable(timeout);
+		boolean result = InetAddress.getByName(ip).isReachable(timeout);
+		if(result){
+			alive_list.add(ip);
+		}
+		return result;
 	}
 
 	public static void main(String[] args) throws UnknownHostException,
 			IOException {
-		// System.out.println(singlePing("192.168.0.248",3000));
 		Vector<String> toPingList = new Vector<String>();
 		toPingList.add("192.168.9.188");
 		toPingList.add("192.168.0.248");
 		toPingList.add("192.168.9.254");
-		new PingHelper().multPing(toPingList, 10, 2000);
+		PingHelper p = new PingHelper();p.multPing(toPingList, 10, 2000);
+		System.out.println(p.getAliveIpList().size());
 
 	}
-
-	public static void maian(String[] args) throws InterruptedException {
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
-		map.put("192.168.9.188", 1);
-		map.put("192.168.0.248", 1);
-		map.put("192.168.9.254", 1);
-		PingMaster p = new PingMaster(2000, map);
-		Thread t = new Thread(p);
-		t.join();
-		t.start();
-		map = p.getPingStatus();
-		Set<String> set = map.keySet();
-		String datetime = (new Date()).toLocaleString();
-		for (String s : set) {
-			System.out.println("*-*-*" + datetime + "ping-report *-*-*");
-			System.out.println("IP = " + s + "Ping " + " Status:" + map.get(s));
-			Thread.sleep(1500);
-		}
-	}
-
+	/**
+	 * 执行异步PING操作的任务类
+	 * @author haiming.wang
+	 *
+	 */
 	class Task implements Runnable {
 		private String ip;
 		private int retrys;
@@ -103,17 +106,11 @@ public class PingHelper {
 		@Override
 		public void run() {
 			try {
-				if (InetAddress.getByName(ip).isReachable(timeout)) {
-					alive_list.add(ip);
-				}
-				synchronized (alive_list) {
-					endCount++;
-				}
+				singlePing(ip, timeout);
+				multPingLatch.countDown();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-
 	}
-	public static int endCount = 0;
 }
