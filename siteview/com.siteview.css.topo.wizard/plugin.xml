@@ -26,7 +26,7 @@
          <menu
                id="sampleMenu"
                label="拓扑扫描(&amp;M)">
-            <separator
+               <separator
                   name="sampleGroup">
             </separator>
          </menu>
@@ -37,7 +37,16 @@
                label="扫描配置(&amp;S)"
                menubarPath="sampleMenu/sampleGroup"
                toolbarPath="sampleGroup"
-               tooltip="Hello, Eclipse world">
+               tooltip="Scan Setting">
+         </action>
+         <action
+               class="com.siteview.css.topo.wizard.actions.StartScanAction"
+               icon="icons/css16.png"
+               id="com.siteview.css.topo.wizard.startScan"
+               label="开始扫描(&amp;C)"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Start Scan">
          </action>
       </actionSet>
    </extension>

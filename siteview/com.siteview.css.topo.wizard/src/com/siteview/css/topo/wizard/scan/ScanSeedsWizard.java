@@ -21,6 +21,9 @@ public class ScanSeedsWizard extends WizardPage {
 	private Table table;
 	private TableEditor editor = null;
 
+	public Table getSeedsTable(){
+		return table;
+	}
 	protected ScanSeedsWizard() {
 		super("Some wizard Page");
 		setTitle("扫描参数 -->" + "扫描范围 -->" + "排除范围 -->" + "共同体设置 -->" + "扫描种子");

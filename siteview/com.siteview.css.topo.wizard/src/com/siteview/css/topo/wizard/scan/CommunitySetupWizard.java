@@ -11,6 +11,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
 
@@ -23,6 +24,16 @@ import org.eclipse.swt.widgets.*;
 public class CommunitySetupWizard extends WizardPage {
 	private Table table;
 	private TableEditor editor = null;
+	private Text getCommu = null;
+	private Text setCommu = null;
+	
+	public Text getGetCommu() {
+		return getCommu;
+	}
+
+	public Text getSetCommu() {
+		return setCommu;
+	}
 
 	protected CommunitySetupWizard() {
 		super("Some wizard Page");
@@ -33,7 +44,8 @@ public class CommunitySetupWizard extends WizardPage {
 	public void createControl(Composite parent) {
 		Display display = parent.getDisplay();
 		Shell shell = new Shell(display);
-		shell.setLayout(new RowLayout(SWT.VERTICAL));
+		GridLayout gridLayout = new GridLayout(SWT.VERTICAL,true);
+		shell.setLayout(gridLayout);
 		final Table table1 = new Table(shell, SWT.BORDER | SWT.MULTI);
 		table1.setHeaderVisible(true);
 		table1.setLinesVisible(true);
@@ -43,31 +55,22 @@ public class CommunitySetupWizard extends WizardPage {
 		}
 
 		// 设置颜色
-		// display = parent.getDisplay();
-		// COLOR_SYSTEM_RED = display.getSystemColor(SWT.COLOR_RED);
 		// 群组
 		Group group = new Group(parent, SWT.NONE);
 		group.setText("共同体设置");
 		RowLayout layout = new RowLayout(4);
 		group.setLayout(layout);
-		// GridData layoutData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
-		// layoutData.verticalIndent = 2;
-		// group.setLayoutData(layoutData);
 
 		// 收索深度
 		Label get = new Label(group, SWT.NONE);
 		get.setText("GET");
-		// GridData layoutD = new GridData();
-		// layoutD.verticalIndent = 15;
 
-		Text text = new Text(group, SWT.NONE);
-		// GridData data = new GridData();
-		// text.setLayoutData(data);
+		getCommu = new Text(group, SWT.NONE);
 
 		Label set = new Label(group, SWT.NONE);
 		set.setText("SET");
 
-		Text text2 = new Text(group, SWT.NONE);
+		setCommu = new Text(group, SWT.NONE);
 
 		// tabel设置
 		table = new Table(group, SWT.BORDER | SWT.NONE | SWT.FULL_SELECTION

@@ -17,6 +17,35 @@ public class ScanParameterWizard extends WizardPage {
 	private Label parallelThreads;
 	private Label retryCount;
 	private Label timeOut;
+	private Group group = null; 
+	
+	public Group getGroup(){
+		return group;
+	}
+	public Label getParallelThreads() {
+		return parallelThreads;
+	}
+
+	public void setParallelThreads(Label parallelThreads) {
+		this.parallelThreads = parallelThreads;
+	}
+
+	public Label getRetryCount() {
+		return retryCount;
+	}
+
+	public void setRetryCount(Label retryCount) {
+		this.retryCount = retryCount;
+	}
+
+	public Label getTimeOut() {
+		return timeOut;
+	}
+
+	public void setTimeOut(Label timeOut) {
+		this.timeOut = timeOut;
+	}
+
 	/** 红色 */
 	private Color COLOR_SYSTEM_RED = null;
 	private Display display = null;
@@ -35,7 +64,8 @@ public class ScanParameterWizard extends WizardPage {
 		display = parent.getDisplay();
 		COLOR_SYSTEM_RED = display.getSystemColor(SWT.COLOR_RED);
 		// 群组
-		Group group = new Group(parent, SWT.NONE);
+		group = new Group(parent, SWT.NONE);
+		
 		group.setText("扫描参数");
 		group.setLayout(new GridLayout(2, true));
 		GridData layoutData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
@@ -44,10 +74,10 @@ public class ScanParameterWizard extends WizardPage {
 
 		// 收索深度
 		Label searchDepth = new Label(group, SWT.NONE);
-		searchDepth.setText("\t\t收索深度：");
+		searchDepth.setText("\t\t搜索深度：");
 		GridData layoutD = new GridData();
 		layoutD.verticalIndent = 15;
-		creatSpinner(group, 5, "收索深度");// 下拉调整
+		creatSpinner(group, 5, "搜索深度");// 下拉调整
 		// 并行线程数
 		parallelThreads = new Label(group, SWT.NONE);
 		parallelThreads.setText("\t\t并行线程数：");

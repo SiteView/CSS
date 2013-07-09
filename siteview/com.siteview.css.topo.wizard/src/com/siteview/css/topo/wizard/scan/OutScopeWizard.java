@@ -24,7 +24,9 @@ public class OutScopeWizard extends WizardPage {
 
 	private Table table;
 	private TableEditor editor = null;
-
+	public Table getTable(){
+		return this.table;
+	}
 	protected OutScopeWizard() {
 		super("Some wizard Page");
 		setTitle("扫描参数 -->" + "扫描范围 -->" + "排除范围 -->" + "共同体设置 -->" + "扫描种子");

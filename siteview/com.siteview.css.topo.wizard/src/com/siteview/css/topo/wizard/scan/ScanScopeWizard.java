@@ -24,19 +24,26 @@ public class ScanScopeWizard extends WizardPage {
 	private Table table;
 	private TableEditor editor = null;
 	private TableItem item;
-
+	Group group = null;
+	public Table getTable(){
+		return this.table;
+	}
 	protected ScanScopeWizard() {
 		super("ScanScopeWizard");
 		setTitle("扫描参数 -->" + "扫描范围 -->" + "排除范围 -->" + "共同体设置 -->" + "扫描种子");
 		setMessage("用起始ip地址指定扫描范围，不设置表示全范围扫描");
 	}
 
+	public  TableItem getTableItem(){
+		return item;
+	}
+	final String[] strArray = new String[5];
 	/**
 	 * 创建界面视图
 	 */
 	public void createControl(Composite parent) {
 		// 群组
-		Group group = new Group(parent, SWT.NONE);
+		group = new Group(parent, SWT.NONE);
 		group.setText("扫描范围");
 		group.setLayout(new FillLayout());
 		GridData layoutData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
@@ -101,7 +108,7 @@ public class ScanScopeWizard extends WizardPage {
 						final Text txt = new Text(table, SWT.NONE);
 						txt.setText(tableitem.getText(col1));// 取得当前单元格里的值
 						editor.setEditor(txt, tableitem, col1);
-						final String[] strArray = new String[5];
+						
 						txt.addModifyListener(new ModifyListener() {
 							@Override
 							public void modifyText(ModifyEvent e) {
@@ -110,12 +117,11 @@ public class ScanScopeWizard extends WizardPage {
 																		// 的文字
 								// System.out.println(tableitem.getText(0)+"----"+tableitem.getText(1));
 								for (int i = 0; i < strArray.length; i++) {
-									strArray[i] = tableitem.getText(0);
-									ScanScopeWizard.this.getWizard()
-											.getDialogSettings()
-											.put("Array", strArray);
+									strArray[i] = "0:"+tableitem.getText(0) + "@" + tableitem.getText(1);
 								}
-
+								ScanScopeWizard.this.getWizard()
+								.getDialogSettings()
+								.put("Array", strArray);
 								// 可以存数组
 								ScanScopeWizard.this.getWizard()
 										.getDialogSettings()
