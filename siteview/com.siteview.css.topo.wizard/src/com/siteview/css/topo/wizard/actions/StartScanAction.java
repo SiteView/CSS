@@ -140,7 +140,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 		workbench
 				.getActiveWorkbenchWindow()
 				.getActivePage()
-				.openEditor(new NoResourceEditorInput(null),
+				.openEditor(new FileEditorInput(file),
 						"com.siteview.css.topo.editparts.TOPOEdit");
 	}
 	public IFile createFileHandle(IPath filePath){

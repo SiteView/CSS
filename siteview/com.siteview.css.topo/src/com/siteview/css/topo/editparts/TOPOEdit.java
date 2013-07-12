@@ -26,6 +26,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
+import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.models.TopologyModel;
 import com.siteview.snmp.common.ScanParam;
 import com.siteview.snmp.pojo.DevicePro;
@@ -79,7 +80,14 @@ public class TOPOEdit extends OPIEditor {
 	protected void createGraphicalViewer(Composite parent) {
 		super.createGraphicalViewer(parent);
 		DisplayModel displayModel = getDisplayModel();
-
+		TopoData topoDate = new TopoData();
+		if (topoDate.isTrue()) {
+			List list = topoDate.getList();
+			Iterator iterator = list.iterator();
+			while (iterator.hasNext()) {
+				System.out.println("扫描数据 \n"+iterator.next());
+			}
+		}
 		for (int i = 0; i < model.length; i++) {
 			// 创建 i个模型
 			model[i] = new TopologyModel();
