@@ -17,4 +17,15 @@ Bundle-ActivationPolicy: lazy
 Export-Package: com.siteview.css.topo.models,
  com.siteview.css.topo.feedBack,
  com.siteview.css.topo.editparts,
- com.siteview.css.topo.figure
+ com.siteview.css.topo.figure,
+ com.siteview.snmp.common,
+ com.siteview.snmp.scan,
+ com.siteview.snmp.model,
+ com.siteview.snmp.util,
+ com.siteview.css.topo.common
+Bundle-ClassPath: lib/commons-net-3.3-sources.jar,
+ lib/commons-net-3.3.jar,
+ lib/jpcap.jar,
+ lib/snmp4j-2.0.3.jar,
+ lib/sqlitejdbc-v053.jar,
+ .

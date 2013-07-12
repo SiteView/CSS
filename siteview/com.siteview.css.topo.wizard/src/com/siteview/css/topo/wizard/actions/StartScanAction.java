@@ -50,6 +50,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.osgi.framework.Bundle;
 
+import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.wizard.NewTopoFilePage;
 import com.siteview.css.topo.wizard.common.GlobalData;
 import com.siteview.snmp.common.ScanParam;
@@ -69,11 +70,6 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 	@Override
 	public void run(IAction action) {
 		workbench = PlatformUI.getWorkbench();
-//		try {
-//			workbench.getActiveWorkbenchWindow().getActivePage().showView(TOPOEdit.ID);
-//		} catch (PartInitException e) {
-//			e.printStackTrace();
-//		}
 		//如果用户从界面配置了扫描参数，以配置的参数信息扫描
 		if(GlobalData.isConfiged){
 			scanParam = GlobalData.scanParam;
@@ -104,9 +100,12 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 					Map<String, Map<String, String>> special_oid_list = new ConcurrentHashMap<String, Map<String, String>>();
 					scan = new NetScan(null, special_oid_list, scanParam);
 					try{
-//						scan.scan();
+						scan.scan();
+						TopoData.isInit = true;
+						TopoData.edgeList = scan.getTopo_edge_list();
 						drawTopo(scan);
 					}catch (Exception e) {
+						TopoData.isInit = false;
 						MessageDialog.openError(workbench.getActiveWorkbenchWindow().getShell(), "Error", e.getMessage());
 					}
 					monitor.done();
@@ -134,30 +133,6 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 	 * @throws Exception 
 	 */
 	private void drawTopo(NetScan scan) throws Exception{
-		// ISelectionService service = window.getSelectionService();
-		// IStructuredSelection selection =
-		// (IStructuredSelection)service.getSelection("org.eclipse.jdt.ui.PackageExplorer");
-		// if (selection.getFirstElement() instanceof IFile) {
-		// IFile file = (IFile)selection.getFirstElement();
-		// }
-		//
-		// try {
-		// IViewPart view =
-		// window.getActivePage().showView("org.eclipse.jdt.ui.PackageExplorer");
-		// PackageExplorerPart packageExplorer = ((PackageExplorerPart)view);
-		// System.out.println("adsf");
-		// packageExplorer.getTreeViewer().setLabelProvider(new
-		// PackageExplorerLabelProvider());
-		// } catch (PartInitException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// Composite topLevel = null;
-		// ResourceAndContainerGroup _resourceGroup = new
-		// ResourceAndContainerGroup(topLevel, this,
-		// "aaaaaaaa.opi",
-		// Messages.WizardNewFileCreationPage_LABEL_FILE, false, 250);
-		// IFile file = new FileUtil().
 		URI uri = new URI("/jajaj/topo.opi");
 		IPath path = FileUtil.toPath(uri);
 		IFile file = createFileHandle(path);

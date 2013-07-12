@@ -4,6 +4,7 @@ Bundle-Name: Wizard
 Bundle-SymbolicName: com.siteview.css.topo.wizard;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SITEVIEW
+Export-Package: com.siteview.css.topo.wizard.common
 Require-Bundle: org.eclipse.core.filesystem;bundle-version="1.2.0";visibility:=reexport,
  org.eclipse.ui.editors,
  org.eclipse.jface.text;bundle-version="3.4.0",
@@ -13,5 +14,7 @@ Require-Bundle: org.eclipse.core.filesystem;bundle-version="1.2.0";visibility:=r
  org.eclipse.core.runtime,
  org.eclipse.search,
  org.apache.batik,
- com.siteview.css.topo;bundle-version="1.0.0"
+ com.siteview.css.topo;bundle-version="1.0.0",
+ org.csstudio.ui.util,
+ org.eclipse.jdt.ui;bundle-version="3.7.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
