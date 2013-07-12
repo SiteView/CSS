@@ -1,20 +1,20 @@
 package com.siteview.snmp.pojo;
 
 /**
- * 边结构
+ * 杈圭粨鏋�
  * @author haiming.wang
  *
  */
 public class Edge {
 
-	private String ip_left;//左端点ip
-	private String pt_left;//左端点port
-	private String inf_left;//左端点inf
-	private String dsc_left;//左端点描述信息
-	private String ip_right;//右端点ip
-	private String pt_right;//右端点port
-	private String inf_right;//右端点inf
-	private String dsc_right;//右端点描述信息
+	private String ip_left;		//左端点ip
+	private String pt_left;		//左端点port
+	private String inf_left;	//左端点inf
+	private String dsc_left;	//左端点描述信息
+	private String ip_right;	//右端点ip
+	private String pt_right;	//右端点port
+	private String inf_right;	//右端点inf
+	private String dsc_right;	//右端点描述信息
 	public String getIp_left() {
 		return ip_left;
 	}

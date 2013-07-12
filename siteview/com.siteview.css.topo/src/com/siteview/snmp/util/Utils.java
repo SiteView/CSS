@@ -1,24 +1,17 @@
 package com.siteview.snmp.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.snmp4j.smi.OID;
 import org.snmp4j.smi.VariableBinding;
 
-import com.siteview.snmp.constants.OIDConstants;
 import com.siteview.snmp.model.Pair;
 
 public class Utils {
@@ -168,4 +161,19 @@ public class Utils {
 		}
 		return hexStr;
 	}
+	/**
+	 * 判断IP地址格式是否正确
+	 * @param src
+	 * @return
+	 */
+	public static boolean isIp(String src){
+		if((src.indexOf(".") < 0) || (src.split("\\.").length != 4)){
+			return false;
+		}
+		String ipTest = "(2[5][0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\.(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\.(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})\\.(25[0-5]|2[0-4]\\d|1\\d{2}|\\d{1,2})";
+		Pattern pattern = Pattern.compile(ipTest);
+		Matcher matcher = pattern.matcher(src);
+		return matcher.matches();
+	}
+	
 }

@@ -34,11 +34,7 @@ public class ScanParam {
 	// ÅÅ³ýµÄ·¶Î§
 	private List<Pair<String, String>> filter_scales = new ArrayList<Pair<String, String>>();
 	private List<Pair<Long, Long>> filter_scales_num = new ArrayList<Pair<Long, Long>>();
-//	std::list<std::pair<std::string,std::string> > filter_scales;
-//    std::list<std::pair<unsigned long, unsigned long> > filter_scales_num;
 
-	
-	
 	public String getCommunity_get_dft() {
 		return community_get_dft;
 	}

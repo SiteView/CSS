@@ -5,10 +5,9 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.snmp4j.CommunityTarget;
-import org.snmp4j.Target;
-import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.UdpAddress;
+
 
 import com.siteview.snmp.model.Pair;
 
@@ -18,6 +17,27 @@ public class ScanUtils {
 
 	private static Map<String, Integer> tbl = new HashMap<String, Integer>();
 	
+	/**
+	 * 构造snmpPDU
+	 * @param ip 		IP地址
+	 * @param port 		端口号
+	 * @param community 共同体
+	 * @param timeout 	超时时间
+	 * @param retry   	重试时间
+	 * @param version 	snmp版本
+	 * @return
+	 */
+	public static CommunityTarget buildGetPduCommunityTarget(String ip,
+			int port, String community, int timeout, int retry, int version) {
+		UdpAddress add = new UdpAddress(ip + "/" + port);
+		CommunityTarget target = new CommunityTarget();
+		target.setAddress(add);
+		target.setVersion(version);
+		target.setRetries(retry);
+		target.setTimeout(timeout);
+		target.setCommunity(new OctetString(community));
+		return target;
+	}
 	/**
 	 * 根据子网掩码 获取IP地址范围
 	 * @param ipMask
@@ -39,27 +59,6 @@ public class ScanUtils {
 			String ipStrMax = longToIp(ip_max);
 			return new Pair<String, String>(ipStrMin, ipStrMax);
 		}
-	}
-	/**
-	 * 构造snmpPDU
-	 * @param ip 		IP地址
-	 * @param port 		端口号
-	 * @param community 共同体
-	 * @param timeout 	超时时间
-	 * @param retry   	重试时间
-	 * @param version 	snmp版本
-	 * @return
-	 */
-	public static CommunityTarget buildGetPduCommunityTarget(String ip,
-			int port, String community, int timeout, int retry, int version) {
-		UdpAddress add = new UdpAddress(ip + "/" + port);
-		CommunityTarget target = new CommunityTarget();
-		target.setAddress(add);
-		target.setVersion(version);
-		target.setRetries(retry);
-		target.setTimeout(timeout);
-		target.setCommunity(new OctetString(community));
-		return target;
 	}
 	/**
 	 * IP地址转换成数字long
@@ -160,13 +159,16 @@ public class ScanUtils {
 		}
 		return v;
 	}
-
+	/**
+	 * 获取子网
+	 * @param ip 种子IP
+	 * @param mask　子网掩码
+	 * @return
+	 */
 	public static String getSubnetByIPMask(String ip, String mask) {
-		long masknum = ScanUtils.ipToLong(mask);// ntohl(inet_addr(mask));
+		long masknum = ScanUtils.ipToLong(mask);
 		long subnet = ScanUtils.ipToLong(ip) & masknum;
 		int iLen = getMaskBitLen(mask);
-		// struct in_addr ipsubnet;
-		// ipsubnet.S_un.S_addr = htonl(subnet);
 		return ScanUtils.longToIp(subnet) + "/" + iLen;
 	}
 

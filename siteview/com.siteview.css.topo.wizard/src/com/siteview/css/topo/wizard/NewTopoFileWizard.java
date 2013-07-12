@@ -1,21 +1,9 @@
 package com.siteview.css.topo.wizard;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
-import org.csstudio.opibuilder.editparts.AbstractWidgetEditPart;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.model.DisplayModel;
-import org.csstudio.opibuilder.persistence.XMLUtil;
-import org.csstudio.opibuilder.util.WidgetDescriptor;
-import org.csstudio.opibuilder.util.WidgetsService;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,8 +14,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
-import com.siteview.css.topo.feedBack.TopologyFeedBackFactory;
-import com.siteview.css.topo.models.TopologyModel;
 
 public class NewTopoFileWizard extends Wizard implements INewWizard {
 

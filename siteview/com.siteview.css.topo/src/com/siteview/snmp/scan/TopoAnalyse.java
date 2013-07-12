@@ -901,7 +901,7 @@ public class TopoAnalyse {
 	}
 	public void compAftWithArp(String stype){
 		aft_list.clear();
-		Utils.addAllMap(arp_list, aft_list);
+		Utils.mapAddAll(arp_list, aft_list);
 	}
 	public List<Edge> getDirectEdge(){
 		List<Edge> edge_list_cur = new ArrayList<Edge>();

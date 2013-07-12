@@ -10,6 +10,8 @@ import org.snmp4j.CommunityTarget;
 import org.snmp4j.Snmp;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.smi.OID;
+import org.snmp4j.smi.OctetString;
+import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TableEvent;
@@ -77,6 +79,7 @@ public class IpAddressTableScan {
 				}
 		}
 	}
+	
 	/**
 	 * 获取ipaddress表数据
 	 * @param spr

@@ -59,12 +59,15 @@ public class ReadService {
 	private ThreadTaskPool pool ;
 	private ScanParam scanParam = new ScanParam();
 	private AuxParam auxParam = new AuxParam();
-	boolean isStop = false;
+	private volatile boolean  isStop = false;
 	byte[] lock = new byte[0];
 	private Map<String, RouterStandbyItem> routeStandby_list = new ConcurrentHashMap<String, RouterStandbyItem>();
 	private Map<String, Map<String, String> > special_oid_list = new ConcurrentHashMap<String, Map<String,String>>();
 	private Map<String, List<Directitem>> directdata_list = new ConcurrentHashMap<String, List<Directitem>>();
 	private Map<String,List<String>> stp_list = new ConcurrentHashMap<String,List<String>>();
+	public void stop(){
+		isStop = true;
+	}
 	public void init(AuxParam auxParam){
 		this.auxParam = auxParam;
 	}
@@ -332,13 +335,13 @@ public class ReadService {
 		//设备stp列表
 		Map<String,List<String>> stplist_cur = new HashMap<String, List<String>>();
 
-		boolean bAft = false;
-		boolean bArp = false;
-		boolean bInf = true;
-		boolean bNbr = false;
-		boolean bRoute = false;
-		boolean bBgp = false;
-		boolean bVrrp = false; 
+		boolean bAft   =  false;
+		boolean bArp   =  false;
+		boolean bInf   =  true;
+		boolean bNbr   =  false;
+		boolean bRoute =  false;
+		boolean bBgp   =  false;
+		boolean bVrrp  =  false; 
 		boolean bDirect = true;
 
 		MibScan snmp = new MibScan();
@@ -461,11 +464,6 @@ public class ReadService {
 				String ip_tmp = "";
 				for(String iter : ips_tmp)
 				{
-//					if (find(telnetReader->telnetIPList_Arp.begin(), telnetReader->telnetIPList_Arp.end(), *iter) != telnetReader->telnetIPList_Arp.end())
-//					{
-//						ip_tmp = *iter;
-//						break;
-//					}
 				}
 				if (ip_tmp != "") //该IP配置了telnet读arp表
 				{
@@ -609,13 +607,6 @@ public class ReadService {
 			}
 		}
 
-//		Sleep(500);
-//		try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//	        SvLog::writeLog("End read the data of " + spr.ip);
 		System.out.print(spr.getIp() + "结束     ");
 		System.out.println(Thread.currentThread().getName() + "======================================================结束   getOneDeviceData");
 	}
@@ -628,14 +619,10 @@ public class ReadService {
 	    
 		if (!ipmsks.isEmpty()) {
 			for (Pair<String, String> i : ipmsks) {
-				String ip_cur = i.getFirst().substring(21);// ->first.substr(21);
+				String ip_cur = i.getFirst().substring(21);
 				if (ip_cur != "" && ip_cur != "0.0.0.0" // 排除任意匹配地址
-						&& !ip_cur.substring(0, 3).equals("127")// .compare(0,3,"127")
-																// != 0 //排除环回地址
-						&& !ip_cur.substring(0, 5).equals("0.255")// .compare(0,5,"0.255")
-																	// != 0
-						// && (ip_cur.compare(0,3,"224") < 0 ||
-						// ip_cur.compare(0,3,"239") > 0) //排除组播地址
+						&& !ip_cur.substring(0, 3).equals("127")// != 0 //排除环回地址
+						&& !ip_cur.substring(0, 5).equals("0.255")// 排除组播地址
 				) {
 					if (i.getSecond().isEmpty()) {
 						continue;
@@ -983,7 +970,6 @@ public class ReadService {
 						mac_tmp = mac_tmp.substring(0, 12);
 					}
 					baseMac = mac_tmp.toUpperCase();
-					System.out.println("ip @@@@@@@@@@@@@@@@@@@@@@@@@@@ = @@@@@@@@@" + spr.getIp() + "@@@@ basemac is " +baseMac );
 					if ((!"".equals(baseMac))
 							&& (!"000000000000".equals(baseMac))
 							&& (!"FFFFFFFFFFFF".equals(baseMac))) {
@@ -1020,6 +1006,7 @@ public class ReadService {
 			typeName_res = OIDTypeUtils.getInstance().getDevicePro(sysOid)
 					.getDevTypeName();
 		} else {
+			System.out.println(sysOid);
 			if (sysOid.substring(0, 16).equals("1.3.6.1.4.1.311."))// enterprises节点:1.3.6.1.4.1
 			{
 				devtype_res = "5";// host
@@ -1043,7 +1030,6 @@ public class ReadService {
 				} else {
 					devtype_res = "5"; // host
 					// SvLog::writeLog("Can't identify oid=" + sysOid +
-					// ", services=" + sysSvcs + " (" + ip + ")");
 				}
 			}
 		}

@@ -12,6 +12,12 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.swing.text.View;
+
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PartInitException;
+
+import com.siteview.css.topo.editparts.TOPOEdit;
 import com.siteview.snmp.common.AuxParam;
 import com.siteview.snmp.common.ScanParam;
 import com.siteview.snmp.common.SnmpPara;
@@ -59,7 +65,23 @@ public class NetScan implements Runnable {
 	private Map<String, Map<String, List<String>>> aft_list_frm = new ConcurrentHashMap<String, Map<String, List<String>>>();
 	private List<List<String>> rtpath_list = new ArrayList<List<String>>();
 	private Map<String, IDBody> topo_entity_list = new HashMap<String, IDBody>();
-
+	private IWorkbench workbench;
+	
+	public List<Edge> getTopo_edge_list() {
+		return topo_edge_list;
+	}
+	public void setTopo_edge_list(List<Edge> topo_edge_list) {
+		this.topo_edge_list = topo_edge_list;
+	}
+	public Map<String, IDBody> getTopo_entity_list() {
+		return topo_entity_list;
+	}
+	public void setTopo_entity_list(Map<String, IDBody> topo_entity_list) {
+		this.topo_entity_list = topo_entity_list;
+	}
+	public void stop(){
+		siReader.stop();
+	}
 	// 规范化后的设备AFT或ARP数据 {sourceIP,{infInx,[destIP]}}
 	public void init(ScanParam sp, AuxParam ap) {
 		this.scanParam = sp;
@@ -70,14 +92,20 @@ public class NetScan implements Runnable {
 	public NetScan() {
 
 	}
-
 	public NetScan(Map<String, DevicePro> devtypemap,
 			Map<String, Map<String, String>> specialoidlist, ScanParam param) {
+		this.workbench = workbench;
+		if(param == null){
+			if(!IoUtils.readConfigDate(scanParam)){
+				//初始化扫描参数失败
+			}
+		}else{
+			scanParam = param;
+		}
 		getLocalhostIPs();
 		// ReadConfig(param);
 		readMyScanConfigFile();
-		this.scanParam = param;
-		siReader = new ReadService(devtypemap, param, myParam, specialoidlist);
+		siReader = new ReadService(devtypemap, scanParam, myParam, specialoidlist);
 	}
 
 	public void readMyScanConfigFile() {
@@ -99,7 +127,7 @@ public class NetScan implements Runnable {
 		myParam.setFilter_type("0"); // 不清除扫描范围外的ip 
 		myParam.setCommit_pc("1"); // 提交PC到SVDB 
 
-		PropertiesUtils.load("scanconfig.properties");
+		PropertiesUtils.load(IoUtils.getPlatformPath() + "scanconfig.properties");
 		myParam.setScan_type(PropertiesUtils.getValue("SCAN_TYPE"));
 		myParam.setSeed_type(PropertiesUtils.getValue("SEED_TYPE"));
 		myParam.setPing_type(PropertiesUtils.getValue("PING_TYPE"));
@@ -150,6 +178,7 @@ public class NetScan implements Runnable {
 		s.setDepth(5);
 		s.getScan_seeds().add("192.168.0.248");
 		s.getScan_seeds().add("192.168.0.251");
+			
 		Map<String, Map<String, String>> special_oid_list = new ConcurrentHashMap<String, Map<String, String>>();
 		NetScan scan = new NetScan(null, special_oid_list, s);
 		// scan.init(s, auxParam);
@@ -171,12 +200,24 @@ public class NetScan implements Runnable {
 			return;
 		}
 		scanByIps(aliveIp_list, false);
-		// add by wings 2009-11-13
 		devid_list = siReader.getDevid_list_valid();
 	}
 
 	public void scan() {
+//		Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+//		try {
+//			workbench.getActiveWorkbenchWindow().getActivePage().showView(TOPOEdit.ID);
+//		} catch (PartInitException e) {
+//			e.printStackTrace();
+//		}
+//		for(IViewDescriptor id : views){
+//			System.out.println(id.getId());
+//			if(id.getId().equals(TOPOEdit.ID)){
+//				System.out.println(TOPOEdit.ID);
+//			}
+//		}
 		long start = System.currentTimeMillis();
+		System.out.println("asdf");
 		System.out.println("scan start");
 		String msg = "";
 		devid_list.clear();
@@ -293,6 +334,13 @@ public class NetScan implements Runnable {
 		}
 		long theend = System.currentTimeMillis();
 		System.out.println("is end by " + (theend - start));
+//		Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+//		try {
+//			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(TOPOEdit.ID);
+//		} catch (PartInitException e) {
+//			MessageDialog.openError(shell, "错误！", "打开拓扑图失败");
+//			e.printStackTrace();
+//		}//.openEditor(input, "");
 	}
 
 	// 创建哑设备
@@ -442,7 +490,7 @@ public class NetScan implements Runnable {
 	{
 		if(!myParam.getPing_type().equals("2"))
 			IoUtils.savaDevidIps(devid_list);
-		IoUtils.saveIDBodyData(devid_list,"");
+		IoUtils.saveIDBodyData(devid_list);
 		IoUtils.saveAftList(aft_list);
 		IoUtils.saveArpList(arp_list);
 		IoUtils.saveInfPropList(ifprop_list,"");
