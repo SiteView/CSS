@@ -11,12 +11,12 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.siteview.css.topo.wizard.common.GlobalData;
 import com.siteview.snmp.model.Pair;
+import com.siteview.snmp.util.IoUtils;
 import com.siteview.snmp.util.ScanUtils;
 import com.siteview.snmp.util.Utils;
 
 /**
  * 扫描向导
- * 
  * @author zhangxinnan
  * 
  */
@@ -37,10 +37,10 @@ public class SomeWizard extends Wizard {
 		this.setDialogSettings(new DialogSettings("导入工程"));
 		addPage(paramPage);
 		addPage(scopePage);
-		
 		addPage(filterPage);
 		addPage(communityPage);
 		addPage(seedsPage);
+		
 	}
 
 	/**
@@ -56,6 +56,7 @@ public class SomeWizard extends Wizard {
 		String[] array = dialogSettings2.getArray("Array");
 		Object value1 = paramPage.getGroup().getText();
 		Control[] groups = paramPage.getGroup().getChildren();
+		//获取基本扫描信息
 		for(int i=0;i<groups.length;i++){
 			Control c = groups[i];
 			if(c instanceof Spinner){
@@ -76,29 +77,12 @@ public class SomeWizard extends Wizard {
 			}
 			
 		}
-		// 如果没有进行操作
-		if (0 == searchDepth) {
-			searchDepth = 5;
-		}
-		if (0 == parallelThreads) {
-			parallelThreads = 50;
-		}
-		if (0 == retryCount) {
-			retryCount = 3;
-		}
-		if (0 == timeOut) {
-			timeOut = 99;
-		}
-		if (null == array) {
-			array = new String[2];
-			array[0] = "1";
-		}
 		// 构造扫描参数
 		GlobalData.scanParam.setDepth(searchDepth);
 		GlobalData.scanParam.setThreadCount(parallelThreads);
 		GlobalData.scanParam.setRetrytimes(retryCount);
 		GlobalData.scanParam.setTimeout(timeOut);
-		TableItem[] items = scopePage.getTable().getItems();//.getItem(0);
+		TableItem[] items = scopePage.getTable().getItems();
 		/**
 		 * 初始化扫描IP范围
 		 */
@@ -141,6 +125,8 @@ public class SomeWizard extends Wizard {
 			}
 		}
 		GlobalData.isConfiged = true;
+		//缓存扫描参数
+		IoUtils.saveScanParam(GlobalData.scanParam);
 		// 将获取的数据进行下一步操作
 		System.out.println("收索深度" + searchDepth + "并行线程数" + parallelThreads
 				+ "重试次数" + retryCount + "超时时间" + timeOut);
