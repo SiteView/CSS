@@ -84,14 +84,18 @@ public class ScanUtils {
 		StringBuffer sb = new StringBuffer("");
 		sb.append(String.valueOf(value >>> 24));// 直接右移24位
 		sb.append(".");
-		sb.append(String.valueOf((value & 0x00ffffff) >>> 16));// 将高8位置0，然后右移16位
+		sb.append(String.valueOf((value & 0x00ffffff) >>> 16)); // 将高8位置0，然后右移16位
 		sb.append(".");
-		sb.append(String.valueOf((value & 0x0000ffff) >>> 8));
+		sb.append(String.valueOf((value & 0x0000ffff) >>> 8));  // 将高16位置0，然后右移8位
 		sb.append(".");
-		sb.append(String.valueOf(value & 0x000000ff));
+		sb.append(String.valueOf(value & 0x000000ff));		    // 将高24位置0
 		return sb.toString();
 	}
-
+	/**
+	 * 将long转换为bytes
+	 * @param n
+	 * @return
+	 */
 	public static byte[] longToBytes(long n) {
 		byte[] b = new byte[8];
 		b[7] = (byte) (n & 0xff);
@@ -104,7 +108,12 @@ public class ScanUtils {
 		b[0] = (byte) (n >> 56 & 0xff);
 		return b;
 	}
-
+	/**
+	 * 将bytes 转换为long
+	 * @param array
+	 * @param offset
+	 * @return
+	 */
 	public static long bytesToLong(byte[] array, int offset) {
 		return ((((long) array[offset + 0] & 0xff) << 56)
 				| (((long) array[offset + 1] & 0xff) << 48)
@@ -189,7 +198,7 @@ public class ScanUtils {
 		int len = 0;
 		String[] dest = msk.split("\\.");
 		if (dest.length != 4) {
-			// throw std::runtime_error("Bad Mask");
+			throw new RuntimeException("掩码地址格式不正确！");
 		}
 		return tbl.get(dest[0]) + tbl.get(dest[1]) + tbl.get(dest[2])
 				+ tbl.get(dest[3]);
