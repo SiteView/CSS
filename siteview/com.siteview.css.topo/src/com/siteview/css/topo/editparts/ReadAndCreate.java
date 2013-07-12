@@ -133,6 +133,39 @@ public class ReadAndCreate {
 		return list;
 	}
 
+	
+	public List allInfo(){
+		List li = new ArrayList();
+		Map map = readNode();
+		List list = readEdge();
+		Iterator xys = map.keySet().iterator();
+//		while (xys.hasNext()) {
+//			String key = (String) xys.next();
+//			String value = (String) map.get(key);
+//			String[] values = value.split("-");
+//			System.out.println("获得模型坐标");
+//			System.out.println("模型id=" + key + "\n" + "模型X值=" + values[0]
+//					+ "    模型Y值=" + values[1]);
+//		}
+		Iterator iterator = list.iterator();
+		while (iterator.hasNext()) {
+			String key = (String) xys.next();
+			String value = (String) map.get(key);
+			String[] values = value.split("-");
+//			System.out.println("获得模型坐标");
+//			System.out.println("模型id=" + key + "\n" + "模型X值=" + values[0]
+//					+ "    模型Y值=" + values[1]);
+			
+			String s = (String) iterator.next();
+			String str[]= s.split("-");
+			li.add(str[0]+":"+map.get(str[0])+","+str[1]+":"+map.get(str[1]));
+		}
+		Iterator iterator2 = li.iterator();
+		while (iterator2.hasNext()) {
+			System.out.println(iterator2.next());
+		}
+		return li;
+	}
 	/**
 	 * 生成OPI头部
 	 */
