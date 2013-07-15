@@ -93,9 +93,15 @@ public class TopoAnalyse {
 						sw2_list.add(i.getKey());
 					}
 				}
-				if(i.getValue().getDevFactory().equals(CommonDef.ROUTE_SWITCH) || i.getValue().getDevType().equals(CommonDef.FIREWALL)){
+				if(i.getValue().getDevType().equals(CommonDef.ROUTE_SWITCH) || i.getValue().getDevType().equals(CommonDef.FIREWALL)){
 					if(!sw3_list.contains(i.getKey())){
 						sw3_list.add(i.getKey());
+					}
+				
+				}
+				if(i.getValue().getDevType().equals(CommonDef.ROUTE_SWITCH) || i.getValue().getDevType().equals(CommonDef.SWITCH) || i.getValue().getDevType().equals(CommonDef.FIREWALL)){
+					if(!sw_list.contains(i.getKey())){
+						sw_list.add(i.getKey());
 					}
 				}
 				if(i.getValue().getDevType().equals(CommonDef.ROUTER)){
@@ -103,11 +109,9 @@ public class TopoAnalyse {
 						rt_list.add(i.getKey());
 						List<Pair<String,String>> subnet_ifindex = new ArrayList<Pair<String,String>>();
 						
-						for(int ip_i = 0,msk_i=0,if_i=0;
-								ip_i<i.getValue().getIps().size()
-								&& msk_i<i.getValue().getMsks().size()
-								&& if_i<i.getValue().getInfinxs().size();
-								ip_i++,msk_i++,if_i++){
+						for (int ip_i = 0, msk_i = 0, if_i = 0; ip_i < i.getValue().getIps().size()
+								&& msk_i < i.getValue().getMsks().size()
+								&& if_i < i.getValue().getInfinxs().size(); ip_i++, msk_i++, if_i++) {
 							Vector<String> ip_iter   = new Vector<String>(), 
 										  msk_iter 	 = new Vector<String>(), 
 									  ifindex_iter 	 = new Vector<String>();
@@ -133,7 +137,7 @@ public class TopoAnalyse {
 				}
 			}
 			for(String i : sw_list){
-				if(!aft_list.containsKey(i)){
+				if(!aft_list.containsKey(i)){//若有交换机的aft表未读出
 					List<String> list_tmp = new ArrayList<String>();
 					Map<String,List<String>> mm = new HashMap<String, List<String>>();
 					mm.put("0", list_tmp);
@@ -468,11 +472,9 @@ public class TopoAnalyse {
 		analyseRRByRt();
 		//分析路由器之间的连接关系
 		analyseRRByNbr();
-		
 		analyseRRByBgp();
 		// 分析路由器之间的连接关系
 		analyseRRByArp();
-		
 		List<Edge> edge_list_tmp = getDirectEdge();
 		for(Edge i :edge_list_tmp){
 			boolean bNew =true;
@@ -489,7 +491,7 @@ public class TopoAnalyse {
 				topo_edge_list.add(i);
 			}
 		}
-		if(m_param.getComp_type().equals("00")){
+		if(!m_param.getComp_type().equals("00")){
 			compAftWithArp(m_param.getComp_type());
 			analyseSH_COMP();
 			analyseSS_COMP();
@@ -842,6 +844,7 @@ public class TopoAnalyse {
 						//对dest ip 循环,为每个目的ip添加一条边
 						for(String k : j.getValue()){
 							if(sw_list.contains(k)){
+								//忽略为交换设备的dest_ip
 								continue;
 							}
 							if(rs_list.contains(k)){
@@ -865,6 +868,7 @@ public class TopoAnalyse {
 							edge_tmp.setIp_right(k);
 							edge_tmp.setPt_right(pt_dest);
 							edge_tmp.setInf_right(pt_dest);
+							edge_list_sh.add(edge_tmp);//???????????????????????????????
 							//将该dest ip 添加到已经处理的ip地址表中
 							if(!iplist_del.contains(k)){
 								iplist_del.add(k);
@@ -885,6 +889,18 @@ public class TopoAnalyse {
 				}
 			}
 		}//while end
+		for(Edge i : edge_list_sh){
+			boolean bNew = true;
+			for(Edge j : topo_edge_list){
+				if(j.getIp_right().equals(i.getIp_right())){
+					bNew = false;
+					break;
+				}
+			}
+			if(bNew){
+				topo_edge_list.add(i);
+			}
+		}
 		//将不能分析的主机ip全部抛弃
 		for(Entry<String, Map<String,List<String>>> i : aft_list.entrySet()){
 			String ip_src = i.getKey();
@@ -901,7 +917,7 @@ public class TopoAnalyse {
 	}
 	public void compAftWithArp(String stype){
 		aft_list.clear();
-		Utils.mapAddAll(arp_list, aft_list);
+		Utils.mapAddAll(aft_list, arp_list);
 	}
 	public List<Edge> getDirectEdge(){
 		List<Edge> edge_list_cur = new ArrayList<Edge>();
@@ -1717,7 +1733,6 @@ public class TopoAnalyse {
 	}
 	public boolean analyseSH(){
 		List<Edge> edge_list_sh = new ArrayList<Edge>();
-		//add by wings 2009-11-26  
 		//优先确定连有一个pc的交换机端口
 		for(Entry<String,Map<String,List<String>>> i :aft_list.entrySet())
 		{//对source ip 循环
@@ -1781,7 +1796,7 @@ public class TopoAnalyse {
 			{//对source port 循环
 				if(isLeafPort(j.getValue(), sw_list))
 				{//是叶子端口
-					String pt_src = j.getKey();//->first; 
+					String pt_src = j.getKey();
 					for(String k : j.getValue())
 					{//对dest ip 循环,为每个目的ip添加一条边
 						String pt_dest = "PX";
@@ -1809,7 +1824,7 @@ public class TopoAnalyse {
 						if(bNew)
 						{
 							Edge edge_tmp = new Edge();
-							edge_tmp.setIp_left(ip_src);//.ip_left  = ip_src;
+							edge_tmp.setIp_left(ip_src);
 							edge_tmp.setPt_left(pt_src);
 							edge_tmp.setInf_left(pt_src);
 							edge_tmp.setIp_right(k);

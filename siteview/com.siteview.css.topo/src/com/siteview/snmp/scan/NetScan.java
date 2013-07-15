@@ -283,7 +283,6 @@ public class NetScan implements Runnable {
 		formatData();
 		saveFormatData();
 
-
 		if (devid_list.isEmpty()) {
 			topo_edge_list.clear();
 		} else if (existNetDevice(devid_list)) {
@@ -334,13 +333,6 @@ public class NetScan implements Runnable {
 		}
 		long theend = System.currentTimeMillis();
 		System.out.println("is end by " + (theend - start));
-//		Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-//		try {
-//			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(TOPOEdit.ID);
-//		} catch (PartInitException e) {
-//			MessageDialog.openError(shell, "错误！", "打开拓扑图失败");
-//			e.printStackTrace();
-//		}//.openEditor(input, "");
 	}
 
 	// 创建哑设备
@@ -353,9 +345,9 @@ public class NetScan implements Runnable {
 		int amountAdded = 0;
 		List<Edge> edge_list_dumb = new ArrayList<Edge>();
 		Map<String, IDBody> device_list_dumb = new HashMap<String, IDBody>();
-		Edge i_end = edge_list.get(edge_list.size() - 1);
-		Edge j_start = new Edge();
-		for (Edge i : edge_list) {
+		
+		for (int indexi=0;indexi<edge_list.size();indexi++){//Edge i : edge_list) {
+			Edge i = edge_list.get(indexi);
 			if (i.getIp_left().substring(0, 4).equals("DUMB")) {
 				continue;
 			}
@@ -365,10 +357,10 @@ public class NetScan implements Runnable {
 				// 只对主机和服务器添加dumb
 				continue;
 			}
-			j_start = i;
 			String dumbIp = "";
 			IDBody dumbBody = new IDBody();
-			for (Edge j : edge_list) {
+			for (int indexj = indexi+1;indexj < edge_list.size();indexj++){// : edge_list) {
+				Edge j = edge_list.get(indexj);
 				IDBody iiii = device_list.get(j.getIp_right());
 				if (iiii != null && !iiii.getDevType().equals("5")
 						&& !iiii.getDevType().equals("4")) {
