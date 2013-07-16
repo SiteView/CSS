@@ -5,7 +5,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.siteview.css.topo.wizard.scan.ScanDialog;
 import com.siteview.css.topo.wizard.scan.SomeWizard;
@@ -19,7 +18,6 @@ import com.siteview.css.topo.wizard.scan.SomeWizard;
  * @see IWorkbenchWindowActionDelegate
  */
 public class SampleAction implements IWorkbenchWindowActionDelegate {
-	private IWorkbenchWindow window;
 	/**
 	 * The constructor.
 	 */
@@ -36,11 +34,6 @@ public class SampleAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
 		ScanDialog dialog = new ScanDialog(Display.getCurrent().getActiveShell(),new SomeWizard());
 		dialog.open();
-//		MessageDialog.openInformation(
-//			window.getShell(),
-//			"Wizard",
-//			"Hello, Eclipse world");
-		
 	}
 
 	/**
@@ -67,6 +60,5 @@ public class SampleAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
 	public void init(IWorkbenchWindow window) {
-		this.window = window;
 	}
 }

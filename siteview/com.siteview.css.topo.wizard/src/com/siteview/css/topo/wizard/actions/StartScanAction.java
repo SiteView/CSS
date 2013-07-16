@@ -33,24 +33,19 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.BaseNewWizardMenu;
-import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.internal.ide.filesystem.FileSystemConfiguration;
 import org.eclipse.ui.internal.ide.filesystem.FileSystemSupportRegistry;
 import org.eclipse.ui.part.FileEditorInput;
 import org.osgi.framework.Bundle;
 
 import com.siteview.css.topo.common.TopoData;
-import com.siteview.css.topo.wizard.NewTopoFilePage;
 import com.siteview.css.topo.wizard.common.GlobalData;
 import com.siteview.snmp.common.ScanParam;
 import com.siteview.snmp.scan.NetScan;
@@ -60,6 +55,7 @@ import com.siteview.snmp.util.IoUtils;
  * @author haiming.wang
  *
  */
+@SuppressWarnings({ "unused", "restriction" })
 public class StartScanAction implements IWorkbenchWindowActionDelegate {
 	//扫描参数
 	private ScanParam scanParam;
@@ -129,6 +125,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 			Map<String, Map<String, String>> special_oid_list = new ConcurrentHashMap<String, Map<String, String>>();
 			scan = new NetScan(null, special_oid_list, scanParam);
 			try{
+				
 				scan.scan();
 				monitor.worked(50);
 				//缓存边数据
