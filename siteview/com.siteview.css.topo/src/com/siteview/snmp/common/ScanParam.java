@@ -15,11 +15,11 @@ public class ScanParam {
 	// 缺省写共同体名
 	private String community_set_dft = "public";
 	// 超时时间
-	private int timeout = 300;
+	private int timeout = 200;
 	// 线程数量
-	private int threadCount;
+	private int threadCount = 50;
 	// 扫描深度
-	private int depth;
+	private int depth = 5;
 	// 重试次数
 	private int retrytimes = 2;
 	// <种子IP>

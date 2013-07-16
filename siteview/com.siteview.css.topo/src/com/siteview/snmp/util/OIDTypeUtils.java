@@ -26,7 +26,9 @@ public class OIDTypeUtils {
 	private static Map<String, DevicePro> OidMap = new HashMap<String, DevicePro>();
 	private static OIDTypeUtils instance = null;
 	private OIDTypeUtils(){
-		dbName = IoUtils.getPlatformPath() + "resource" + File.separator + dbName;
+		dbName = IoUtils.getProductPath() + "data" + File.separator + dbName;
+		File file = new File(dbName);
+		System.out.println(file.exists());
 		Connection con = null;
 		try {
 			Class.forName("org.sqlite.JDBC");

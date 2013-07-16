@@ -127,7 +127,7 @@ public class NetScan implements Runnable {
 		myParam.setFilter_type("0"); // 不清除扫描范围外的ip 
 		myParam.setCommit_pc("1"); // 提交PC到SVDB 
 
-		PropertiesUtils.load(IoUtils.getPlatformPath() + "scanconfig.properties");
+		PropertiesUtils.load(IoUtils.getProductPath() + "scanconfig.properties");
 		myParam.setScan_type(PropertiesUtils.getValue("SCAN_TYPE"));
 		myParam.setSeed_type(PropertiesUtils.getValue("SEED_TYPE"));
 		myParam.setPing_type(PropertiesUtils.getValue("PING_TYPE"));
@@ -202,22 +202,11 @@ public class NetScan implements Runnable {
 		scanByIps(aliveIp_list, false);
 		devid_list = siReader.getDevid_list_valid();
 	}
-
+	/**
+	 * 拓扑扫描
+	 */
 	public void scan() {
-//		Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-//		try {
-//			workbench.getActiveWorkbenchWindow().getActivePage().showView(TOPOEdit.ID);
-//		} catch (PartInitException e) {
-//			e.printStackTrace();
-//		}
-//		for(IViewDescriptor id : views){
-//			System.out.println(id.getId());
-//			if(id.getId().equals(TOPOEdit.ID)){
-//				System.out.println(TOPOEdit.ID);
-//			}
-//		}
 		long start = System.currentTimeMillis();
-		System.out.println("asdf");
 		System.out.println("scan start");
 		String msg = "";
 		devid_list.clear();

@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.osgi.service.datalocation.Location;
 
 
 import com.siteview.snmp.common.ScanParam;
@@ -31,7 +33,7 @@ import com.siteview.snmp.pojo.RouteItem;
 import com.siteview.snmp.pojo.RouterStandbyItem;
 
 /**
- * 淇濆瓨鏂囦欢鐨勫伐鍏风被
+ * 保存文件的工具类
  * @author haiming.wang
  */
 public class IoUtils {
@@ -40,7 +42,7 @@ public class IoUtils {
 	public static final String SPLIT_MAIN	=  "[::]";
 	public static final String SPLIT_SUB	=  "[:]";
 	/**
-	 * 淇濆瓨鏍煎紡鍖栧悗鐨刟rp琛ㄦ暟鎹�
+	 * 保存格式化后的arp表数据
 	 * @param frm_aftarp_list
 	 * @return
 	 */
@@ -71,8 +73,8 @@ public class IoUtils {
 		return writeData("Arp_FRM.txt", line.toString());
 	}
 	/**
-	 * 淇濆瓨鏍煎紡鍖栧悗鐨刟ft淇℃伅
-	 * @param aft_list_frm aft鏁版嵁闆嗗悎
+	 * 保存格式化后的aft信息
+	 * @param aft_list_frm aft数据集合
 	 * @return
 	 */
 	public static boolean saveFrmAftList(Map<String, Map<String, List<String>>> aft_list_frm){
@@ -102,13 +104,13 @@ public class IoUtils {
 		return writeData("Aft_FRM.txt", line.toString());
 	}
 	/**
-	 * 淇濆瓨鏂囦欢
-	 * @param fileName 鏂囦欢鍚嶏紝鐩綍涓哄綋鍓嶉」鐩牴鐩綍
-	 * @param data 鏂囦欢鍐呭
+	 * 保存文件
+	 * @param fileName 文件名，目录为当前项目根目录
+	 * @param data 文件内容
 	 * @return
 	 */
 	public static boolean writeData(String fileName,String data){
-		String path = getPlatformPath() + File.separator + fileName;
+		String path = getProductPath() + fileName;
 		File file = new File(path);
 		if(file.exists()){
 			file.delete();
@@ -135,7 +137,7 @@ public class IoUtils {
 		}
 		return true;
 	}
-	// 鐢ㄦ枃浠朵繚瀛樿澶囨爣璇嗕綋鏁版嵁鍒楄〃
+	// 用文件保存设备标识体数据列表
 	public static boolean saveIDBodyData(Map<String, IDBody> devid_list)
 	{
 		String fileName = "DeviceInfos.txt";
@@ -171,7 +173,7 @@ public class IoUtils {
 		return writeData("Arp_ORG.txt", line.toString()); 
 	}
 	/**
-	 * 淇濆瓨璁惧鐨刬p闆嗗悎
+	 * 保存设备的ip集合
 	 * @param devid_list
 	 * @return
 	 */
@@ -183,7 +185,7 @@ public class IoUtils {
 		return writeData("deviceIps.txt", sb.toString());
 	}
 	/**
-	 * 鏋勯�璁惧闆嗗悎鐨勬枃浠跺唴瀹�
+	 * 构造设备集合的文件内容
 	 * @param devid_list
 	 * @return
 	 */
@@ -197,11 +199,11 @@ public class IoUtils {
 			line.append(id.getCommunity_get()).append(SPLIT_MAIN);
 			line.append(id.getCommunity_set()).append(SPLIT_MAIN);
 			line.append(id.getSysOid()).append(SPLIT_MAIN);
-			line.append(id.getDevType()).append(SPLIT_MAIN);//璁惧绫诲瀷
-			line.append(id.getDevFactory()).append(SPLIT_MAIN);//璁惧鍘傚
-			line.append(id.getDevModel()).append(SPLIT_MAIN);//璁惧鍨嬪彿
-			line.append(id.getDevTypeName()).append(SPLIT_MAIN);//璁惧绫诲瀷鍚嶇О
-			line.append(id.getBaseMac()).append(SPLIT_MAIN);//鍩烘湰Mac鍦板潃
+			line.append(id.getDevType()).append(SPLIT_MAIN);//设备类型
+			line.append(id.getDevFactory()).append(SPLIT_MAIN);//设备厂家
+			line.append(id.getDevModel()).append(SPLIT_MAIN);//设备型号
+			line.append(id.getDevTypeName()).append(SPLIT_MAIN);//设备类型名称
+			line.append(id.getBaseMac()).append(SPLIT_MAIN);//基本Mac地址
 			line.append(id.getSysName()).append(SPLIT_MAIN);
 			line.append(id.getSysSvcs()).append(SPLIT_MAIN);
 			if(id.getIps()!=null && !id.getIps().isEmpty()){
@@ -228,12 +230,12 @@ public class IoUtils {
 		}
 		return line.toString();
 	}
-	// 鐢ㄦ枃浠朵繚瀛樿澶囨爣璇嗕綋鏁版嵁鍒楄〃
+	// 用文件保存设备标识数据列表
 	public static boolean saveFrmDevIDList(Map<String, IDBody> devid_list){
 		return writeData("DeviceInfos_Frm.txt", buildDeviceLine(devid_list));
 	}
 
-	// 璇诲彇璁惧ip鍒楄〃
+	// 读取设备ip列表
 	public static boolean readDeviceIpList(Vector<String> devip_list)
 	{
 		String path = System.getProperty("user.dir") + File.separator + "DeviceIps.txt";
@@ -273,17 +275,17 @@ public class IoUtils {
 			{
 				continue;
 			}
-			line.append(i.getKey()).append("::"); //绠＄悊IP
+			line.append(i.getKey()).append("::"); //管理IP
 			int indexj = 0;
 			for(Entry<String, List<String>> j : i.getValue().entrySet())
-			{//port 寰幆
+			{//port 循环
 				indexj++;
 				if(j.getValue().isEmpty())
 					continue;
 				line.append(j.getKey()).append(":");
 				int indexk = 0;
 				for(String k : j.getValue())
-				{//ip寰幆
+				{//ip循环
 					indexk ++ ;
 					line.append(k);
 					if(indexk != (j.getValue().size() - 1))
@@ -383,7 +385,7 @@ public class IoUtils {
 		return writeData("Direct_Data.txt", line.toString());
 	}
 	/**
-	 * 淇濆瓨閰嶇疆淇℃伅 to Scan_Para.txt
+	 * 保存配置信息 to Scan_Para.txt
 	 * @param scanParam
 	 * @return
 	 */
@@ -402,7 +404,7 @@ public class IoUtils {
 		return writeData("Scan_Para.txt", line.toString());
 	}
 	/**
-	 * 淇濆瓨鎺ュ彛鏁版嵁鍒楄〃 to InfProps.txt
+	 * 保存接口数据列表 to InfProps.txt
 	 * @param ifprops
 	 * @param cdpPrex
 	 * @return
@@ -416,15 +418,15 @@ public class IoUtils {
 				continue;
 			}
 			line.append(i.getKey()).append(SPLIT_TOP);//IP
-			line.append(i.getValue().getFirst()).append(SPLIT_TOP);//鎺ュ彛鏁版嵁
+			line.append(i.getValue().getFirst()).append(SPLIT_TOP);//閹恒儱褰涢弫鐗堝祦
 			Iterator<IfRec> jiter = i.getValue().getSecond().iterator();
 			while(jiter.hasNext()){
 				IfRec j = jiter.next();
-				line.append(j.getIfIndex()).append(SPLIT_SUB);//鎺ュ彛绱㈠紩
-				line.append(j.getIfType()).append(SPLIT_SUB);//鎺ュ彛绫诲瀷
-				line.append(j.getIfMac()).append(SPLIT_SUB);//鎺ュ彛mac鍦板潃
-				line.append(j.getIfPort()).append(SPLIT_SUB);//鎺ュ彛绔彛鍙�
-				line.append(j.getIfDesc()).append(SPLIT_SUB);//鎺ュ彛鎻忚堪
+				line.append(j.getIfIndex()).append(SPLIT_SUB);//閹恒儱褰涚槐銏犵穿
+				line.append(j.getIfType()).append(SPLIT_SUB);//閹恒儱褰涚猾璇茬�
+				line.append(j.getIfMac()).append(SPLIT_SUB);//閹恒儱褰沵ac閸︽澘娼�
+				line.append(j.getIfPort()).append(SPLIT_SUB);//閹恒儱褰涚粩顖氬經閸欙拷
+				line.append(j.getIfDesc()).append(SPLIT_SUB);//閹恒儱褰涢幓蹇氬牚
 				line.append(j.getIfSpeed());
 				if(jiter.hasNext()){
 					line.append(SPLIT_MAIN);
@@ -435,7 +437,7 @@ public class IoUtils {
 		return writeData("InfProps.txt", line.toString());
 	}
 	/**
-	 * 淇濆瓨Ospf閭诲眳鏁版嵁鍒楄〃
+	 * 保存Ospf邻居数据列表
 	 * @return
 	 */
 	public static boolean saveOspfNbrList(Map<String, Map<String, List<String>>> ospfnbr_list){
@@ -467,7 +469,7 @@ public class IoUtils {
 		return writeData("OspfNbr_ORG.txt", line.toString());
 	}
 	/**
-	 * 淇濆瓨Route鏁版嵁鍒楄〃 Route_ORG.txt
+	 * 保存Route数据列表 Route_ORG.txt
 	 * @return
 	 */
 	public static boolean saveRouteList(Map<String, Map<String, List<RouteItem>>> route_list){
@@ -500,7 +502,7 @@ public class IoUtils {
 		return writeData("Route_ORG.txt", line.toString());
 	}
 	/**
-	 * 淇濆瓨bgp鏁版嵁鍒楄〃 to Bgp_ORG.txt
+	 * 保存bgp数据列表 to Bgp_ORG.txt
 	 * @return
 	 */
 	public static boolean saveBgpList(List<Bgp> bgp_list){
@@ -514,7 +516,7 @@ public class IoUtils {
 		return writeData("Bgp_ORG.txt", line.toString());
 	}
 	/**
-	 * 淇濆瓨vrrp鏁版嵁琛� to  Vrrp_ORG.txt
+	 * 保存vrrp数据表 to  Vrrp_ORG.txt
 	 * @return
 	 */
 	public static boolean saveVrrpList(Map<String, RouterStandbyItem> vrrp_list){
@@ -539,9 +541,9 @@ public class IoUtils {
 		return writeData("Vrrp_ORG.txt", line.toString());
 	}
 	/**
-	 * 璇诲彇DeviceInfos.txt 宸辩粡淇濆瓨鐨勮澶囦俊鎭�
+	 * 读取DeviceInfos.txt 己经保存的设备信息
 	 * @param devid_list
-	 * @param cdpPrex cdp鏂囦欢鍚嶅墠缂�紝榛樿涓虹┖瀛椾覆
+	 * @param cdpPrex cdp文件名前缀，默认为空字串
 	 * @return
 	 */
 	public static boolean readIdBodyData(Map<String, IDBody> devid_list,
@@ -617,7 +619,7 @@ public class IoUtils {
 		return true;
 	}
 	/**
-	 * 璇诲彇Aft_ORG.txt aft鍘熷鏁版嵁
+	 * 读取Aft_ORG.txt aft原始数据
 	 * @param aft_list
 	 * @return
 	 */
@@ -633,7 +635,7 @@ public class IoUtils {
 				if(vstr.length == 2){
 					String ip = vstr[0];
 					if(!vstr[1].isEmpty()){
-						//瀛樺湪绔彛闆嗗悎
+						//存在端口集合
 						Map<String,List<String>> map_ps = new HashMap<String, List<String>>();
 						String[] vpms = vstr[1].split(";");
 						for(int i=0;i<vpms.length;i++){
@@ -681,7 +683,7 @@ public class IoUtils {
 		return true;
 	}
 	/**
-	 * 璇诲彇Arp_ORG.txt arp鍘熷鏁版嵁琛�
+	 * 读取Arp_ORG.txt arp原始数据表
 	 * @param arpList
 	 * @return
 	 */
@@ -697,7 +699,7 @@ public class IoUtils {
 				if(vstr.length == 2){
 					String ip = vstr[0];
 					if(!Utils.isEmptyOrBlank(vstr[1])){
-						//瀛樺湪绔彛
+						//鐎涙ê婀粩顖氬經
 						Map<String,List<Pair<String,String>>> map_ps = new HashMap<String,List<Pair<String,String>>>();
 						String[] vpms = vstr[1].split(";");
 						for(int i=0;i<vpms.length;i++){
@@ -747,7 +749,7 @@ public class IoUtils {
 		return true;
 	}
 	/**
-	 * 璇诲彇鎺ュ彛琛ㄥ師濮嬫暟鎹� from InfProps.txt
+	 * 读取接口表原始数据  from InfProps.txt
 	 * @param ifpropList
 	 * @return
 	 */
@@ -762,7 +764,7 @@ public class IoUtils {
 				String[] vstr = line.split(SPLIT_TOP);
 				if(vstr.length == 3){
 					String ip = vstr[0];//IP
-					String amount = vstr[1];//鎺ュ彛鏁伴噺
+					String amount = vstr[1];//閹恒儱褰涢弫浼村櫤
 					if(!Utils.isEmptyOrBlank(vstr[2])){
 						List<IfRec> inf_list = new ArrayList<IfRec>();
 						String[] vinfs = vstr[2].split(SPLIT_MAIN);
@@ -813,7 +815,7 @@ public class IoUtils {
 		return true;
 	}
 	/**
-	 * 璇诲彇閭诲眳琛ㄦ暟鎹�from OspfNbr_ORG.txt
+	 * 读取邻居表数据 from OspfNbr_ORG.txt
 	 * @param ospfnbrList
 	 * @return
 	 */
@@ -879,7 +881,7 @@ public class IoUtils {
 		return true;
 	}
 	/**
-	 * 璇诲彇璺敱琛ㄦ暟鎹�from Route_ORG.txt
+	 * 读取路由表数据 from Route_ORG.txt
 	 * @param rttblList
 	 * @return
 	 */
@@ -894,7 +896,7 @@ public class IoUtils {
 				String[] vstr = line.split("::");
 				if(vstr.length == 2){
 					String ip = vstr[0];//IP
-					if(!Utils.isEmptyOrBlank(vstr[1])){//瀛樺湪绔彛闆嗗悎
+					if(!Utils.isEmptyOrBlank(vstr[1])){//存在端口集合
 						Map<String,List<RouteItem>> map_ps = new HashMap<String,List<RouteItem>>();
 						String[] vpms = vstr[1].split(";");
 						for(int i=0;i<vpms.length;i++){
@@ -953,7 +955,7 @@ public class IoUtils {
 		return true;
 	}
 	/**
-	 * 璇诲彇閭诲眳鏁版嵁琛�from Bgp_ORG.txt
+	 * 读取邻居数据表 from Bgp_ORG.txt
 	 * @param bgpList
 	 * @return
 	 */
@@ -1001,7 +1003,7 @@ public class IoUtils {
 		return true;
 	}
 	/**
-	 * 璇诲彇vrrp鏁版嵁 from Vrrp_ORG.txt
+	 *  读取vrrp数据 from Vrrp_ORG.txt
 	 * @param routeStandbyList
 	 * @return
 	 */
@@ -1052,7 +1054,7 @@ public class IoUtils {
 		return true;
 	}
 	/**
-	 * 璇诲彇Trace route鏁版嵁鍒楄〃 from Tracert.txt
+	 * 读取Trace route数据列表 from Tracert.txt
 	 * @param tracert_list
 	 * @return
 	 */
@@ -1095,7 +1097,7 @@ public class IoUtils {
 		return true;
 	}
 	/**
-	 * 璇诲彇direct 鏁版嵁琛�from Direct_Data.txt
+	 * 读取direct 数据表 from Direct_Data.txt
 	 * @param directdata_list
 	 * @return
 	 */
@@ -1110,7 +1112,7 @@ public class IoUtils {
 				String[] vstr = line.split(SPLIT_TOP);
 				if(vstr.length == 2){
 					String ip = vstr[0];//IP
-					if(!Utils.isEmptyOrBlank(vstr[1])){//瀛樺湪绔彛闆嗗悎
+					if(!Utils.isEmptyOrBlank(vstr[1])){//存在端口集合
 						List<Directitem> item_list = new ArrayList<Directitem>();
 						String[] vcdps = vstr[1].split(SPLIT_MAIN);
 						for(int i=0;i<vcdps.length;i++){
@@ -1169,7 +1171,7 @@ public class IoUtils {
 		return true;
 	}
 	/**
-	 * 璇诲彇閰嶇疆淇℃伅 from Scan_Para.txt
+	 * 读取配置信息 from Scan_Para.txt
 	 * @param scanPara
 	 * @return
 	 */
@@ -1181,7 +1183,7 @@ public class IoUtils {
 		FileReader fr = null;
 		BufferedReader br = null;
 		try {
-			fr = new FileReader(getPlatformPath() + File.separator + "Scan_Para.txt");
+			fr = new FileReader(getProductPath() + "Scan_Para.txt");
 			br = new BufferedReader(fr);
 			String line = "";
 			while ((line = br.readLine()) != null) {
@@ -1223,13 +1225,22 @@ public class IoUtils {
 		}
 		return true;
 	}
+	/**
+	 * 获取插件的路径
+	 * @return
+	 */
 	public static String getPlatformPath(){
 		String path = Platform.getBundle("com.siteview.css.topo").getLocation().replaceAll("reference:file:", ""); 
 		path = path.substring(1);
 		return path;
 	}
+	public static String getProductPath(){
+		Location location = Platform.getConfigurationLocation();
+		URL url = location.getURL();
+		return url.getPath();
+	}
 	/**
-	 * 保存扫描参数 用于界面初始化
+	 * 保存界面配置信息 to scanParam.txt
 	 * @param sp
 	 * @return
 	 */
@@ -1241,28 +1252,28 @@ public class IoUtils {
 		line.append("retrytimes=").append(sp.getRetrytimes()).append("\r\n");
 		line.append("threadCount=").append(sp.getThreadCount()).append("\r\n");
 		line.append("scanScales=");
-		//保存扫描范围
+		//淇濆瓨鎵弿鑼冨洿
 		for(int i=0;i<sp.getScan_scales().size();i++){
 			Pair<String,String> tmp = sp.getScan_scales().get(i);
 			line.append(tmp.getFirst()).append("-").append(tmp.getSecond());
-			if(i!=sp.getScan_scales().size()){
+			if(i!=sp.getScan_scales().size()-1){
 				line.append(":");
 			}else{
 				line.append("\r\n");
 			}
 		}
 		line.append("\r\n");
-		//保存扫描过滤范围
+		//淇濆瓨鎵弿杩囨护鑼冨洿
 		line.append("filterScales=");
 		for(int i=0;i<sp.getFilter_scales().size();i++){
 			Pair<String, String> tmp = sp.getFilter_scales().get(i);
 			line.append(tmp.getFirst()).append("-").append(tmp.getSecond());
-			if(i!=sp.getFilter_scales().size()){
+			if(i!=sp.getFilter_scales().size()-1){
 				line.append(":");
 			}
 		}
 		line.append("\r\n");
-		//保存扫描种子
+		//淇濆瓨鎵弿绉嶅瓙
 		line.append("scanSeeds=");
 		for(int i=0;i<sp.getScan_seeds().size();i++){
 			String tmp = sp.getScan_seeds().get(i);
@@ -1274,13 +1285,13 @@ public class IoUtils {
 		return writeData("scanParam.txt", line.toString());
 	}
 	/**
-	 * 读取保存的扫描参数
+	 * 读取界面配置信息
 	 * @return
 	 */
 	public static ScanParam readScanParam(){
 		ScanParam sp = new ScanParam();
 		FileReader fr = null;
-		File scanParmFile = new File(getPlatformPath() + File.separator + "scanParam.txt");
+		File scanParmFile = new File(getProductPath() + "scanParam.txt");
 		if(!scanParmFile.exists()){
 			return null;
 		}
@@ -1338,7 +1349,6 @@ public class IoUtils {
 						if (vs.length != 2) {
 							continue;
 						}
-						// 如果不是ip地址的格式或者前一个IP地址比后一个IP址大继续循环
 						if (!Utils.isIp(vs[0])
 								|| !Utils.isIp(vs[1])
 								|| (ScanUtils.ipToLong(vs[0]) > ScanUtils
@@ -1358,7 +1368,6 @@ public class IoUtils {
 						if (vs.length != 2) {
 							continue;
 						}
-						// 如果不是ip地址的格式或者前一个IP地址比后一个IP址大继续循环
 						if (!Utils.isIp(vs[0])
 								|| !Utils.isIp(vs[1])
 								|| (ScanUtils.ipToLong(vs[0]) > ScanUtils
