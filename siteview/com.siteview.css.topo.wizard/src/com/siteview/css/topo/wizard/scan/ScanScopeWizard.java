@@ -3,10 +3,6 @@ package com.siteview.css.topo.wizard.scan;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.TableEditor;
@@ -107,6 +103,7 @@ public class ScanScopeWizard extends WizardPage {
 		// ÐÞ¸Ätable
 		{
 			table.addMouseListener(new MouseAdapter() {
+				@SuppressWarnings("unused")
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					try {

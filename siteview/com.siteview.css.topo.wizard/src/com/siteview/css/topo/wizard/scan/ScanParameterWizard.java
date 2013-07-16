@@ -122,15 +122,6 @@ public class ScanParameterWizard extends WizardPage {
 		timeOutLabel = new Label(group, SWT.NONE);
 		timeOutLabel.setText("\t\t超时时间：");
 		creatSpinnerUsefull(group, timeOut, "超时时间",200,1000);
-		/*
-		 * 简单示例 Spinner spinner4 = new Spinner (group, SWT.BORDER);
-		 * spinner4.setMinimum(0); spinner4.setMaximum(1000);
-		 * spinner4.setSelection(5); spinner4.setIncrement(1);
-		 * spinner4.setPageIncrement(100); spinner4.setLayoutData(new
-		 * GridData(120, SWT.DEFAULT)); Rectangle clientArea4 =
-		 * group.getClientArea(); spinner4.setLocation(clientArea4.x,
-		 * clientArea4.y); spinner4.pack();
-		 */
 		setControl(group);
 	}
 	/**
@@ -145,6 +136,7 @@ public class ScanParameterWizard extends WizardPage {
 		spinner.setValues(init, min, max, 0, 100, 10);// 初始值,最小值,最大值,小數點,點擊增加的多少,。。
 		spinner.setLayoutData(new GridData(120, SWT.DEFAULT));
 		spinner.addModifyListener(new ModifyListener() {
+			@SuppressWarnings("unused")
 			public void modifyText(ModifyEvent e) {
 				String string = ((Spinner) e.getSource()).getText();
 				String message = null;
@@ -189,6 +181,7 @@ public class ScanParameterWizard extends WizardPage {
 		spinner.setValues(init, 0, 99, 0, 1, 10);// 初始值,最小值,最大值,小數點,點擊增加的多少,。。
 		spinner.setLayoutData(new GridData(120, SWT.DEFAULT));
 		spinner.addModifyListener(new ModifyListener() {
+			@SuppressWarnings("unused")
 			public void modifyText(ModifyEvent e) {
 				String string = ((Spinner) e.getSource()).getText();
 				String message = null;

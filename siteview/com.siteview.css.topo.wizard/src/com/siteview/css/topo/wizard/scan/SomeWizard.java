@@ -2,11 +2,8 @@ package com.siteview.css.topo.wizard.scan;
 
 
 import org.eclipse.jface.dialogs.DialogSettings;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -30,10 +27,6 @@ public class SomeWizard extends Wizard {
 	private OutScopeWizard filterPage = new OutScopeWizard();
 	private CommunitySetupWizard communityPage = new CommunitySetupWizard();
 	private ScanSeedsWizard seedsPage = new ScanSeedsWizard();
-	private Table tab;
-	protected void setTable(Table tab){
-		this.tab = tab;
-	}
 	Table tab1 = null;
 	public SomeWizard() {
 		//首先读取上次保存的扫描参数
@@ -68,20 +61,15 @@ public class SomeWizard extends Wizard {
 	 * 扫描完成
 	 */
 	public boolean performFinish() {
-		String retryValue = paramPage.getRetryCount().getText();
-		IDialogSettings dialogSettings2 = this.getDialogSettings();
 		int searchDepth = 0;
 		int parallelThreads = 0;
 		int retryCount = 0;
 		int timeOut = 0;
-		String[] array = dialogSettings2.getArray("Array");
-		Object value1 = paramPage.getGroup().getText();
 		Control[] groups = paramPage.getGroup().getChildren();
 		//获取基本扫描信息
 		for(int i=0;i<groups.length;i++){
 			Control c = groups[i];
 			if(c instanceof Spinner){
-				@SuppressWarnings("unused")
 				Spinner spi = (Spinner)c;
 				if(i == 1){
 					searchDepth = spi.getSelection();

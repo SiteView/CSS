@@ -78,6 +78,7 @@ public class ScanSeedsWizard extends WizardPage {
 		// 修改table
 		{
 			table.addMouseListener(new MouseAdapter() {
+				@SuppressWarnings("unused")
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					try {
@@ -91,8 +92,6 @@ public class ScanSeedsWizard extends WizardPage {
 						final TableItem tableitem = table.getItem(point);
 						// // 得到选中的列
 						int column = -1;
-						Object obj = e.getSource();
-						
 						TableItem tItems = table.getItem(table.getSelectionIndex());
 						
 						for (int i = 0; i < table.getColumnCount(); i++) {

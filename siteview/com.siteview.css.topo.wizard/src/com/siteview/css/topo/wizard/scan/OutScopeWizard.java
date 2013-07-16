@@ -14,7 +14,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import com.siteview.snmp.model.Pair;
@@ -43,6 +42,7 @@ public class OutScopeWizard extends WizardPage {
 		setMessage("用起始IP地址和终止IP地址指定扫描排除的范围，以过滤设备少而网络地址数多的网段，节省扫描时间。");
 	}
 
+	@SuppressWarnings("unused")
 	public void createControl(Composite parent) {
 		// 群组
 		Group group = new Group(parent, SWT.NONE);
