@@ -134,6 +134,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 				//»º´æ±ßÊý¾Ý
 				TopoData.isInit = true;
 				TopoData.edgeList = scan.getTopo_edge_list();
+				TopoData.deviceList = scan.getDevid_list();
 				drawTopo(scan);
 				monitor.worked(100);
 			}catch (Exception e) {
