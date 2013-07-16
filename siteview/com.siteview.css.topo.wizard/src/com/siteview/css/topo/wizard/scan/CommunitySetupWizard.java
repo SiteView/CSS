@@ -26,7 +26,33 @@ public class CommunitySetupWizard extends WizardPage {
 	private TableEditor editor = null;
 	private Text getCommu = null;
 	private Text setCommu = null;
+	private String communityGet = "public";
+	private String communitySet = "public";
 	
+	public String getCommunityGet() {
+		return communityGet;
+	}
+
+	public void setCommunityGet(String communityGet) {
+		this.communityGet = communityGet;
+	}
+
+	public String getCommunitySet() {
+		return communitySet;
+	}
+
+	public void setCommunitySet(String communitySet) {
+		this.communitySet = communitySet;
+	}
+
+	public void setGetCommu(Text getCommu) {
+		this.getCommu = getCommu;
+	}
+
+	public void setSetCommu(Text setCommu) {
+		this.setCommu = setCommu;
+	}
+
 	public Text getGetCommu() {
 		return getCommu;
 	}
@@ -66,11 +92,14 @@ public class CommunitySetupWizard extends WizardPage {
 		get.setText("GET");
 
 		getCommu = new Text(group, SWT.NONE);
+		getCommu.setText(communityGet);
 
 		Label set = new Label(group, SWT.NONE);
 		set.setText("SET");
+		
 
 		setCommu = new Text(group, SWT.NONE);
+		setCommu.setText(communitySet);
 
 		// tabel…Ë÷√
 		table = new Table(group, SWT.BORDER | SWT.NONE | SWT.FULL_SELECTION

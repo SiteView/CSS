@@ -2,11 +2,13 @@ package com.siteview.css.topo.wizard.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.siteview.css.topo.wizard.scan.ScanDialog;
+import com.siteview.css.topo.wizard.scan.SomeWizard;
 
 /**
  * Our sample action implements workbench action delegate.
@@ -32,7 +34,8 @@ public class SampleAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		ScanDialog dialog = new ScanDialog(null);
+		ScanDialog dialog = new ScanDialog(Display.getCurrent().getActiveShell(),new SomeWizard());
+		dialog.open();
 //		MessageDialog.openInformation(
 //			window.getShell(),
 //			"Wizard",

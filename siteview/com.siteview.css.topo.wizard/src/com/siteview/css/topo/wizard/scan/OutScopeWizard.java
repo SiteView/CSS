@@ -1,5 +1,8 @@
 package com.siteview.css.topo.wizard.scan;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.TableEditor;
@@ -14,6 +17,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+import com.siteview.snmp.model.Pair;
+
 /**
  * 排除范围向导
  * 
@@ -24,6 +29,11 @@ public class OutScopeWizard extends WizardPage {
 
 	private Table table;
 	private TableEditor editor = null;
+	private List<Pair<String,String>> filterList = new ArrayList<Pair<String,String>>();
+	
+	public void setFilterList(List<Pair<String, String>> filterList) {
+		this.filterList = filterList;
+	}
 	public Table getTable(){
 		return this.table;
 	}
@@ -34,9 +44,6 @@ public class OutScopeWizard extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-		// 设置颜色
-		// display = parent.getDisplay();
-		// COLOR_SYSTEM_RED = display.getSystemColor(SWT.COLOR_RED);
 		// 群组
 		Group group = new Group(parent, SWT.NONE);
 		group.setText("排除范围");
@@ -62,13 +69,17 @@ public class OutScopeWizard extends WizardPage {
 		col2.setWidth(300);
 
 		// 添加表格数据
-		final TableColumn[] columns = table.getColumns();
-		for (int i = 0; i < columns.length; i++) {
-			TableItem item = new TableItem(table, SWT.NONE);
-			for (int j = 0; j < columns.length; j++) {
-				// item.setText(j,""+i);//设置默认值
+		if(!filterList.isEmpty()){
+			table.clearAll();
+			for(Pair<String, String> p : filterList){
+				TableItem item = new TableItem(table, SWT.NONE);
+				item.setText(new String[]{p.getFirst(),p.getSecond()});
+				table.showItem(item);
 			}
+		}else{
+			TableItem item = new TableItem(table, SWT.NONE);
 		}
+		
 
 		// 修改table
 		{

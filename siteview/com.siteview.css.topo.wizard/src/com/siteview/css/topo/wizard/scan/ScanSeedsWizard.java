@@ -1,5 +1,8 @@
 package com.siteview.css.topo.wizard.scan;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.*;
@@ -20,7 +23,11 @@ public class ScanSeedsWizard extends WizardPage {
 
 	private Table table;
 	private TableEditor editor = null;
-
+	private List<String> seedList = new ArrayList<String>();
+	
+	public void setSeedList(List<String> seedList) {
+		this.seedList = seedList;
+	}
 	public Table getSeedsTable(){
 		return table;
 	}
@@ -54,11 +61,20 @@ public class ScanSeedsWizard extends WizardPage {
 		col1.setWidth(600);
 
 		// 添加表格数据
-		final TableColumn[] columns = table.getColumns();
-		for (int i = 0; i < columns.length; i++) {
-			TableItem item = new TableItem(table, SWT.NONE);
+		if(!seedList.isEmpty()){
+			table.clearAll();
+			for(String s : seedList){
+				TableItem iter = new TableItem(table, SWT.NONE);
+				iter.setText(s);
+				table.showItem(iter);
+			}
+		}else{
+			for(int i=0;i<1;i++){
+				TableItem item = new TableItem(table, SWT.NONE);
+				item.setText("");
+				table.showItem(item);
+			}
 		}
-
 		// 修改table
 		{
 			table.addMouseListener(new MouseAdapter() {
@@ -75,6 +91,10 @@ public class ScanSeedsWizard extends WizardPage {
 						final TableItem tableitem = table.getItem(point);
 						// // 得到选中的列
 						int column = -1;
+						Object obj = e.getSource();
+						
+						TableItem tItems = table.getItem(table.getSelectionIndex());
+						
 						for (int i = 0; i < table.getColumnCount(); i++) {
 							Rectangle rec = tableitem.getBounds(i);
 							if (rec.contains(point)) {
@@ -89,9 +109,9 @@ public class ScanSeedsWizard extends WizardPage {
 						final int col1 = column;
 						// 其他的修改都是用文本框
 						final Text txt = new Text(table, SWT.NONE);
-						txt.setText(tableitem.getText(col1));// 取得当前单元格里的值
+						txt.setText(tItems.getText());// 取得当前单元格里的值
 						txt.forceFocus();
-						editor.setEditor(txt, tableitem, col1);
+						editor.setEditor(txt, tItems, col1);
 						txt.addModifyListener(new ModifyListener() {
 							@Override
 							public void modifyText(ModifyEvent e) {
@@ -109,8 +129,8 @@ public class ScanSeedsWizard extends WizardPage {
 								});
 					} catch (Exception e2) {
 						e2.getStackTrace();
-					}
-					;
+						System.err.println(e2.getMessage());
+					};
 				}
 			});
 		}

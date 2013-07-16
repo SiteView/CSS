@@ -4,12 +4,15 @@ package com.siteview.css.topo.wizard.scan;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.siteview.css.topo.wizard.common.GlobalData;
+import com.siteview.snmp.common.ScanParam;
 import com.siteview.snmp.model.Pair;
 import com.siteview.snmp.util.IoUtils;
 import com.siteview.snmp.util.ScanUtils;
@@ -33,6 +36,24 @@ public class SomeWizard extends Wizard {
 	}
 	Table tab1 = null;
 	public SomeWizard() {
+		//首先读取上次保存的扫描参数
+		ScanParam sp = IoUtils.readScanParam();
+		if(sp != null){
+			//初始化基本扫描参数
+			paramPage.setDepth(sp.getDepth());
+			paramPage.setRetry(sp.getRetrytimes());
+			paramPage.setThreadCount(sp.getThreadCount());
+			paramPage.setTimeOut(sp.getTimeout());
+			//初始化扫描范围
+			scopePage.setScaleList(sp.getScan_scales());
+			//初始化扫描过滤范围列表
+			filterPage.setFilterList(sp.getFilter_scales());
+			//初始化扫描种子
+			seedsPage.setSeedList(sp.getScan_seeds());
+			//初始化读写共同体
+			communityPage.setCommunityGet(sp.getCommunity_get_dft());
+			communityPage.setCommunitySet(sp.getCommunity_set_dft());
+		}
 		setWindowTitle("扫描");
 		this.setDialogSettings(new DialogSettings("导入工程"));
 		addPage(paramPage);
@@ -77,6 +98,8 @@ public class SomeWizard extends Wizard {
 			}
 			
 		}
+		//先清空数据
+		GlobalData.scanParam = new ScanParam();
 		// 构造扫描参数
 		GlobalData.scanParam.setDepth(searchDepth);
 		GlobalData.scanParam.setThreadCount(parallelThreads);
@@ -124,6 +147,11 @@ public class SomeWizard extends Wizard {
 				GlobalData.scanParam.getScan_seeds().add(item.getText(0));
 			}
 		}
+		if(GlobalData.scanParam.getScan_scales().isEmpty() && GlobalData.scanParam.getScan_seeds().isEmpty()){
+			//如果扫描种子和扫描范围都为空不能点击finish按钮
+			seedsPage.setErrorMessage("扫描种子和扫描范围必须配置一项！");
+			return false;
+		}
 		GlobalData.isConfiged = true;
 		//缓存扫描参数
 		IoUtils.saveScanParam(GlobalData.scanParam);
@@ -132,4 +160,12 @@ public class SomeWizard extends Wizard {
 				+ "重试次数" + retryCount + "超时时间" + timeOut);
 		return true;
 	}
+	public boolean canFinish() {
+		   //仅当当前页面为感谢页面时才将“完成”按钮置为可用状态
+		   if (this.getContainer().getCurrentPage() == seedsPage )
+		    return true;
+		   else
+		    return false;
+	}
+	
 }

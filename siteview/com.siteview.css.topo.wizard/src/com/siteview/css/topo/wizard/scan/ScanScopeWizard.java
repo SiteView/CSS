@@ -1,5 +1,12 @@
 package com.siteview.css.topo.wizard.scan;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.TableEditor;
@@ -13,6 +20,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
+import com.siteview.snmp.model.Pair;
+
 /**
  * 扫描参数界面
  * 
@@ -25,6 +34,19 @@ public class ScanScopeWizard extends WizardPage {
 	private TableEditor editor = null;
 	private TableItem item;
 	Group group = null;
+	/**
+	 * 扫描范围的列表
+	 */
+	private List<Pair<String, String>> scaleList = new ArrayList<Pair<String, String>>();
+	
+	public void setScaleList(List<Pair<String, String>> scaleList) {
+		this.scaleList = scaleList;
+	}
+	
+	public List<Pair<String, String>> getScaleList() {
+		return scaleList;
+	}
+
 	public Table getTable(){
 		return this.table;
 	}
@@ -52,12 +74,14 @@ public class ScanScopeWizard extends WizardPage {
 		// tabel设置
 		table = new Table(group, SWT.BORDER | SWT.NONE | SWT.FULL_SELECTION
 				| SWT.VIRTUAL);
+		
 		table.setHeaderVisible(true);// 标题
 		table.setLinesVisible(true);// 表格线可见
 		// 编辑器设置
 		editor = new TableEditor(table);
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
+		
 		// 创建列
 		TableColumn col1 = new TableColumn(table, SWT.LEFT);
 		col1.setText("起始IP地址");
@@ -65,23 +89,28 @@ public class ScanScopeWizard extends WizardPage {
 		TableColumn col2 = new TableColumn(table, SWT.LEFT);
 		col2.setText("终止IP地址");
 		col2.setWidth(300);
-
 		// 添加表格数据
-		final TableColumn[] columns = table.getColumns();
-
-		for (int i = 0; i < 1; i++) {
-			item = new TableItem(table, SWT.NONE);
-			for (int j = 0; j < columns.length; j++) {
-				// item.setText(j,""+i);//设置默认值test数据
+		if(!scaleList.isEmpty()){
+			table.clearAll();
+			for(Pair<String,String> p : scaleList){
+				TableItem item = new TableItem(table, SWT.NONE);
+				item.setText(new String[]{p.getFirst(),p.getSecond()});
+				table.showItem(item);
+			}
+		}else{
+			for(int i=0;i<1;i++){
+				TableItem item = new TableItem(table, SWT.NONE);
+				item.setText(new String[]{"",""});
+				table.showItem(item);
 			}
 		}
-
 		// 修改table
 		{
 			table.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					try {
+						table.getSelection();
 						// 清空编辑器
 						Control c = editor.getEditor();
 						if (c != null) {
@@ -89,7 +118,10 @@ public class ScanScopeWizard extends WizardPage {
 						}
 						// 得到选中的行
 						Point point = new Point(e.x, e.y);
+						table.getSelectionIndex();
+						
 						final TableItem tableitem = table.getItem(point);
+						TableItem ti = table.getItem(table.getTopIndex());
 						// // 得到选中的列
 						int column = -1;
 						for (int i = 0; i < table.getColumnCount(); i++) {
@@ -113,8 +145,7 @@ public class ScanScopeWizard extends WizardPage {
 							@Override
 							public void modifyText(ModifyEvent e) {
 								// 如果col1==0为第一列
-								tableitem.setText(col1, txt.getText());// 哪一列输入
-																		// 的文字
+								tableitem.setText(col1, txt.getText());// 哪一列输入的文字
 								// System.out.println(tableitem.getText(0)+"----"+tableitem.getText(1));
 								for (int i = 0; i < strArray.length; i++) {
 									strArray[i] = "0:"+tableitem.getText(0) + "@" + tableitem.getText(1);
