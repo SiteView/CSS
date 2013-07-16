@@ -14,21 +14,31 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.siteview.css.topo.models.TopologyModel;
+
 public class ReadAndCreate {
+	/** 坐标定位 */
+	final String TOP_LEFT = "TOP_LEFT";
+	final String TOP = "TOP";
+	final String TOP_RIGHT = "TOP_RIGHT";
+	final String LEFT = "LEFT";
+	final String RIGHT = "RIGHT";
+	final String BOTTOM_LEFT = "BOTTOM_LEFT";
+	final String BOTTOM = "BOTTOM";
+	final String BOTTOM_RIGHT = "BOTTOM_RIGHT";
+	
+	private final String filename = "C:\\拓扑图\\css3.gml";
 
-	private Map<String, String> map; // 坐标
-	private List list;
-	String filename = "C:\\拓扑图\\css3.gml";
-
-	// 生成OPI
+	/**生成OPI*/
 	private StringBuffer strContext = new StringBuffer("");
+	/**生成gml*/
 	private StringBuffer strGml = new StringBuffer("");
 
 	/**
 	 * 读取节点
 	 */
 	public Map<String, String> readNode() {
-		map = new HashMap();
+		Map<String, String> map = new HashMap<String, String>();
 		Reader reader = null;
 		try {
 			// 一次读一个字符
@@ -52,7 +62,6 @@ public class ReadAndCreate {
 					for (String str : spitNode) {
 						if (str.indexOf("id") == -1)
 							continue;
-						// System.out.println(str);
 						String key = str.substring(str.indexOf("id") + 2,
 								str.indexOf("label"));
 						String x1 = str.substring(
@@ -62,17 +71,10 @@ public class ReadAndCreate {
 								x1.indexOf("x") + 1, x1.indexOf("y")));
 						int y = (int) Float.parseFloat(x1.substring(
 								x1.indexOf("y") + 1, x1.indexOf("w")));
-						// System.out.println(x1);
 						map.put(key, x + "-" + y);
 					}
 				}
 			}
-			// Iterator iterator = map.keySet().iterator();
-			// while (iterator.hasNext()) {
-			// String key = (String) iterator.next();
-			// String value=map.get(key);
-			// System.out.println(key+value);
-			// }
 			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,8 +87,9 @@ public class ReadAndCreate {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List readEdge() {
-		list = new ArrayList();
+		List list = new ArrayList();
 		Reader reader = null;
 		try {
 			// 一次读一个字符
@@ -110,29 +113,42 @@ public class ReadAndCreate {
 					for (String strE : spitEdge) {
 						if (strE.indexOf("source") == -1)
 							continue;
-						// System.out.println(strE);
 						String source = strE.substring(
 								strE.indexOf("source") + 6,
 								strE.indexOf("target"));
 						String target = strE.substring(
 								strE.indexOf("target") + 6,
 								strE.indexOf("label"));
-						// System.out.println(source + "-" + target);
 						list.add(source + "-" + target);
 					}
 				}
 			}
-			// Iterator iterator = list.iterator();
-			// while (iterator.hasNext()) {
-			// System.out.println(iterator.next());
-			// }
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 		return list;
 	}
-
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List allInfo(){
+		List li = new ArrayList();
+		Map map = readNode();
+		List list = readEdge();
+		Iterator iterator = list.iterator();
+		while (iterator.hasNext()) {
+			String s = (String) iterator.next();
+			String str[]= s.split("-");
+			li.add(str[0]+":"+map.get(str[0])+","+str[1]+":"+map.get(str[1]));
+		}
+		Iterator iterator2 = li.iterator();
+		while (iterator2.hasNext()) {
+			System.out.println(iterator2.next());
+		}
+		return li;
+	}
+	
+	
 	/**
 	 * 生成OPI头部
 	 */
@@ -247,19 +263,19 @@ public class ReadAndCreate {
 	 * @param src
 	 * @param tgt
 	 */
-	public void CreateEdge(String src, String tgt) {
+	public void CreateEdge(String src, String tgt,String src_term,String tgt_term) {
 		strContext
 				.append("\n<connection typeId=\"org.csstudio.opibuilder.connection\" version=\"1.0.0\">");
 		strContext.append("\n<fill_arrow>true</fill_arrow>");
 		strContext.append("\n<widget_type>connection</widget_type>");
-		strContext.append("\n<src_term>BOTTOM</src_term>");
+		strContext.append("\n<src_term>"+src_term+"</src_term>");
 		strContext.append("\n<arrow_length>15</arrow_length>");
 		strContext.append("\n<line_style>0</line_style>");
 		strContext.append("\n<line_color>");
 		strContext.append("\n<color red=\"0\" green=\"0\" blue=\"0\" />");
 		strContext.append("\n</line_color>");
 		strContext.append("\n<wuid>6e843118:13fbda91f83:-7fe7</wuid>");
-		strContext.append("\n<tgt_term>TOP</tgt_term>");
+		strContext.append("\n<tgt_term>"+tgt_term+"</tgt_term>");
 		strContext.append("\n<arrows>0</arrows>");
 		strContext.append("\n<anti_alias>true</anti_alias>");
 		strContext.append("\n<router>1</router>");
@@ -274,13 +290,15 @@ public class ReadAndCreate {
 	/**
 	 * 生成OPI结束
 	 */
-	private void CreateOver() {
+	public void CreateOver() {
 		strContext.append("\n</display>");
-		SaveFile("css.opi");
+		SaveFile(strContext,"css.opi");
 	}
 
+	/**
+	 * 生成opi
+	 */
 	public void load() {
-		// TODO Auto-generated method stub
 		CreateHead();
 		CreateNodeAndEdge();
 		CreateOver();
@@ -289,6 +307,14 @@ public class ReadAndCreate {
 	/**
 	 * 创建OPI节点和边
 	 */
+	final int modeWidth = 2 * TopologyModel.WIDTH;
+	private String s2[];
+	private String s4[];
+	private int x;
+	private int y;
+	private int x1;
+	private int y1;
+	@SuppressWarnings("rawtypes")
 	public void CreateNodeAndEdge() {
 		Map map = readNode();
 		Iterator iterator = map.keySet().iterator();
@@ -300,12 +326,68 @@ public class ReadAndCreate {
 			CreateNode(key, Integer.parseInt(spit[0]),
 					Integer.parseInt(spit[1]));
 		}
-		Iterator iterator2 = list.iterator();
-		while (iterator2.hasNext()) {
-			String str = (String) iterator2.next();
-			String value[] = str.split("-");
-			CreateEdge(value[0], value[1]);
-			// System.out.println(value[0]+value[1]);
+		String xy = "";
+		String x1y1 = "";
+		List list =allInfo();
+		Iterator info = list.iterator();
+
+		for (int i = 0; i < list.size(); i++) {
+			String s  = (String) info.next();
+			String str[] = s.split(",");
+			s2 = str[0].split(":");
+			s4 = str[1].split(":");
+			String s3[] = s2[1].split("-");
+			String s5[] = s4[1].split("-");
+			x = Integer.parseInt(s3[0]);
+			y =Integer.parseInt(s3[1]);
+			x1=Integer.parseInt(s5[0]);
+			y1=Integer.parseInt(s5[1]);
+			
+			// 判断上下方
+			if (x - x1 <= modeWidth
+					&& x - x1 >= -modeWidth) {
+				if (y - y1 > 0) {
+					xy = TOP;
+					x1y1 = BOTTOM;
+				}
+				if (y - y1 < 0) {
+					xy = BOTTOM;
+					x1y1 = TOP;
+				}
+			}
+			// 判断左右方
+			if (y - y1 <= modeWidth
+					&& y - y1 >= -modeWidth) {
+				if (x - x1 > 0) {
+					xy = LEFT;
+					x1y1 = RIGHT;
+				}
+				if (x - x1 < 0) {
+					xy = RIGHT;
+					x1y1 = LEFT;
+				}
+			}
+			if (x - x1 > modeWidth
+					&& y - y1 > modeWidth) {
+				xy = TOP_LEFT;
+				x1y1 = BOTTOM_RIGHT;
+			}
+			if (x - x1 > modeWidth
+					&& y - y1 < -modeWidth) {
+				xy = BOTTOM_LEFT;
+				x1y1 = TOP_RIGHT;
+			}
+			if (x - x1 < -modeWidth
+					&& y - y1 > modeWidth) {
+				xy = TOP_RIGHT;
+				x1y1 = BOTTOM_LEFT;
+			}
+			if (x - x1 < -modeWidth
+					&& y - y1 < -modeWidth) {
+				xy = BOTTOM_RIGHT;
+				x1y1 = TOP_LEFT;
+			}
+			CreateEdge(s2[0], s4[0],xy, x1y1);
 		}
 	}
 	
@@ -393,13 +475,13 @@ public class ReadAndCreate {
 	 */
 	public void DrawOver() {
 		strGml.append("] \n");
-		SaveFile("css.gml");
+		SaveFile(strGml,"css.gml");
 	}
 	
 	/**
 	 * 保存文件
 	 */
-	public void SaveFile(String file){
+	public void SaveFile(StringBuffer sBuffer,String file){
 		// 设置一个默认文件夹路径
 		String path = "C:\\拓扑图\\";
 		File fileUpdate = new File(path);
@@ -413,7 +495,7 @@ public class ReadAndCreate {
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(f);
-			byte b[] = strGml.toString().getBytes();
+			byte b[] = sBuffer.toString().getBytes();
 			for (int i = 0; i < b.length; i++) {
 				out.write(b[i]);
 			}
