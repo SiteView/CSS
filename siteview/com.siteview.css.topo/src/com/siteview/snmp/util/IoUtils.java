@@ -238,7 +238,7 @@ public class IoUtils {
 	// 读取设备ip列表
 	public static boolean readDeviceIpList(Vector<String> devip_list)
 	{
-		String path = System.getProperty("user.dir") + File.separator + "DeviceIps.txt";
+		String path = getPlatformPath() + "DeviceIps.txt";
 		File file = new File(path);
 		devip_list.clear();
 		if(!file.exists()){

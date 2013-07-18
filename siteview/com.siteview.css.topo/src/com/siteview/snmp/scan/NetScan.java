@@ -12,12 +12,9 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.swing.text.View;
 
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PartInitException;
 
-import com.siteview.css.topo.editparts.TOPOEdit;
 import com.siteview.snmp.common.AuxParam;
 import com.siteview.snmp.common.ScanParam;
 import com.siteview.snmp.common.SnmpPara;
@@ -65,6 +62,7 @@ public class NetScan implements Runnable {
 	private Map<String, Map<String, List<String>>> aft_list_frm = new ConcurrentHashMap<String, Map<String, List<String>>>();
 	private List<List<String>> rtpath_list = new ArrayList<List<String>>();
 	private Map<String, IDBody> topo_entity_list = new HashMap<String, IDBody>();
+	private Vector<String> seedsArp = new Vector<String>();
 	private IWorkbench workbench;
 	
 	public List<Edge> getTopo_edge_list() {
@@ -228,7 +226,7 @@ public class NetScan implements Runnable {
 				scanByIplist();
 			} else {
 				if (!scanParam.getScan_scales().isEmpty()) {// 按范围扫描
-
+					scanByScale(scanParam.getScan_scales());
 				} else {// 按种子扫描
 					List<String> seeds_cur = new ArrayList<String>();
 					seeds_cur = scanParam.getScan_seeds();
@@ -323,7 +321,81 @@ public class NetScan implements Runnable {
 		long theend = System.currentTimeMillis();
 		System.out.println("is end by " + (theend - start));
 	}
-
+	public void scanBySeedsArp(List<String> seedList){
+		seedsArp.clear();
+		Utils.collectionCopyAll(seedsArp, seedList);
+		for(int depth = 0;depth < scanParam.getDepth();depth++){
+			if(seedsArp.isEmpty()){
+				break;
+			}
+			scanByIps(seedsArp, false);
+			scanSeedsArp();
+		}
+		devid_list = siReader.getDevid_list_visited();
+	}
+	/**
+	 * 
+	 */
+	public void scanSeedsArp(){
+		Map<String, Map<String, List<Pair<String, String>>>> arp_list_cur = new HashMap<String, Map<String, List<Pair<String, String>>>>();
+		List<String> ipList = new ArrayList<String>();
+		for(String i : seedsArp){
+			Map<String, List<Pair<String, String>>> arp = arp_list.get(i);
+			if(arp != null){
+				for(Entry<String, List<Pair<String,String>>> pmi : arp.entrySet()){
+					for(Pair<String,String> mi : pmi.getValue()){
+						String ip = mi.getFirst();
+						if(!ipList.contains(ip) && !m_ip_list_visited.contains(ip)){
+							ipList.add(ip);
+						}
+					}
+				}
+			}
+			Map<String, List<RouteItem>> route = rttbl_list.get(i);
+			if(route != null){
+				for(Entry<String, List<RouteItem>> k : route.entrySet()){
+					for(RouteItem dst : k.getValue()){
+						String ip = dst.getNext_hop();
+						if(!ipList.contains(ip) && !m_ip_list_visited.contains(ip)){
+							ipList.add(ip);
+						}
+					}
+				}
+			}
+		}
+		seedsArp.clear();
+		if(ipList.isEmpty()){
+			return;
+		}
+		for(String i : ipList){
+			seedsArp.add(i);
+		}
+	}
+	
+	/**
+	 * 按范围扫描
+	 * @param scaleList
+	 * @return
+	 */
+	public boolean scanByScale(List<Pair<String,String>> scaleList){
+		for (int depth = 0; depth < scanParam.getDepth(); depth++) {
+			List<Pair<String, String>> scale_list_cur = new ArrayList<Pair<String, String>>();
+			toscan.clear();
+			toscan = scaleList;
+			Utils.collectionCopyAll(scale_list_cur, toscan);
+			// toscan.size());
+			while (!scale_list_cur.isEmpty()) {
+				Pair<String, String> scale_cur = scale_list_cur.remove(0);
+				toscan.remove(scale_cur);
+				scaned.add(scale_cur);
+				if (!scanOneScale(scale_cur, true)) {
+					return false;
+				}
+			}
+		}
+		devid_list = siReader.getDevid_list_visited();
+		return true;
+	}
 	// 创建哑设备
 	public int generateDumbDevice(List<Edge> edge_list,
 			Map<String, IDBody> device_list) {
@@ -636,7 +708,6 @@ public class NetScan implements Runnable {
 				String snmpVer = getSNMPVersion(aliveIp);// "2" or "1" or "0"
 				spr_list.add(new SnmpPara(aliveIp, ipCmt, scanParam
 						.getTimeout(), scanParam.getRetrytimes(), snmpVer));
-				System.out.println("++++++++++++++++++++++++++++++++++++++++++++++"  + aliveIp);
 			}
 		}
 		siReader.setIp_visited_list(m_ip_list_visited);
@@ -644,13 +715,6 @@ public class NetScan implements Runnable {
 			return false;
 		}
 		m_ip_list_visited = siReader.getIp_visited_list();// 更新后的已访问ip地址表
-		System.out
-				.println("m_ip_list_visited size() is +++++++++++++++++++++++++++++++++++++++++++++++++++++"
-						+ m_ip_list_visited.size());
-		for (String x : m_ip_list_visited)
-			System.out
-					.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-							+ x);
 		Map<String, IDBody> devlist_cur = siReader.getDevid_list_valid();// 在当前范围中发现的新设备
 
 		Map<String, Map<String, List<String>>> aftlist_cur = siReader

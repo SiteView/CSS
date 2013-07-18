@@ -112,7 +112,6 @@ public class CiscoDeviceHandler extends UnivDeviceHandler implements IDeviceHand
 		port_macs.clear();
 		getAftByDtp(snmp, spr, oidIndexList);//1.3.6.1.2.1.17.4.3.1.2
 		getAftByLogicEntity(snmp, spr, oidIndexList);	
-//		getAftByQtp(snmp, spr);//1.3.6.1.2.1.17.7.1.2.2.1.2
 
 		if(!port_macs.isEmpty())
 		{
