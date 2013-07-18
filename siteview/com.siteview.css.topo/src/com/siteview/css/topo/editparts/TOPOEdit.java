@@ -1,19 +1,19 @@
 package com.siteview.css.topo.editparts;
 
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.*;
 
 import org.csstudio.opibuilder.editor.OPIEditor;
+import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.DisplayModel;
-import org.csstudio.opibuilder.properties.FilePathProperty;
-import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
+import org.csstudio.opibuilder.widgets.model.ImageModel;
 import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.graph.Node;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -21,13 +21,14 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
-
+import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.models.TopologyModel;
 import com.siteview.snmp.common.ScanParam;
 import com.siteview.snmp.pojo.DevicePro;
+import com.siteview.snmp.pojo.Edge;
 
 public class TOPOEdit extends OPIEditor {
-	/** ×ø±ê¶¨Î» */
+	/** åæ ‡å®šä½ */
 	final String TOP_LEFT = "TOP_LEFT";
 	final String TOP = "TOP";
 	final String TOP_RIGHT = "TOP_RIGHT";
@@ -37,19 +38,18 @@ public class TOPOEdit extends OPIEditor {
 	final String BOTTOM = "BOTTOM";
 	final String BOTTOM_RIGHT = "BOTTOM_RIGHT";
 
+	public static final String DUMB0 = "192.168.8.80";
+	public static final String DUMB1 = "192.168.8.81";
+	public static final String DUMB2 = "192.168.8.82";
+	public static final String DUMB3 = "192.168.8.83";
+	public static final String DUMB4 = "192.168.8.84";
 	ReadAndCreate red = new ReadAndCreate();
-	/** Ä£ĞÍ½Úµã */
-	TopologyModel[] model = new TopologyModel[15];
-	/** Á¬½ÓÄ£ĞÍ */
-	ConnectionModel[] cModels = new ConnectionModel[model.length];
-	/** ²âÊÔÊı¾İ */
-	@SuppressWarnings("rawtypes")
-	List testList = new ArrayList();
 	public static final String PROP_IMAGE_FILE = "image_file";
 	private static final String[] FILE_EXTENSIONS = new String[] { "jpg",
 			"jpeg", "gif", "bmp", "png" };
 	int nnodes;
 	// List list = new A
+	private StringBuffer strGml = new StringBuffer("");
 	public static final String ID = "com.siteview.css.topo.editparts.TOPOEdit";
 	static Random rand = new Random(90);
 
@@ -66,204 +66,96 @@ public class TOPOEdit extends OPIEditor {
 	public void NetScan(Map<String, DevicePro> devtypemap,
 			Map<String, Map<String, String>> specialoidlist, ScanParam param) {
 	}
-	private String s2[];
-	private String s4[];
-	private int x;
-	private int y;
-	private int x1;
-	private int y1;
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
 	protected void createGraphicalViewer(Composite parent) {
 		super.createGraphicalViewer(parent);
 		DisplayModel displayModel = getDisplayModel();
-		//ÊµÀı»¯Ä£ĞÍÓëÁ¬½ÓÄ£ĞÍ
-		for (int i = 0; i < model.length; i++) {
-			// ´´½¨ i¸öÄ£ĞÍ
-			model[i] = new TopologyModel();
-			// ´´½¨i¸öÁ¬½ÓÏßÄ£ĞÍ
-			cModels[i] = new ConnectionModel(displayModel);
-			// ÉèÖÃÄ£ĞÍ×ø±ê
-			getDisplayModel().addChild(model[i]);
-		}
-		// »­Í·²¿
-		red.DrawHead();
-		// »­²¿¼ş
-		for (int i = 0; i < model.length; i++) {// model[i].getWUID()// °ÑgetWUID¸ÄÎªÉè±¸±àºÅ// 6.model[i].getName()
-			red.Drawnode(482, 84, 122, 122, i, i, "rectangle", "#FFCC00",
-					"#000000");
-		}
-
-		System.out.println("ÕâÊÇÖ×Ã´»ØÊÂ");
-//		//int x=0, y=0, x1=0, y1=0;
-//		String xy = "";
-//		String x1y1 = "";
-//		
-//		List list = red.allInfo();
-//		Iterator info = list.iterator();
-//
-//		for (int i = 0; i < list.size(); i++) {
-//			String s  = (String) info.next();
-//			String str[] = s.split(",");
-//			s2 = str[0].split(":");
-//			s4 = str[1].split(":");
-//			String s3[] = s2[1].split("-");
-//			String s5[] = s4[1].split("-");
-//			x = Integer.parseInt(s3[0]);
-//			y =Integer.parseInt(s3[1]);
-//			x1=Integer.parseInt(s5[0]);
-//			y1=Integer.parseInt(s5[1]);
-//			
-//			// ÅĞ¶ÏÉÏÏÂ·½
-//			if (x - x1 <= 2 * TopologyModel.WIDTH
-//					&& x - x1 >= -2 * TopologyModel.WIDTH) {
-//				if (y - y1 > 0) {
-//					xy = TOP;
-//					x1y1 = BOTTOM;
-//				}
-//				if (y - y1 < 0) {
-//					xy = BOTTOM;
-//					x1y1 = TOP;
-//				}
-//			}
-//			// ÅĞ¶Ï×óÓÒ·½
-//			if (y - y1 <= 2 * TopologyModel.WIDTH
-//					&& y - y1 >= -2 * TopologyModel.WIDTH) {
-//				if (x - x1 > 0) {
-//					xy = LEFT;
-//					x1y1 = RIGHT;
-//				}
-//				if (x - x1 < 0) {
-//					xy = RIGHT;
-//					x1y1 = LEFT;
-//				}
-//			}
-//			if (x - x1 > 2 * TopologyModel.WIDTH
-//					&& y - y1 > 2 * TopologyModel.WIDTH) {
-//				xy = TOP_LEFT;
-//				x1y1 = BOTTOM_RIGHT;
-//			}
-//			if (x - x1 > 2 * TopologyModel.WIDTH
-//					&& y - y1 < -2 * TopologyModel.WIDTH) {
-//				xy = BOTTOM_LEFT;
-//				x1y1 = TOP_RIGHT;
-//			}
-//			if (x - x1 < -2 * TopologyModel.WIDTH
-//					&& y - y1 > 2 * TopologyModel.WIDTH) {
-//				xy = TOP_RIGHT;
-//				x1y1 = BOTTOM_LEFT;
-//			}
-//			if (x - x1 < -2 * TopologyModel.WIDTH
-//					&& y - y1 < -2 * TopologyModel.WIDTH) {
-//				xy = BOTTOM_RIGHT;
-//				x1y1 = TOP_LEFT;
-//			}
-//			// ÉèÖÃÁ¬½ÓÄ£ĞÍ
-//			cModels[i].connect(model[Integer.parseInt(s2[0])], xy,
-//					model[Integer.parseInt(s4[0])], x1y1);
-//
-//			// »­±ß cModels[j].getSource().getWUID()
-//			red.Drawedge(s2[0], s4[0], "±¸×¢ĞÅÏ¢", "#000000", "standard");
-//		}
-//		System.out.println(s2[0]+"-"+x+"-"+y);
-//		System.out.println(s4[0]+"-"+x1+"-"+y1);
-		
-		
-		
-		//½çÃæÏÔÊ¾
-		String t = "0-1,0-2,0-3,1-4,1-5,1-6,2-7,2-8,2-9,3-10,3-11,3-12,3-13,3-14";
-		String test[] = t.split(",");
-		for (int i = 0; i < test.length; i++) {
-			testList.add(test[i]);
-		}
-		// ÉèÖÃÁËÁ¬½ÓµÄ±ß Ã»ÓĞÈ·¶¨¾ßÌåÎ»ÖÃ
-		Iterator it = testList.iterator();// µü´úÄ£ÄâÊı¾İ
-		String mStr = "";
-		String spitStr[];
-		for (int i = 0; i < test.length; i++) {
-			mStr = (String) it.next();
-			spitStr = mStr.split("-");
-			// System.out.println(spitStr[0] + "-" + spitStr[1]);
-
-			// ÉèÖÃÁ¬½ÓÄ£ĞÍ
-			cModels[i].connect(model[Integer.parseInt(spitStr[0])], BOTTOM,
-					model[Integer.parseInt(spitStr[1])], TOP);
-
-			// »­±ß cModels[j].getSource().getWUID()
-			red.Drawedge(spitStr[0], spitStr[1], "±¸×¢ĞÅÏ¢", "#000000", "standard");
-		}
-		// Éú³É½áÊø
-		red.DrawOver();
-
-		// ½âÎögml»ñÈ¡Ä£ĞÍ×ø±ê,ÉèÖÃÁ¬½Ó×ø±ê
-
-		Map<String, String> map = red.readNode();// ÔÚ½çÃæÕ¹Ê¾
-		Iterator its = map.keySet().iterator();
-		while (its.hasNext()) {
-			String key = (String) its.next();
-			String value = map.get(key);
-			String[] values = value.split("-");
-			// System.out.println("Ä£ĞÍid="+key+"\n"+"Ä£ĞÍXÖµ="+values[0]+"    Ä£ĞÍYÖµ="+values[1]);
-			// ÉèÖÃ×ø±ê
-			model[Integer.parseInt(key)].setX(Integer.parseInt(values[0]));
-			model[Integer.parseInt(key)].setY(Integer.parseInt(values[1]));
-			if (Integer.parseInt(key) == 0) {
-				model[0].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Blue.bmp"), FILE_EXTENSIONS));
-			} else if (Integer.parseInt(key) == 1 || Integer.parseInt(key) == 2
-					|| Integer.parseInt(key) == 3 || Integer.parseInt(key) == 4) {
-				model[1].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[2].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[3].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[4].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[5].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[6].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[7].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[8].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[9].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[10].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[11].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
-				model[12].addProperty(new FilePathProperty(PROP_IMAGE_FILE,
-						"Image File", WidgetPropertyCategory.Basic, new Path(
-								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
+		String leftIp;
+		String rightIp;
+		List ipList = new ArrayList();
+		if (TopoData.isInit) {
+			List list = TopoData.edgeList;
+			Iterator iterator = list.iterator();
+			while (iterator.hasNext()) {
+				Edge edge = (Edge) iterator.next();
+				leftIp = edge.getIp_left();
+				rightIp = edge.getIp_right();
+				ipList.add(leftIp + "-" + rightIp);
 			}
 		}
 
-		// Éú³Éopi
-		red.load();// Éú³Éopi
-	}
-
-	/**
-	 * ÅĞ¶Ï Éú³É ×Ö·û³¤¶È´óĞ¡
-	 */
-	public int DrawWidth(String name, int number) {
-		int width = name.length() * number;
-		if (name.charAt(0) > 0 && name.charAt(0) < 127) {
-			width = name.length() * number / 2;
+		/** ç”Ÿæˆgmlæ–‡ä»¶ */
+		// ç”»å¤´éƒ¨
+		red.DrawHead();
+		// ç”»éƒ¨ä»¶
+		Map deviceList = TopoData.deviceList;// è·å–æ‰«ææ•°æ®
+		Iterator ii = deviceList.keySet().iterator();
+		while (ii.hasNext()) {
+			String key = (String) ii.next();
+			red.Drawnode(482, 84, 122, 122, key, key, "rectangle", "#FFCC00",
+					"#000000");
 		}
-		return width;
+		// ç”»è¾¹
+		Iterator iterator = ipList.iterator();
+		while (iterator.hasNext()) {
+			String string = (String) iterator.next();
+			String[] intIp = string.split("-");
+			red.Drawedge(intIp[0], intIp[1], "å¤‡æ³¨ä¿¡æ¯", "#000000", "standard");
+		}
+		// ç”Ÿæˆç»“æŸ
+		red.DrawOver();
+
+		//TreeLayout treeLayout = new TreeLayout();
+		/** ç•Œé¢å±•ç¤º */
+//		// æµ‹è¯•æ•°æ®
+//		List testList = new ArrayList();
+//		// æ¨¡å‹èŠ‚ç‚¹
+//		ImageModel[] model = new ImageModel[15];
+//
+//		// è¿æ¥æ¨¡å‹
+//		ConnectionModel[] cModels = new ConnectionModel[model.length];
+//
+//		for (int i = 0; i < model.length; i++) {
+//			// åˆ›å»º iä¸ªæ¨¡å‹
+//			model[i] = new ImageModel();
+//			// åˆ›å»ºiä¸ªè¿æ¥çº¿æ¨¡å‹
+//			cModels[i] = new ConnectionModel(displayModel);
+//			// è®¾ç½®æ¨¡å‹åæ ‡
+//			getDisplayModel().addChild(model[i]);
+//		}
+//		// å¦‚æœæ·»åŠ äº†æ¨¡å‹ã€‚éœ€è¦å…ˆåœ¨è¿™æ·»åŠ  allIp
+//		String t = "0-1,0-2,0-3,1-4,1-5,1-6,2-7,2-8,2-9,3-10,3-11,3-12,3-13,3-14";
+//		String test[] = t.split(",");
+//		for (int i = 0; i < test.length; i++) {
+//			testList.add(test[i]);
+//		}
+//		// è®¾ç½®äº†è¿æ¥çš„è¾¹ æ²¡æœ‰ç¡®å®šå…·ä½“ä½ç½®
+//		Iterator it = testList.iterator();// è¿­ä»£æ¨¡æ‹Ÿæ•°æ®
+//		String mStr = "";
+//		String spitStr[];
+//		for (int i = 0; i < test.length; i++) {
+//			mStr = (String) it.next();
+//			spitStr = mStr.split("-");
+//			cModels[i].connect(model[Integer.parseInt(spitStr[0])], BOTTOM,
+//					model[Integer.parseInt(spitStr[1])], TOP);
+//		}
+//		// è§£ægml3è·å–æ¨¡å‹åæ ‡,è®¾ç½®è¿æ¥åæ ‡
+//		Map<String, String> map = red.readNode();// åœ¨ç•Œé¢å±•ç¤º
+//		Iterator its = map.keySet().iterator();
+//		while (its.hasNext()) {
+//			String key = (String) its.next();
+//			String value = map.get(key);
+//			String[] values = value.split("-");
+//			// è®¾ç½®åæ ‡
+//			model[Integer.parseInt(key)].setX(Integer.parseInt(values[0]));
+//			model[Integer.parseInt(key)].setY(Integer.parseInt(values[1]));
+//		}
+
+		// ç”Ÿæˆopi
+		/**
+		 * ç”Ÿæˆæ­£ç¡®çš„opi 1.è§£ægml3æ–‡ä»¶ 2.è·å¾—åæ ‡åŠå…¶è¿æ¥æ–¹ä½
+		 */
+		red.load();// ç”Ÿæˆopi
 	}
 
 	/**
@@ -278,7 +170,6 @@ public class TOPOEdit extends OPIEditor {
 		return editorInput;
 	}
 
-	@SuppressWarnings("unused")
 	private InputStream getInputStream() {
 		InputStream result = null;
 
@@ -309,86 +200,9 @@ public class TOPOEdit extends OPIEditor {
 	}
 
 	// ========================
-	@SuppressWarnings("unused")
 	private void buildLevelTree(Node v, int x) {
 		if (v.getOffsetIncoming() != 0) {
 
 		}
 	}
-
-	/*
-	 * {
-	 * 
-	 * Map<String, String> map1 = red.readNode();//ÔÚ½çÃæÕ¹Ê¾ Iterator its1 =
-	 * map1.keySet().iterator(); int x,y,x1,y1; String xy = ""; String x1y1="";
-	 * String key = (String) its1.next(); String value = map1.get(key); String[]
-	 * values = value.split("-"); // String value1[] = values[0].split("[.]");
-	 * // String value2[] = values[1].split("[.]");
-	 * System.out.println("Ä£ĞÍid="+key
-	 * +"\n"+"Ä£ĞÍXÖµ="+values[0]+"    Ä£ĞÍYÖµ="+values[1]); if (key == spitStr[0]) {
-	 * x=Integer.parseInt(values[0]); y=Integer.parseInt(values[1]); } if (key
-	 * == spitStr[1]) { x1=Integer.parseInt(values[0]);
-	 * y1=Integer.parseInt(values[1]); }
-	 *//**
-	 * »ñµÃÁ½¸öÏàÁ¬Ä£ĞÍµÄ×ø±êspitStr[0] spitStr[1] Èç¹ûÊÇ0-1 »ñµÃ0µÄ×ø±êx=380 y=578 »ñµÃ1µÄ×ø±êx=187
-	 * y=913 Èç¹û ÄÇÃ´×ø±êÉèÖÃÎªleft_buttom=====right_top
-	 */
-//
-//		{
-//			int x, y, x1, y1;
-//			String xy = "";
-//			String x1y1 = "";
-//			/**
-//			 * »ñµÃÁ½¸öÏàÁ¬Ä£ĞÍµÄ×ø±êspitStr[0] spitStr[1] Èç¹ûÊÇ0-1 »ñµÃ0µÄ×ø±êx=380 y=578
-//			 * »ñµÃ1µÄ×ø±êx=187 y=913 Èç¹û ÄÇÃ´×ø±êÉèÖÃÎªleft_buttom=====right_top
-//			 */
-//			x = 380;
-//			y = 578;
-//			x1 = 187;
-//			y1 = 913;
-//			// ÅĞ¶ÏÉÏÏÂ·½
-//			if (x - x1 <= 2 * TopologyModel.WIDTH
-//					&& x - x1 >= -2 * TopologyModel.WIDTH) {
-//				if (y - y1 > 0) {
-//					xy = TOP;
-//					x1y1 = BOTTOM;
-//				}
-//				if (y - y1 < 0) {
-//					xy = BOTTOM;
-//					x1y1 = TOP;
-//				}
-//			}
-//			// ÅĞ¶Ï×óÓÒ·½
-//			if (y - y1 <= 2 * TopologyModel.WIDTH
-//					&& y - y1 >= -2 * TopologyModel.WIDTH) {
-//				if (x - x1 > 0) {
-//					xy = LEFT;
-//					x1y1 = RIGHT;
-//				}
-//				if (x - x1 < 0) {
-//					xy = RIGHT;
-//					x1y1 = LEFT;
-//				}
-//			}
-//			if (x - x1 > 2 * TopologyModel.WIDTH
-//					&& y - y1 > 2 * TopologyModel.WIDTH) {
-//				xy = TOP_LEFT;
-//				x1y1 = BOTTOM_LEFT;
-//			}
-//			if (x - x1 > 2 * TopologyModel.WIDTH
-//					&& y - y1 < -2 * TopologyModel.WIDTH) {
-//				xy = LEFT;
-//				x1y1 = TOP_RIGHT;
-//			}
-//			if (x - x1 < -2 * TopologyModel.WIDTH
-//					&& y - y1 > 2 * TopologyModel.WIDTH) {
-//				xy = TOP_RIGHT;
-//				x1y1 = BOTTOM_LEFT;
-//			}
-//			if (x - x1 < -2 * TopologyModel.WIDTH
-//					&& y - y1 < -2 * TopologyModel.WIDTH) {
-//				xy = BOTTOM_RIGHT;
-//				x1y1 = TOP_LEFT;
-//			}
-//		}
 }
