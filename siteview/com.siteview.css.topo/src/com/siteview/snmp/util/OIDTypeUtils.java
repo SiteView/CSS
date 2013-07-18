@@ -13,8 +13,8 @@ import com.siteview.snmp.pojo.DevicePro;
 
 
 /**
- * Éè±¸ÀàĞÍ¹¤¾ßÀà
- * ´ÓsqliteÄÚÖÃÊı¾İ¿âÖĞ¶ÁÈ¡Éè±¸ÀàĞÍĞÅÏ¢
+ * è®¾å¤‡ç±»å‹å·¥å…·ç±»
+ * ä»sqliteå†…ç½®æ•°æ®åº“ä¸­è¯»å–è®¾å¤‡ç±»å‹ä¿¡æ¯
  * @author haiming.wang
  *
  */

@@ -18,13 +18,13 @@ public class ScanUtils {
 	private static Map<String, Integer> tbl = new HashMap<String, Integer>();
 	
 	/**
-	 * ¹¹ÔìsnmpPDU
-	 * @param ip 		IPµØÖ·
-	 * @param port 		¶Ë¿ÚºÅ
-	 * @param community ¹²Í¬Ìå
-	 * @param timeout 	³¬Ê±Ê±¼ä
-	 * @param retry   	ÖØÊÔÊ±¼ä
-	 * @param version 	snmp°æ±¾
+	 * æ„é€ snmpPDU
+	 * @param ip 		IPåœ°å€
+	 * @param port 		ç«¯å£å·
+	 * @param community å…±åŒä½“
+	 * @param timeout 	è¶…æ—¶æ—¶é—´
+	 * @param retry   	é‡è¯•æ—¶é—´
+	 * @param version 	snmpç‰ˆæœ¬
 	 * @return
 	 */
 	public static CommunityTarget buildGetPduCommunityTarget(String ip,
@@ -39,7 +39,7 @@ public class ScanUtils {
 		return target;
 	}
 	/**
-	 * ¸ù¾İ×ÓÍøÑÚÂë »ñÈ¡IPµØÖ··¶Î§
+	 * æ ¹æ®å­ç½‘æ©ç  è·å–IPåœ°å€èŒƒå›´
 	 * @param ipMask
 	 * @return
 	 */
@@ -61,7 +61,7 @@ public class ScanUtils {
 		}
 	}
 	/**
-	 * IPµØÖ·×ª»»³ÉÊı×Ölong
+	 * IPåœ°å€è½¬æ¢æˆæ•°å­—long
 	 * @param ip 
 	 * @return
 	 */
@@ -76,23 +76,23 @@ public class ScanUtils {
 				+ ipLong[3];
 	}
 	/**
-	 * long ×ª»»³Éµã·ÖÊ®½øÖÆipµØÖ·
+	 * long è½¬æ¢æˆç‚¹åˆ†åè¿›åˆ¶ipåœ°å€
 	 * @param value
 	 * @return
 	 */
 	public static String longToIp(long value) {
 		StringBuffer sb = new StringBuffer("");
-		sb.append(String.valueOf(value >>> 24));// Ö±½ÓÓÒÒÆ24Î»
+		sb.append(String.valueOf(value >>> 24));// Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½24Î»
 		sb.append(".");
-		sb.append(String.valueOf((value & 0x00ffffff) >>> 16)); // ½«¸ß8Î»ÖÃ0£¬È»ºóÓÒÒÆ16Î»
+		sb.append(String.valueOf((value & 0x00ffffff) >>> 16)); // ï¿½ï¿½ï¿½ï¿½8Î»ï¿½ï¿½0ï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½16Î»
 		sb.append(".");
-		sb.append(String.valueOf((value & 0x0000ffff) >>> 8));  // ½«¸ß16Î»ÖÃ0£¬È»ºóÓÒÒÆ8Î»
+		sb.append(String.valueOf((value & 0x0000ffff) >>> 8));  // ï¿½ï¿½ï¿½ï¿½16Î»ï¿½ï¿½0ï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½8Î»
 		sb.append(".");
-		sb.append(String.valueOf(value & 0x000000ff));		    // ½«¸ß24Î»ÖÃ0
+		sb.append(String.valueOf(value & 0x000000ff));		    // ï¿½ï¿½ï¿½ï¿½24Î»ï¿½ï¿½0
 		return sb.toString();
 	}
 	/**
-	 * ½«long×ª»»Îªbytes
+	 * long×ªè½¬æ¢æˆbytes
 	 * @param n
 	 * @return
 	 */
@@ -109,7 +109,7 @@ public class ScanUtils {
 		return b;
 	}
 	/**
-	 * ½«bytes ×ª»»Îªlong
+	 * bytesè½¬æ¢æˆlong
 	 * @param array
 	 * @param offset
 	 * @return
@@ -134,10 +134,10 @@ public class ScanUtils {
 	}
 
 	/**
-	 * ÅĞ¶Ï scaleB ÊÇ·ñÔÚ¡¡scaleA¡¡µÄ·¶Î§ÄÚ
+	 * åˆ¤æ–­ scaleB æ˜¯å¦åœ¨ã€€scaleAã€€çš„èŒƒå›´å†…
 	 * @param scaleA
 	 * @param scaleB
-	 * @return¡¡yes: true no:false;
+	 * @returnã€€yes: true no:false;
 	 */
 	public static boolean isScaleBInA(Pair<String, String> scaleA,
 			Pair<String, String> scaleB) {
@@ -148,7 +148,7 @@ public class ScanUtils {
 		return (numMin0 <= numMin1 && numMax1 <= numMax0);
 	}
 
-	// trimÖ¸Ê¾ÊÇ·ñ±£Áô¿Õ´®£¬Ä¬ÈÏÎª±£Áô¡£
+	// trimæŒ‡ç¤ºæ˜¯å¦ä¿ç•™ç©ºä¸²ï¼Œé»˜è®¤ä¸ºä¿ç•™ã€‚
 	public static Vector<String> tokenize(String src, String tok, boolean trim,
 			String null_subst) {
 		Vector<String> v = new Vector<String>();
@@ -169,9 +169,9 @@ public class ScanUtils {
 		return v;
 	}
 	/**
-	 * »ñÈ¡×ÓÍø
-	 * @param ip ÖÖ×ÓIP
-	 * @param mask¡¡×ÓÍøÑÚÂë
+	 * æ ¹æ®ipä¸maskè·å–å­ç½‘
+	 * @param ip ï¿½ï¿½ï¿½ï¿½IP
+	 * @param maskï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @return
 	 */
 	public static String getSubnetByIPMask(String ip, String mask) {
@@ -181,7 +181,7 @@ public class ScanUtils {
 		return ScanUtils.longToIp(subnet) + "/" + iLen;
 	}
 
-	// »ñÈ¡maskµÄ·Ç0Î»Êı
+	// è·å–maskçš„é0ä½æ•°
 	public static int getMaskBitLen(String msk) {
 		if (tbl.isEmpty()) {
 			tbl.put("255", 8);
@@ -198,7 +198,7 @@ public class ScanUtils {
 		int len = 0;
 		String[] dest = msk.split("\\.");
 		if (dest.length != 4) {
-			throw new RuntimeException("ÑÚÂëµØÖ·¸ñÊ½²»ÕıÈ·£¡");
+			throw new RuntimeException("maskåœ°å€æ ¼å¼ä¸æ­£ç¡®ï¼");
 		}
 		return tbl.get(dest[0]) + tbl.get(dest[1]) + tbl.get(dest[2])
 				+ tbl.get(dest[3]);

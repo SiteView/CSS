@@ -34,21 +34,21 @@ import com.siteview.snmp.util.ScanUtils;
 import com.siteview.snmp.util.Utils;
 
 /**
- * ÍØÆËÉ¨Ãè
+ * æ‹“æ‰‘æ‰«æ
  * @author haiming.wang
  *
  */
 public class NetScan implements Runnable {
 	private Map<String, Map<String, List<String>>> aft_list = new ConcurrentHashMap<String, Map<String, List<String>>>();
-	// Éè±¸ARPÊı¾İÁĞ±í {sourceIP,{infInx,[(MAC,destIP)]}}
+	// è®¾å¤‡ARPæ•°æ®åˆ—è¡¨ {sourceIP,{infInx,[(MAC,destIP)]}}
 	private Map<String, Map<String, List<Pair<String, String>>>> arp_list = new ConcurrentHashMap<String, Map<String, List<Pair<String, String>>>>();
-	// Éè±¸½Ó¿ÚÊôĞÔÁĞ±í
+	// è®¾å¤‡æ¥å£å±æ€§åˆ—è¡¨
 	// {devIP,(ifAmount,[(ifindex,ifType,ifDescr,ifMac,ifPort,ifSpeed)])}
 	private Map<String, Pair<String, List<IfRec>>> ifprop_list = new ConcurrentHashMap<String, Pair<String, List<IfRec>>>();
-	// Éè±¸OSPFÁÚ¾ÓÁĞ±í {sourceIP,{infInx,[destIP]}}
+	// è®¾å¤‡OSPFé‚»å±…åˆ—è¡¨ {sourceIP,{infInx,[destIP]}}
 	private Map<String, Map<String, List<String>>> ospfnbr_list = new ConcurrentHashMap<String, Map<String, List<String>>>();
 	private List<Bgp> bgp_list = new ArrayList<Bgp>();
-	// Éè±¸Â·ÓÉ±í {sourceIP,{infInx,[nextIP]}}
+	// è®¾å¤‡è·¯ç”±è¡¨ {sourceIP,{infInx,[nextIP]}}
 	private Map<String, Map<String, List<RouteItem>>> route_list = new ConcurrentHashMap<String, Map<String, List<RouteItem>>>();
 	private Map<String, Map<String, List<RouteItem>>> rttbl_list = new ConcurrentHashMap<String, Map<String, List<RouteItem>>>();
 	private List<Pair<SnmpPara, Pair<String, String>>> sproid_list = new ArrayList<Pair<SnmpPara, Pair<String, String>>>();
@@ -57,7 +57,7 @@ public class NetScan implements Runnable {
 	private Map<String, List<Directitem>> directdata_list = new ConcurrentHashMap<String, List<Directitem>>();
 	private Map<String, List<String>> stp_list = new ConcurrentHashMap<String, List<String>>();
 	private List<Edge> topo_edge_list = new ArrayList<Edge>();
-	// ¹æ·¶»¯ºóµÄÉè±¸AFT»òARPÊı¾İ {sourceIP,{infInx,[destIP]}}
+	// è§„èŒƒåŒ–åçš„è®¾å¤‡AFTæˆ–ARPæ•°æ® {sourceIP,{infInx,[destIP]}}
 	private Map<String, Map<String, List<String>>> frm_aftarp_list = new ConcurrentHashMap<String, Map<String, List<String>>>();
 	private Map<String, Map<String, List<String>>> aft_list_frm = new ConcurrentHashMap<String, Map<String, List<String>>>();
 	private List<List<String>> rtpath_list = new ArrayList<List<String>>();
@@ -80,7 +80,7 @@ public class NetScan implements Runnable {
 	public void stop(){
 		siReader.stop();
 	}
-	// ¹æ·¶»¯ºóµÄÉè±¸AFT»òARPÊı¾İ {sourceIP,{infInx,[destIP]}}
+	// è§„èŒƒåŒ–åçš„è®¾å¤‡AFTæˆ–ARPæ•°æ® {sourceIP,{infInx,[destIP]}}
 	public void init(ScanParam sp, AuxParam ap) {
 		this.scanParam = sp;
 		this.myParam = ap;
@@ -95,7 +95,7 @@ public class NetScan implements Runnable {
 		this.workbench = workbench;
 		if(param == null){
 			if(!IoUtils.readConfigDate(scanParam)){
-				//³õÊ¼»¯É¨Ãè²ÎÊıÊ§°Ü
+				//åˆå§‹åŒ–æ‰«æå‚æ•°å¤±è´¥
 			}
 		}else{
 			scanParam = param;
@@ -108,22 +108,22 @@ public class NetScan implements Runnable {
 
 	public void readMyScanConfigFile() {
 		myParam = new AuxParam();
-		// myParam.scan_type = "1"; //É¨ÃèÀàĞÍ
-		myParam.setScan_type("0"); // É¨ÃèÀàĞÍ
-		myParam.setSeed_type("0");// ÖÖ×Ó·½Ê½ 
-		myParam.setPing_type("1");// Ö´ĞĞping
-		myParam.setComp_type("1");// ²¹³äÀàĞÍ
-		// myParam.dumb_type = "0"; //Éú³Édumb
-		myParam.setDumb_type("1"); // Éú³Édumb
-		myParam.setArp_read_type("0");// ²»¶ÁÈ¡2²ã½»»»»úµÄarpÊı¾İ
-		myParam.setNbr_read_type("0");// ²»¶ÁÈ¡ÁÚ¾Ó±í
-		myParam.setRt_read_type("0");// ²»¶ÁÈ¡Â·ÓÉ±í »Ö¸´Â·ÓÉ±í 
-		myParam.setVrrp_read_type("0");// ²»¶ÁÈ¡VRRP,HSRP 
+		// myParam.scan_type = "1"; //æ‰«æç±»å‹
+		myParam.setScan_type("0"); // æ‰«æç±»å‹
+		myParam.setSeed_type("0");// ç§å­æ–¹å¼ 
+		myParam.setPing_type("1");// æ‰§è¡Œping
+		myParam.setComp_type("1");// è¡¥å……ç±»å‹
+		// myParam.dumb_type = "0"; //ç”Ÿæˆdumb
+		myParam.setDumb_type("1"); // ç”Ÿæˆdumb
+		myParam.setArp_read_type("0");// ä¸è¯»å–2å±‚äº¤æ¢æœºçš„arpæ•°æ®
+		myParam.setNbr_read_type("0");// ä¸è¯»å–é‚»å±…è¡¨
+		myParam.setRt_read_type("0");// ä¸è¯»å–è·¯ç”±è¡¨ æ¢å¤è·¯ç”±è¡¨ 
+		myParam.setVrrp_read_type("0");// ä¸è¯»å–VRRP,HSRP 
 		myParam.setBgp_read_type("0");
-		myParam.setSnmp_version("0");// ×ÔÊÊÓ¦SNMP°æ±¾
-		myParam.setTracert_type("0");// ²»Ö´ĞĞtrace route
-		myParam.setFilter_type("0"); // ²»Çå³ıÉ¨Ãè·¶Î§ÍâµÄip 
-		myParam.setCommit_pc("1"); // Ìá½»PCµ½SVDB 
+		myParam.setSnmp_version("0");// è‡ªé€‚åº”SNMPç‰ˆæœ¬
+		myParam.setTracert_type("0");// ä¸æ‰§è¡Œtrace route
+		myParam.setFilter_type("0"); // ä¸æ¸…é™¤æ‰«æèŒƒå›´å¤–çš„ip 
+		myParam.setCommit_pc("1"); // æäº¤PCåˆ°SVDB 
 
 		PropertiesUtils.load(IoUtils.getProductPath() + "scanconfig.properties");
 		myParam.setScan_type(PropertiesUtils.getValue("SCAN_TYPE"));
@@ -143,9 +143,9 @@ public class NetScan implements Runnable {
 		PropertiesUtils.clear();
 		myParam.getSNMPV_list().clear();
 		if ("1".equals(myParam.getSnmp_version())) {
-			// ´ÓSNMPV2_List.txtÖĞÈ¡³öĞèÒªÓÃSNMPV2Ì½²âSNMPĞÅÏ¢µÄÌØ¶¨Éè±¸
+			// ä»SNMPV2_List.txtä¸­å–å‡ºéœ€è¦ç”¨SNMPV2æ¢æµ‹SNMPä¿¡æ¯çš„ç‰¹å®šè®¾å¤‡
 		} else if ("2".equals(myParam.getSnmp_version())) {
-			// ´ÓSNMPV1_List.txtÖĞÈ¡³öĞèÒªÓÃSNMPV1Ì½²âSNMPĞÅÏ¢µÄÌØ¶¨Éè±¸
+			// ä»SNMPV1_List.txtä¸­å–å‡ºéœ€è¦ç”¨SNMPV1æ¢æµ‹SNMPä¿¡æ¯çš„ç‰¹å®šè®¾å¤‡
 		}
 	}
 
@@ -190,7 +190,7 @@ public class NetScan implements Runnable {
 		}
 	}
 
-	// ¸ù¾İipµØÖ·±íÉ¨Ãè
+	// æ ¹æ®ipåœ°å€è¡¨æ‰«æ
 	public void scanByIplist() {
 		Vector<String> aliveIp_list = new Vector<String>();
 		if ((!IoUtils.readDeviceIpList(aliveIp_list)) || aliveIp_list.isEmpty()) {
@@ -201,7 +201,7 @@ public class NetScan implements Runnable {
 		devid_list = siReader.getDevid_list_valid();
 	}
 	/**
-	 * ÍØÆËÉ¨Ãè
+	 * æ‹“æ‰‘æ‰«æ
 	 */
 	public void scan() {
 		long start = System.currentTimeMillis();
@@ -216,33 +216,33 @@ public class NetScan implements Runnable {
 		directdata_list.clear();
 		m_ip_list_visited.clear();
 		if ("1".equals(myParam.getScan_type())
-				|| "2".equals(myParam.getScan_type())) {// ¶ÁÈ¡Ô´Êı¾İ£¬´Ó±£´æµÄÍØÆËÍ¼
+				|| "2".equals(myParam.getScan_type())) {// è¯»å–æºæ•°æ®ï¼Œä»ä¿å­˜çš„æ‹“æ‰‘å›¾
 			readOriginData();
 		}
 		if ("0".equals(myParam.getScan_type())
-				|| "2".equals(myParam.getScan_type())) {// ½øĞĞÈ«ĞÂÉ¨Ãè
+				|| "2".equals(myParam.getScan_type())) {// è¿›è¡Œå…¨æ–°æ‰«æ
 			if ("2".equals(myParam.getPing_type())) {
 				// scan by ips;
 				scanByIplist();
 			} else {
-				if (!scanParam.getScan_scales().isEmpty()) {// °´·¶Î§É¨Ãè
+				if (!scanParam.getScan_scales().isEmpty()) {// æŒ‰èŒƒå›´æ‰«æ
 					scanByScale(scanParam.getScan_scales());
-				} else {// °´ÖÖ×ÓÉ¨Ãè
+				} else {// æŒ‰ç§å­æ‰«æ
 					List<String> seeds_cur = new ArrayList<String>();
 					seeds_cur = scanParam.getScan_seeds();
 					if (seeds_cur.isEmpty()) {
 						// log
 						return;
 					}
-					if ("0".equals(myParam.getSeed_type())) {// °´×ÓÍøÏòÏÂÉ¨Ãè
+					if ("0".equals(myParam.getSeed_type())) {// æŒ‰å­ç½‘å‘ä¸‹æ‰«æ
 						scanBySeeds(scanParam.getScan_seeds());
-					} else {// °´arpÏòÏÂÉ¨Ãè
+					} else {// æŒ‰arpå‘ä¸‹æ‰«æ
 
 					}
 				}
 			}
 
-			// ½«½Ó¿Ú±íÖĞµÄMACÌí¼Óµ½Éè±¸µÄmacµØÖ·±íÖĞ
+			// å°†æ¥å£è¡¨ä¸­çš„MACæ·»åŠ åˆ°è®¾å¤‡çš„macåœ°å€è¡¨ä¸­
 			Set<String> keys = devid_list.keySet();
 			for (String key : keys) {
 				System.out.print("\t key is " + key);
@@ -266,7 +266,7 @@ public class NetScan implements Runnable {
 		}
 		System.out.println("scan end");
 		long end = System.currentTimeMillis();
-		System.out.println("ÓÃÊ±" + (end - start));
+		System.out.println("ç”¨æ—¶" + (end - start));
 		formatData();
 		saveFormatData();
 
@@ -286,25 +286,25 @@ public class NetScan implements Runnable {
 					traceR.tracePrepare();
 					if ("0".equals(myParam.getScan_type())) {
 						rtpath_list = traceR.getTraceRouteByIPs();
-						// ½«trace path ±£´æµ½ÎÄ¼ş
+						// å°†trace path ä¿å­˜åˆ°æ–‡ä»¶
 						IoUtils.saveTracertList(rtpath_list);
 						TraceAnalyse traceA = new TraceAnalyse(devid_list,
 								rtpath_list, traceR.routeDESTIPPairList,
 								traceR.unManagedDevices, scanParam);
 						traceA.analyseRRByRtPath(topo_edge_list);
 					} else {
-						// ´ÓÎÄ¼şÉ¨ÃèÊ±
+						// ä»æ–‡ä»¶æ‰«ææ—¶
 						TraceAnalyse traceA = new TraceAnalyse(devid_list,
 								rtpath_list, traceR.routeDESTIPPairList,
 								traceR.unManagedDevices);
 						traceA.analyseRRByRtPath_Direct(topo_edge_list);
 					}
 				}
-				// ²¹³ä±ßµÄ¸½¼ÓĞÅÏ¢
+				// è¡¥å……è¾¹çš„é™„åŠ ä¿¡æ¯
 				fillEdge(topo_edge_list);
-				// ´´½¨ÑÆÉè±¸
+				// åˆ›å»ºå“‘è®¾å¤‡
 				generateDumbDevice(topo_edge_list, devid_list);
-				topo_entity_list = devid_list;// ¼ºÌí¼ÓÁËÑÆÉè±¸
+				topo_entity_list = devid_list;// å·±æ·»åŠ äº†å“‘è®¾å¤‡
 				if("0".equals(myParam.getCommit_pc())){
 					for(Entry<String, IDBody> j : devid_list.entrySet()){
 						if("5".equals(j.getValue().getDevType())){
@@ -315,7 +315,7 @@ public class NetScan implements Runnable {
 					topo_entity_list = devid_list;
 				}
 			} else {
-				// ·ÖÎöÊ§°ÜÈÕÖ¾
+				// åˆ†æå¤±è´¥æ—¥å¿—
 			}
 		}
 		long theend = System.currentTimeMillis();
@@ -373,7 +373,7 @@ public class NetScan implements Runnable {
 	}
 	
 	/**
-	 * °´·¶Î§É¨Ãè
+	 * æŒ‰èŒƒå›´æ‰«æ
 	 * @param scaleList
 	 * @return
 	 */
@@ -396,11 +396,11 @@ public class NetScan implements Runnable {
 		devid_list = siReader.getDevid_list_visited();
 		return true;
 	}
-	// ´´½¨ÑÆÉè±¸
+	// åˆ›å»ºå“‘è®¾å¤‡
 	public int generateDumbDevice(List<Edge> edge_list,
 			Map<String, IDBody> device_list) {
 		if ("0".equals(myParam.getDumb_type()) || edge_list.isEmpty()) {
-			// ²»´´½¨ÑÆÉè±¸
+			// ä¸åˆ›å»ºå“‘è®¾å¤‡
 			return 0;
 		}
 		int amountAdded = 0;
@@ -415,7 +415,7 @@ public class NetScan implements Runnable {
 			IDBody iii = device_list.get(i.getIp_right());
 			if (iii != null && !iii.getDevType().equals("5")
 					&& !iii.getDevType().equals("4")) {
-				// Ö»¶ÔÖ÷»úºÍ·şÎñÆ÷Ìí¼Ódumb
+				// åªå¯¹ä¸»æœºå’ŒæœåŠ¡å™¨æ·»åŠ dumb
 				continue;
 			}
 			String dumbIp = "";
@@ -429,18 +429,18 @@ public class NetScan implements Runnable {
 				}
 				if (j.getIp_left().equals(i.getIp_left())
 						&& j.getInf_left().equals(i.getInf_left())) {
-					// ×óÁ¬Éè±¸ÏàÍ¬
+					// å·¦è¿è®¾å¤‡ç›¸åŒ
 					if ("".equals(dumbIp)) {
-						// Ìí¼ÓÑÆÉè±¸
+						// æ·»åŠ å“‘è®¾å¤‡
 						dumbIp = "DUMB" + amountAdded;
 						dumbBody.setBaseMac("");
-						dumbBody.setDevType("6");// ÆäËüÉè±¸
+						dumbBody.setDevType("6");// å…¶å®ƒè®¾å¤‡
 						dumbBody.setSysOid("HUB");
 						dumbBody.setSysName("dumb device");
 						device_list_dumb.put(dumbIp, dumbBody);
 						amountAdded++;
 					}
-					// ¸Ä±ä±ßµÄ¹ØÁª¹ØÏµ
+					// æ”¹å˜è¾¹çš„å…³è”å…³ç³»
 					j.setIp_left(dumbIp);
 					j.setDsc_left("");
 					j.setInf_left("0");
@@ -448,7 +448,7 @@ public class NetScan implements Runnable {
 				}
 			}
 			if (!dumbIp.equals("")) {
-				// Ìí¼ÓÒ»Ìõ±ß
+				// æ·»åŠ ä¸€æ¡è¾¹
 				Edge edge_tmp = new Edge();
 				edge_tmp.setIp_left(i.getIp_left());
 				edge_tmp.setInf_left(i.getInf_left());
@@ -459,7 +459,7 @@ public class NetScan implements Runnable {
 				edge_tmp.setPt_right("0");
 				edge_tmp.setDsc_right("");
 				edge_list_dumb.add(edge_tmp);
-				// ¸ü¸ÄµÚÒ»Ìõ±ßµÄ×ó±ßĞÅÏ¢
+				// æ›´æ”¹ç¬¬ä¸€æ¡è¾¹çš„å·¦è¾¹ä¿¡æ¯
 				i.setIp_left(dumbIp);
 				i.setDsc_left("");
 				i.setInf_left("0");
@@ -480,7 +480,7 @@ public class NetScan implements Runnable {
 			return;
 		}
 		for (Edge i : edge_list) {
-			// ´¦Àí×ó±ß¶Ë¿Ú
+			// å¤„ç†å·¦è¾¹ç«¯å£
 			if (i.getInf_left().equals("PX")) {
 				i.setInf_left("0");
 			} else {
@@ -488,9 +488,9 @@ public class NetScan implements Runnable {
 						.get(i.getIp_left());
 				if (iinf != null) {
 					for (IfRec jj : iinf.getSecond()) {
-						// Í¨¹ı¶Ë¿ÚÑ°ÕÒ¶ÔÓ¦µÄ½Ó¿ÚË÷Òı
+						// é€šè¿‡ç«¯å£å¯»æ‰¾å¯¹åº”çš„æ¥å£ç´¢å¼•
 						if (jj.getIfIndex().equals(i.getInf_left())) {
-							// ĞèÒªĞŞ¸Ä¶Ë¿Ú
+							// éœ€è¦ä¿®æ”¹ç«¯å£
 							i.setPt_left(jj.getIfPort());
 							i.setDsc_left(jj.getIfDesc());
 							break;
@@ -498,7 +498,7 @@ public class NetScan implements Runnable {
 					}
 				}
 			}
-			// ´¦ÀíÓÒ±ß¶Ë¿Ú
+			// å¤„ç†å³è¾¹ç«¯å£
 			if (!i.getPt_right().equals("PX")) {
 				i.setInf_right("0");
 			} else {
@@ -506,9 +506,9 @@ public class NetScan implements Runnable {
 						.getIp_right());
 				if (iinf != null) {
 					for (IfRec jj : iinf.getSecond()) {
-						// Í¨¹ı¶Ë¿ÚÑ°ÕÒ¶ÔÓ¦µÄ½Ó¿ÚË÷Òı
+						// é€šè¿‡ç«¯å£å¯»æ‰¾å¯¹åº”çš„æ¥å£ç´¢å¼•
 						if (jj.getIfIndex().equals(i.getInf_right())) {
-							// ĞèÒªĞŞ¸Ä¶Ë¿Ú
+							// éœ€è¦ä¿®æ”¹ç«¯å£
 							i.setPt_right(jj.getIfPort());
 							i.setDsc_right(jj.getIfDesc());
 							break;
@@ -538,8 +538,8 @@ public class NetScan implements Runnable {
 		IoUtils.saveFrmArpList(frm_aftarp_list);
 	}
 
-	// ±£´æÉ¨ÃèºóµÄÔ­Ê¼Êı¾İ
-	public boolean saveOriginData() // ²»ÔÙ±£´æÉ¨ÃèºóµÄÔ­Ê¼ÎÄ¼ş
+	// ä¿å­˜æ‰«æåçš„åŸå§‹æ•°æ®
+	public boolean saveOriginData() // ä¸å†ä¿å­˜æ‰«æåçš„åŸå§‹æ–‡ä»¶
 	{
 		if(!myParam.getPing_type().equals("2"))
 			IoUtils.savaDevidIps(devid_list);
@@ -561,16 +561,16 @@ public class NetScan implements Runnable {
 			scaned.clear();
 		if (toscan != null)
 			toscan.clear();
-		// ´ÓÖÖ×Ó·¢ÏÖ×ÓÍø
+		// ä»ç§å­å‘ç°å­ç½‘
 		for (String seedIp : seedList) {
 			List<Pair<String, String>> maskList = new ArrayList<Pair<String, String>>();
-			/* ²éÑ¯ÑÚÂë */
+			/* æŸ¥è¯¢æ©ç  */
 			new IpAddressTableScan()
 					.getIpMaskList(new SnmpPara(seedIp,
 							getCommunity_Get(seedIp), scanParam.getTimeout(),
 							scanParam.getRetrytimes()), maskList);
 			for (int i = 0; i < maskList.size(); i++) {
-				// ·ÖÎö×ÓÍø
+				// åˆ†æå­ç½‘
 				Pair<String, String> scale_cur = ScanUtils
 						.getScaleByIPMask(maskList.get(i));
 				boolean bExist = false;
@@ -609,7 +609,7 @@ public class NetScan implements Runnable {
 		return true;
 	}
 
-	// É¨ÃèÒ»¸ö·¶Î§
+	// æ‰«æä¸€ä¸ªèŒƒå›´
 	public boolean scanOneScale(Pair<String, String> scale, boolean bChng) {
 		String msg = "start scan scale : " + scale.getFirst() + "-"
 				+ scale.getSecond();
@@ -622,7 +622,7 @@ public class NetScan implements Runnable {
 			if (ipStr.length() < 7
 					|| ipStr.substring(ipStr.length() - 4).equals(".255")
 					|| ipStr.substring(ipStr.length() - 2) == ".0") {
-				// ÅÅ³ı¹ã²¥ºÍÈ±Ê¡µØÖ·
+				// æ’é™¤å¹¿æ’­å’Œç¼ºçœåœ°å€
 				continue;
 			}
 			boolean bExcluded = false;
@@ -685,7 +685,7 @@ public class NetScan implements Runnable {
 		return community_ret;
 	}
 
-	// »ñÈ¡IP¶ÔÓ¦µÄSNMP Version
+	// è·å–IPå¯¹åº”çš„SNMP Version
 	public String getSNMPVersion(String ip) {
 		String sVersion = myParam.getSnmp_version();
 		if (myParam.getSNMPV_list().isEmpty()) {
@@ -702,7 +702,7 @@ public class NetScan implements Runnable {
 	public boolean scanByIps(Vector<String> aliveIp_list, boolean bChange) {
 		Vector<SnmpPara> spr_list = new Vector<SnmpPara>();
 		for (String aliveIp : aliveIp_list) {
-			{// Ôö¼Óµ½ÒÑ·ÃÎÊÁĞ±í
+			{// å¢åŠ åˆ°å·²è®¿é—®åˆ—è¡¨
 				m_ip_list_visited.add(aliveIp);
 				String ipCmt = getCommunity_Get(aliveIp);
 				String snmpVer = getSNMPVersion(aliveIp);// "2" or "1" or "0"
@@ -714,8 +714,8 @@ public class NetScan implements Runnable {
 		if (!siReader.getDeviceData(spr_list)) {
 			return false;
 		}
-		m_ip_list_visited = siReader.getIp_visited_list();// ¸üĞÂºóµÄÒÑ·ÃÎÊipµØÖ·±í
-		Map<String, IDBody> devlist_cur = siReader.getDevid_list_valid();// ÔÚµ±Ç°·¶Î§ÖĞ·¢ÏÖµÄĞÂÉè±¸
+		m_ip_list_visited = siReader.getIp_visited_list();// æ›´æ–°åçš„å·²è®¿é—®ipåœ°å€è¡¨
+		Map<String, IDBody> devlist_cur = siReader.getDevid_list_valid();// åœ¨å½“å‰èŒƒå›´ä¸­å‘ç°çš„æ–°è®¾å¤‡
 
 		Map<String, Map<String, List<String>>> aftlist_cur = siReader
 				.getAft_list();
@@ -759,14 +759,14 @@ public class NetScan implements Runnable {
 			Utils.mapAddAll(directdata_list, directlist_cur);
 		}
 
-		if (bChange) {// Ôö¼ÓĞÂ·¶Î§
+		if (bChange) {// å¢åŠ æ–°èŒƒå›´
 			addScaleFromDevID(devlist_cur);
 		}
 
 		return true;
 	}
 
-	// ´ÓÉè±¸ĞÅÏ¢Ìí¼ÓĞÂµÄÉ¨Ãè·¶Î§
+	// ä»è®¾å¤‡ä¿¡æ¯æ·»åŠ æ–°çš„æ‰«æèŒƒå›´
 	public void addScaleFromDevID(Map<String, IDBody> devlist) {
 		Set<String> keys = devlist.keySet();
 		for (String key : keys) {
@@ -801,7 +801,7 @@ public class NetScan implements Runnable {
 							}
 						}
 					}
-					if (bNew) {// ·¢ÏÖĞÂ×ÓÍø
+					if (bNew) {// å‘ç°æ–°å­ç½‘
 						toscan.add(scale_j);
 					}
 				}
@@ -809,7 +809,7 @@ public class NetScan implements Runnable {
 		}
 	}
 
-	/** Íê³É */
+	/** å®Œæˆ */
 	public boolean icmpPing(Vector<String> iplist, boolean bGetla, String msg,
 			Vector<String> iplist_alive) {
 		iplist_alive.clear();
@@ -825,7 +825,7 @@ public class NetScan implements Runnable {
 			}
 			Utils.collectionCopyAll(iplist_to_ping, iplist);
 			istart = iend;
-			if (!myPing.multPing(iplist_to_ping, 2, scanParam.getTimeout()))// PingÖØÊÔ¼°³¬Ê±¹Ì¶¨Îª2£¬1000ms
+			if (!myPing.multPing(iplist_to_ping, 2, scanParam.getTimeout()))// Pingé‡è¯•åŠè¶…æ—¶å›ºå®šä¸º2ï¼Œ1000ms
 			{
 				return false;
 			}
@@ -833,7 +833,7 @@ public class NetScan implements Runnable {
 			for (int i = 0; i < list_tmp.size(); ++i) {
 				iplist_alive.add(list_tmp.get(i));
 			}
-			if (bGetla) {// »ñÈ¡±¾»úarp±í
+			if (bGetla) {// è·å–æœ¬æœºarpè¡¨
 				String communityStr = getCommunity_Get(localip);
 
 				siReader.getOneArpData(new SnmpPara(localip, communityStr,
@@ -844,9 +844,9 @@ public class NetScan implements Runnable {
 		return true;
 	}
 
-	// ¹æ·¶»¯Êı¾İÎÄ¼ş
+	// è§„èŒƒåŒ–æ•°æ®æ–‡ä»¶
 	public boolean formatData() {
-		// ´¦ÀívrrpµÄÊı¾İ:É¾³ıvrrpµÄip-macÊı¾İ
+		// å¤„ç†vrrpçš„æ•°æ®:åˆ é™¤vrrpçš„ip-macæ•°æ®
 		List<String> iplist_virtual = new ArrayList<String>();
 		List<String> maclist_virtual = new ArrayList<String>();
 		for (Entry<String, RouterStandbyItem> iter : routeStandby_list
@@ -909,23 +909,23 @@ public class NetScan implements Runnable {
 				&& (scanParam.getScan_scales_num() != null && !scanParam
 						.getScan_scales_num().isEmpty())) {
 			for (Entry<String, Map<String, List<Pair<String, String>>>> m_srcip : arp_list
-					.entrySet()) {// ¶Ôsource ip Ñ­»·
+					.entrySet()) {// å¯¹source ip å¾ªç¯
 				for (Entry<String, List<Pair<String, String>>> m_srcport : m_srcip
-						.getValue().entrySet()) {// ¶Ôsource port Ñ­»·
+						.getValue().entrySet()) {// å¯¹source port å¾ªç¯
 					for (Iterator<Pair<String, String>> destip_mac_iter = m_srcport
-							.getValue().iterator(); destip_mac_iter.hasNext();) {// ¶Ôdestip-macÑ­»·
+							.getValue().iterator(); destip_mac_iter.hasNext();) {// å¯¹destip-macå¾ªç¯
 						Pair<String, String> destip_mac = destip_mac_iter
 								.next();
 						boolean bAllowed = false;
 						long ipnum = ScanUtils.ipToLong(destip_mac.getFirst());
 						for (Pair<Long, Long> j : scanParam
 								.getScan_scales_num()) {
-							// ÔÊĞíµÄ·¶Î§
+							// å…è®¸çš„èŒƒå›´
 							if (ipnum <= j.getSecond() && ipnum >= j.getFirst()) {
 								bAllowed = true;
 								for (Pair<Long, Long> k : scanParam
 										.getFilter_scales_num()) {
-									// ÅÅ³ıµÄ·¶Î§ip
+									// æ’é™¤çš„èŒƒå›´ip
 									if (ipnum <= k.getSecond()
 											&& ipnum >= k.getFirst()) {
 										bAllowed = false;
@@ -942,14 +942,14 @@ public class NetScan implements Runnable {
 				}
 			}
 		}
-		// ¹æ·¶»¯½Ó¿Ú,
+		// è§„èŒƒåŒ–æ¥å£,
 		for (Entry<String, Map<String, List<Pair<String, String>>>> i : arp_list
-				.entrySet()) {// Ñ­»·source ip
+				.entrySet()) {// å¾ªç¯source ip
 			List<Pair<String, List<Pair<String, String>>>> infindex_list = new ArrayList<Pair<String, List<Pair<String, String>>>>();
-			// Ñ­»·source ip
+			// å¾ªç¯source ip
 
 			for (Entry<String, List<Pair<String, String>>> m_it : i.getValue()
-					.entrySet()) {// ¶Ôsource port Ñ­»·
+					.entrySet()) {// å¯¹source port å¾ªç¯
 				String port = m_it.getKey();
 				if (port.length() == 1
 						|| (!port.startsWith("G") && !port.startsWith("E"))) {
@@ -985,7 +985,7 @@ public class NetScan implements Runnable {
 				}
 			}
 		}
-		for (Entry<String, Map<String, List<String>>> i : aft_list.entrySet()) {// ¶Ôsource ipÑ­»·
+		for (Entry<String, Map<String, List<String>>> i : aft_list.entrySet()) {// å¯¹source ipå¾ªç¯
 			List<Pair<String, List<String>>> infindex_list = new ArrayList<Pair<String, List<String>>>();// [<oldport,[mac]>]
 			List<Pair<String, List<String>>> validinfindex_list = new ArrayList<Pair<String, List<String>>>();// [<validport,[mac]>]
 
@@ -1035,13 +1035,13 @@ public class NetScan implements Runnable {
 					for (Pair<String, List<String>> k : infindex_list) {
 						i.getValue().put(k.getFirst(), k.getSecond());
 					}
-					// ºÏ²¢¶Ë¿Ú¼¯
+					// åˆå¹¶ç«¯å£é›†
 					for (Pair<String, List<String>> port_mac : validinfindex_list) {
 						// port-macs
-						if (i.getValue().containsKey(port_mac.getFirst())) {// ´æÔÚ¸Ã¶Ë¿Ú
+						if (i.getValue().containsKey(port_mac.getFirst())) {// å­˜åœ¨è¯¥ç«¯å£
 							for (String idestmac : port_mac.getSecond()) {
 								if (!i.getValue().get(port_mac.getFirst())
-										.contains(idestmac)) {// ²»´æÔÚ¸Ãmac
+										.contains(idestmac)) {// ä¸å­˜åœ¨è¯¥mac
 									i.getValue().get(port_mac.getFirst())
 											.add(idestmac);
 								}
@@ -1054,16 +1054,16 @@ public class NetScan implements Runnable {
 				}
 			}
 		}
-		// ÔÚarpÖĞ³öÏÖµÄĞÂµÄip-mac×÷Îªhost¼ÓÈëµ½Éè±¸ÁĞ±í
+		// åœ¨arpä¸­å‡ºç°çš„æ–°çš„ip-macä½œä¸ºhoståŠ å…¥åˆ°è®¾å¤‡åˆ—è¡¨
 		List<Pair<String, String>> ipmac_list = new ArrayList<Pair<String, String>>();
 		List<String> deleteIPS = new ArrayList<String>();
 		for (Entry<String, Map<String, List<Pair<String, String>>>> i : arp_list
-				.entrySet()) {// ¶Ôsource ip Ñ­»·
+				.entrySet()) {// å¯¹source ip å¾ªç¯
 			for (Entry<String, List<Pair<String, String>>> m_it : i.getValue()
-					.entrySet()) {// ¶Ôsource port Ñ­»·
+					.entrySet()) {// å¯¹source port å¾ªç¯
 				for (Pair<String, String> ip_mac_new : m_it.getValue()) {
 					if (maclist_virtual.contains(ip_mac_new.getSecond())) {
-						continue;// ºöÂÔvrrp ĞéÄâip-mac
+						continue;// å¿½ç•¥vrrp è™šæ‹Ÿip-mac
 					}
 					if (ip_mac_new.getFirst().substring(0, 3).equals("127")
 							|| ip_mac_new.getFirst().substring(0, 5)
@@ -1108,7 +1108,7 @@ public class NetScan implements Runnable {
 					break;
 				}
 			}
-			if (!bExist) {// ×÷Îªhost¼ÓÈë
+			if (!bExist) {// ä½œä¸ºhoståŠ å…¥
 				IDBody id_tmp = new IDBody();
 				id_tmp.setSnmpflag("0");
 				id_tmp.setBaseMac(i.getSecond());
@@ -1120,12 +1120,12 @@ public class NetScan implements Runnable {
 				id_tmp.getInfinxs().add("0");
 				id_tmp.getMacs().add(i.getSecond());
 				devid_list.put(i.getFirst(), id_tmp);
-			} else if (iid.getMacs() == null || iid.getMacs().isEmpty()) {// ½«MACµØÖ·¼ÓÈëÉè±¸µÄ
+			} else if (iid.getMacs() == null || iid.getMacs().isEmpty()) {// å°†MACåœ°å€åŠ å…¥è®¾å¤‡çš„
 				iid.getMacs().add(i.getSecond());
 				iid.setBaseMac(i.getSecond());
 			}
 		}
-		// ¹æ·¶»¯arpÊı¾İ±í
+		// è§„èŒƒåŒ–arpæ•°æ®è¡¨
 		frm_aftarp_list.clear();
 		for (Entry<String, Map<String, List<Pair<String, String>>>> i : arp_list
 				.entrySet()) {
@@ -1141,12 +1141,12 @@ public class NetScan implements Runnable {
 			if (!bDevice) {
 				continue;
 			}
-			if (!frm_aftarp_list.containsKey(src_ip)) {// ºöÂÔÒÑ¾­´æÔÚµÄsrc_ip
+			if (!frm_aftarp_list.containsKey(src_ip)) {// å¿½ç•¥å·²ç»å­˜åœ¨çš„src_ip
 				String myPrex = "";
 				List<String> infindex_list = new ArrayList<String>();
 				if (i.getValue() != null && !(i.getValue().isEmpty())) {
 					String temp = i.getValue().entrySet().iterator().next()
-							.getKey();// »ñÈ¡µÚÒ»¸öÔªËØµÄ¼ü
+							.getKey();// è·å–ç¬¬ä¸€ä¸ªå…ƒç´ çš„é”®
 					if (temp.startsWith("G") || temp.startsWith("E")) {
 						for (Entry<String, List<Pair<String, String>>> j : i
 								.getValue().entrySet()) {
@@ -1154,7 +1154,7 @@ public class NetScan implements Runnable {
 							if (str_tmp.length() > 1
 									&& !str_tmp.substring(0, 2).equals("0/")) {
 								if (str_tmp.indexOf("0") > 0) {
-									str_tmp = str_tmp.replaceAll("^(0+)", "");// È¥³ı×Ö·û´®Ç°ÃæµÄ0
+									str_tmp = str_tmp.replaceAll("^(0+)", "");// å»é™¤å­—ç¬¦ä¸²å‰é¢çš„0
 								}
 								infindex_list.add(str_tmp);
 							}
@@ -1169,12 +1169,12 @@ public class NetScan implements Runnable {
 				Map<String, List<String>> pset_tmp = new HashMap<String, List<String>>();
 				for (Entry<String, List<Pair<String, String>>> j : i.getValue()
 						.entrySet()) {
-					String myport = j.getKey();// È±Ê¡½Ó¿Ú
+					String myport = j.getKey();// ç¼ºçœæ¥å£
 					List<String> destip_list = new ArrayList<String>();
 					// dest_ip->dev_ip
 					for (Pair<String, String> k : j.getValue()) {
 						if (iplist_virtual.contains(k.getFirst())) {
-							// ºöÂÔvrrp ĞéÄâip-mac
+							// å¿½ç•¥vrrp è™šæ‹Ÿip-mac
 							continue;
 						}
 						if (deleteIPS.contains(k.getFirst())) {
@@ -1182,9 +1182,9 @@ public class NetScan implements Runnable {
 						}
 						for (Entry<String, IDBody> m : devid_list.entrySet()) {
 							if (m.getValue().getIps().contains(k.getFirst())) {
-								// ºöÂÔ²»ÔÚÉè±¸ÁĞ±íÖĞµÄÌõÄ¿
+								// å¿½ç•¥ä¸åœ¨è®¾å¤‡åˆ—è¡¨ä¸­çš„æ¡ç›®
 								if (m.getKey().equals(src_ip)) {
-									// //ºöÂÔ×ª·¢µ½×ÔÉíµÄÌõÄ¿
+									// //å¿½ç•¥è½¬å‘åˆ°è‡ªèº«çš„æ¡ç›®
 									break;
 								}
 								if (!destip_list.contains(m.getKey())) {
@@ -1203,7 +1203,7 @@ public class NetScan implements Runnable {
 				}
 			}
 		}
-		// ¹æ·¶»¯aftÊı¾İ±í
+		// è§„èŒƒåŒ–aftæ•°æ®è¡¨
 		aft_list_frm.clear();
 		for (Entry<String, Map<String, List<String>>> i : aft_list.entrySet()) {
 			String src_ip = i.getKey();
@@ -1218,7 +1218,7 @@ public class NetScan implements Runnable {
 			if (!bDevice) {
 				continue;
 			}
-			if (!aft_list_frm.containsKey(src_ip)) {// ºöÂÔÒÑ¾­´æÔÚµÄsrc_ip
+			if (!aft_list_frm.containsKey(src_ip)) {// å¿½ç•¥å·²ç»å­˜åœ¨çš„src_ip
 				String myPrex = "";
 				List<String> infindex_list = new ArrayList<String>();
 				if (i.getValue() != null && !i.getValue().isEmpty()) {
@@ -1239,13 +1239,13 @@ public class NetScan implements Runnable {
 				}
 				Map<String, List<String>> pset_tmp = new HashMap<String, List<String>>();
 				for (Entry<String, List<String>> j : i.getValue().entrySet()) {
-					String myport = j.getKey();// È±Ê¡½Ó¿ÚºÅ
+					String myport = j.getKey();// ç¼ºçœæ¥å£å·
 					if (iinf != null && !iinf.isEmpty()) {
 						for (IfRec k : iinf.getSecond()) {
-							// Í¨¹ı¶Ë¿ÚÑ°ÕÒ¶ÔÓ¦µÄ½Ó¿ÚË÷Òı
+							// é€šè¿‡ç«¯å£å¯»æ‰¾å¯¹åº”çš„æ¥å£ç´¢å¼•
 							if (k.getIfPort().equals(myport)
 									&& !k.getIfIndex().equals(myport)) {
-								// ĞèÒªĞŞ¸Ä¶Ë¿Ú
+								// éœ€è¦ä¿®æ”¹ç«¯å£
 								myport = k.getIfIndex();
 								break;
 							}
@@ -1254,16 +1254,16 @@ public class NetScan implements Runnable {
 					List<String> destip_list = new ArrayList<String>();
 					for (String k : j.getValue()) {
 						if (maclist_virtual.contains(k)) {
-							// ºöÂÔvrrp ĞéÄâip-mac
+							// å¿½ç•¥vrrp è™šæ‹Ÿip-mac
 							continue;
 						}
 						String temp = k.toUpperCase();
 						for (Entry<String, IDBody> m : devid_list.entrySet()) {
 							if (m.getValue().getMacs().contains(k)) {
-								// ºöÂÔ²»ÔÚÉè±¸ÁĞ±íÖĞµÄÌõÄ¿
+								// å¿½ç•¥ä¸åœ¨è®¾å¤‡åˆ—è¡¨ä¸­çš„æ¡ç›®
 								if (!m.getKey().equals(src_ip)
 										&& !destip_list.contains(m.getKey())) {
-									// ºöÂÔ×ª·¢µ½×ÔÉíµÄÌõÄ¿
+									// å¿½ç•¥è½¬å‘åˆ°è‡ªèº«çš„æ¡ç›®
 									destip_list.add(m.getKey());
 								}
 								break;
@@ -1283,9 +1283,9 @@ public class NetScan implements Runnable {
 	}
 
 	public String findInfPortFromDescr(List<IfRec> inf_list, String port) {
-		for (IfRec m : inf_list) {// Í¨¹ı½Ó¿ÚÃèÊöĞÅÏ¢Ñ°ÕÒ¶ÔÓ¦µÄ½Ó¿ÚË÷Òı
+		for (IfRec m : inf_list) {// é€šè¿‡æ¥å£æè¿°ä¿¡æ¯å¯»æ‰¾å¯¹åº”çš„æ¥å£ç´¢å¼•
 			int iPlace = m.getIfDesc().indexOf(port);
-			if (iPlace != -1) {// ĞèÒªĞŞ¸Ä¶Ë¿Ú
+			if (iPlace != -1) {// éœ€è¦ä¿®æ”¹ç«¯å£
 				return m.getIfPort();
 			} else {
 				String toport = port;
@@ -1298,7 +1298,7 @@ public class NetScan implements Runnable {
 		return port;
 	}
 
-	// ¸ù¾İ½Ó¿ÚË÷ÒıÁĞ±íÓë½Ó¿Ú±í,»ñÈ¡¹²Í¬Ç°×º
+	// æ ¹æ®æ¥å£ç´¢å¼•åˆ—è¡¨ä¸æ¥å£è¡¨,è·å–å…±åŒå‰ç¼€
 	public String getInfDescPrex(List<String> infIndex_list,
 			List<IfRec> inf_list) {
 		String prex = "";
@@ -1365,7 +1365,7 @@ public class NetScan implements Runnable {
 		return true;
 	}
 	/**
-	 * ¶ÁÈ¡¸ñÊ½»¯Ö®Ç°µÄÔ­Ê¼Êı¾İ
+	 * è¯»å–æ ¼å¼åŒ–ä¹‹å‰çš„åŸå§‹æ•°æ®
 	 * @return
 	 */
 	public boolean readOriginData(){
@@ -1429,20 +1429,20 @@ public class NetScan implements Runnable {
 
 	private ScanParam scanParam = new ScanParam();
 
-	// É¨Ãè²¹³ä²ÎÊı
+	// æ‰«æè¡¥å……å‚æ•°
 	AuxParam myParam = new AuxParam();
-	// ¼ºÉ¨Ãè×ÓÍø£»
+	// å·±æ‰«æå­ç½‘ï¼›
 	private List<Pair<String, String>> scaned = new ArrayList<Pair<String, String>>();
-	// ´ıÉ¨Ãè×ÓÍø 
+	// å¾…æ‰«æå­ç½‘ 
 	private List<Pair<String, String>> toscan = new ArrayList<Pair<String, String>>();
-	// ÒÑ·ÃÎÊip
+	// å·²è®¿é—®ip
 	private List<String> m_ip_list_visited = new ArrayList<String>();
 	
 	private ReadService siReader = new ReadService();
-	// ±¾µØÖ÷»úipµØÖ·ÁĞ±í
+	// æœ¬åœ°ä¸»æœºipåœ°å€åˆ—è¡¨
 	private List<String> localip_list = new ArrayList<String>();
 	private String localip;
-	// Éè±¸ÁĞ±í
+	// è®¾å¤‡åˆ—è¡¨
 	private Map<String, IDBody> devid_list = new HashMap<String, IDBody>();
 
 	public Map<String, List<Pair<String, String>>> getLocalport_macs() {

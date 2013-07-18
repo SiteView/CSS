@@ -36,7 +36,7 @@ public class IpAddressTableScan {
 			if(t.getStatus() < 0) continue;
 			String varible = t.getColumns()[0].toString();
 			String[] varibleSplit = varible.split("=");
-			//Ç°20Î»±íÊ¾OID£¬Ö®ºóµÄÊı¾İÊÇÓÉ¶ÔÓ¦ÉÌÆ·ºÅ+IPµØÉú³ÉµÄINDEX
+			//å‰20ä½è¡¨ç¤ºOIDï¼Œä¹‹åçš„æ•°æ®æ˜¯ç”±å¯¹åº”å•†å“å·+IPåœ°ç”Ÿæˆçš„INDEX
 			String oidStr = varibleSplit[0].substring(0,21);
 			String dateIndex = varibleSplit[0].substring(21);
 			IpAddressTable ipadd = null;
@@ -63,7 +63,7 @@ public class IpAddressTableScan {
 		return result;
 	}
 	/**
-	 * »ñÈ¡ipaddress±í ÑÚÂëÁĞÊı¾İ
+	 * è·å–ipaddressè¡¨ æ©ç åˆ—æ•°æ®
 	 * @param spr
 	 * @param ipcm_result
 	 */
@@ -72,8 +72,8 @@ public class IpAddressTableScan {
 		Set<String> keys = tables.keySet();
 		for(String key : keys){
 				if (!"".equals(key) 
-					&& !"0.0.0.0".equals(key) // ÅÅ³ıÈÎÒâÆ¥ÅäµØÖ·
-					&& !key.substring(0, 3).equals("127") // ÅÅ³ı»·»ØµØÖ·
+					&& !"0.0.0.0".equals(key) // ï¿½Å³ï¿½ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½ï¿½Ö·
+					&& !key.substring(0, 3).equals("127") // ï¿½Å³ï¿½ï¿½ï¿½ï¿½Øµï¿½Ö·
 					&& !key.startsWith("0.255")) {
 					ipcm_result.add(new Pair<String, String>(key, tables.get(key).getIpAdEntNetMask()));
 				}
@@ -81,7 +81,7 @@ public class IpAddressTableScan {
 	}
 	
 	/**
-	 * »ñÈ¡ipaddress±íÊı¾İ
+	 * è·å–ipaddressè¡¨æ•°æ®
 	 * @param spr
 	 * @return
 	 */
