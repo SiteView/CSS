@@ -32,5 +32,31 @@
             matchingStrategy="org.csstudio.opibuilder.editor.OPIEditorMatcher">
       </editor>
    </extension>
+ <extension
+       point="org.eclipse.ui.views">
+    <view
+          class="com.siteview.css.topo.viewpart.DeviceDetailInfoViewPart"
+          id="com.siteview.css.topo.devicelistview"
+          name="设备列表"
+          restorable="true">
+    </view>
+ </extension>
+ <extension
+       point="org.eclipse.ui.actionSets">
+    <actionSet
+          id="com.siteview.css.topo.actionSet1"
+          label="label"
+          visible="true">
+       <action
+             class="com.siteview.css.topo.actions.ShowDeviceView"
+             icon="icons/css16.png"
+             id="com.siteview.css.topo.showdevicelist"
+             label="设备信息"
+             menubarPath="sampleMenu/"
+             style="push"
+             toolbarPath="sampleGroup">
+       </action>
+    </actionSet>
+ </extension>
  
 </plugin>
