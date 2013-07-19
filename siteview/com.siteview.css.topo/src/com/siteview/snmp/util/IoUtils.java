@@ -551,11 +551,12 @@ public class IoUtils {
 		FileReader fr = null;
 		BufferedReader br = null;
 		try {
-			fr = new FileReader(System.getProperty("user.dir") + File.separator + cdpPrex + "DeviceInfos.txt");
+			fr = new FileReader(getProductPath() + File.separator + "DeviceInfos.txt");
 			br = new BufferedReader(fr);
 			String line = "";
+			System.out.println("asdf");
 			while ((line = br.readLine()) != null) {
-				String[] vstr = line.split(SPLIT_MAIN);
+				String[] vstr = line.split("\\[::\\]");
 				if (vstr.length == 14) {
 					String ip = vstr[0];
 					IDBody id = new IDBody();
@@ -1413,9 +1414,15 @@ public class IoUtils {
 		return sp;
 	}
 	public static void main(String[] args) {
-		List<String> l = new ArrayList<String>();
-		String[] s = new String[]{"s"};
-		Collections.addAll(l, s);
-		System.out.println(l.size());
+//		List<String> l = new ArrayList<String>();
+//		String[] s = new String[]{"s"};
+//		Collections.addAll(l, s);
+//		System.out.println(l.size());
+		String a = "a[::]b[::]c[::]";
+
+		String b[] = a.split("\\[::\\]");
+		for(String i : b){
+			System.out.println(i);
+		}
 	}
 }

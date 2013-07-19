@@ -16,22 +16,22 @@ import com.siteview.snmp.pojo.RouteItem;
 import com.siteview.snmp.pojo.RouterStandbyItem;
 
 /**
- * Ò»Ğ©É¨ÃèÓÃµ½µÄ³£Á¿
+ * Ò»Ğ©É¨ï¿½ï¿½ï¿½Ãµï¿½ï¿½Ä³ï¿½ï¿½ï¿½
  * @author haiming.wang
  *
  */
 public class CommonDef {
 
 	/**
-	 * Éè±¸ÀàĞÍ
+	 * ï¿½è±¸ï¿½ï¿½ï¿½ï¿½
 	 */
-	public static final String ROUTE_SWITCH = "0";	//Èı²ã½»»»
-	public static final String SWITCH = "1";		//¶ş²ã
-	public static final String ROUTER = "2";		//Â·ÓÉÆ÷
-	public static final String FIREWALL = "3";		//·À»ğÇ½
-	public static final String SERVER = "4";		//·şÎñÆ÷ ¿ªÆôÁËsnmp·şÎñµÄpcÒ²µ±³É·şÎñÆ÷´¦Àí¡£
+	public static final String ROUTE_SWITCH = "0";	//ä¸‰å±‚äº¤æ¢
+	public static final String SWITCH = "1";		//äºŒå±‚äº¤æ¢
+	public static final String ROUTER = "2";		//è·¯ç”±å™¨
+	public static final String FIREWALL = "3";		//é˜²ç«å¢™
+	public static final String SERVER = "4";		//æœåŠ¡å™¨è®¾å¤‡æˆ–è€…å¼€å¯äº†snmpæœåŠ¡çš„pc
 	public static final String PC = "5";			//pc
-	public static final String OTHER = "6";			//ÆäËü
+	public static final String OTHER = "6";			//å…¶å®ƒ
 	
 	
 	public static final String ERR_AFT_LOG = "Err_Aft_log.txt";
@@ -44,42 +44,42 @@ public class CommonDef {
 	public static final String ERR_VRRP_LOG = "Err_Vrrp_log.txt";
 	public static final String ERR_DRC_LOG = "Err_DRC_log.txt";
 	
-	//ÌØÊâÉè±¸µÄoid¼¯ºÏ [{³§ÉÌoid,[{Ö¸±ê´úÂë,Ö¸±êoid}]}] 
+	//ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½oidï¿½ï¿½ï¿½ï¿½ [{ï¿½ï¿½ï¿½ï¿½oid,[{Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½,Ö¸ï¿½ï¿½oid}]}] 
 	public static Map<String, Map<String, String>> SPECIAL_OID_LIST = new HashMap<String, Map<String,String>>();
 	
-	public static Map<String, RouterStandbyItem> RouterStandby_LIST = new ConcurrentHashMap<String, RouterStandbyItem>(); //vrrp,hsrpµÈ
+	public static Map<String, RouterStandbyItem> RouterStandby_LIST = new ConcurrentHashMap<String, RouterStandbyItem>(); //vrrp,hsrpï¿½ï¿½
 
-	//Éè±¸»ù±¾ĞÅÏ¢ÁĞ±í{devIP,(TYPE,SNMP,[IP],[MAC],[MASK],SYSOID,sysname)}
+	//ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ğ±ï¿½{devIP,(TYPE,SNMP,[IP],[MAC],[MASK],SYSOID,sysname)}
 	public static Map<String, IDBody> DEVID_LIST = new ConcurrentHashMap<String, IDBody>();
-	//Éè±¸½Ó¿ÚÊôĞÔÁĞ±í {devIP,(ifAmount,[(ifindex,ifType,ifDescr,ifMac,ifPort,ifSpeed)])}
+	//ï¿½è±¸ï¿½Ó¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½ {devIP,(ifAmount,[(ifindex,ifType,ifDescr,ifMac,ifPort,ifSpeed)])}
 	public static Map<String, Pair<String, List<IfRec>>> IFPROP_LIST = new ConcurrentHashMap<String, Pair<String, List<IfRec>>>();
-	//Éè±¸AFTÊı¾İÁĞ±í {sourceIP,{port,[MAC]}}
+	//ï¿½è±¸AFTï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½ {sourceIP,{port,[MAC]}}
 	public static Map<String, Map<String, List<String>>> AFT_LIST = new ConcurrentHashMap<String, Map<String, List<String>>>();
-	//Éè±¸ARPÊı¾İÁĞ±í {sourceIP,{infInx,[(MAC,destIP)]}}
+	//ï¿½è±¸ARPï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½ {sourceIP,{infInx,[(MAC,destIP)]}}
 	public static Map<String, Map<String, List<Pair<String,String>>>> ARP_LIST = new ConcurrentHashMap<String, Map<String, List<Pair<String,String>>>>();
-	//Éè±¸OSPFÁÚ¾ÓÁĞ±í {sourceIP,{infInx,[destIP]}}
+	//ï¿½è±¸OSPFï¿½Ú¾ï¿½ï¿½Ğ±ï¿½ {sourceIP,{infInx,[destIP]}}
 	public static Map<String, Map<String, List<String>>> OSPFNBR_LIST = new ConcurrentHashMap<String, Map<String, List<String>>>();
-	//Éè±¸Â·ÓÉ±í {sourceIP,{infInx,[nextIP]}}
+	//ï¿½è±¸Â·ï¿½É±ï¿½ {sourceIP,{infInx,[nextIP]}}
 	public static Map<String, Map<String, List<RouteItem>>> ROUTE_LIST = new ConcurrentHashMap<String, Map<String, List<RouteItem>>>();
 
 	//typedef map<string, VRRPITEM> VRRP_LIST;
 
 	public static List<Bgp> BGP_LIST = new ArrayList<Bgp>();
-	//Éè±¸Â·ÓÉ±í {sourceIP,{infInx,[nextIP]}}
+	//ï¿½è±¸Â·ï¿½É±ï¿½ {sourceIP,{infInx,[nextIP]}}
 	public static Map<String, Map<String, List<String>>> ROUTE_LIST_FRM = new ConcurrentHashMap<String, Map<String, List<String>>>();
-	//¹æ·¶»¯ºóµÄÉè±¸AFT»òARPÊı¾İ {sourceIP,{infInx,[destIP]}}
+	//ï¿½æ·¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸AFTï¿½ï¿½ARPï¿½ï¿½ï¿½ï¿½ {sourceIP,{infInx,[destIP]}}
 	public static Map<String, Map<String, List<String>>> FRM_AFTARP_LIST = new ConcurrentHashMap<String, Map<String, List<String>>>();
 
 	public static Map<String, List<Directitem>> DIRECTDATA_LIST = new ConcurrentHashMap<String, List<Directitem>>();
 
-	//Éè±¸stpÁĞ±í
+	//ï¿½è±¸stpï¿½Ğ±ï¿½
 	public static Map<String,List<String>> STP_LIST = new ConcurrentHashMap<String,List<String>>();  
-	//±ßÁĞ±í
+	//ï¿½ï¿½ï¿½Ğ±ï¿½
 	public static List<Edge> EDGE_LIST;
 
 	public static List<Pair<String,String>> SCALE_LIST = new ArrayList<Pair<String,String>>();//[ip0,ip1]
 
-	//Â·ÓÉ¸ú×ÙÂ·¾¶±í [[path1],[path2],...,[pathn]]
+	//Â·ï¿½É¸ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ [[path1],[path2],...,[pathn]]
 	public static List<List<String>> ROUTEPATH_LIST = new ArrayList<List<String>>();
 	
 

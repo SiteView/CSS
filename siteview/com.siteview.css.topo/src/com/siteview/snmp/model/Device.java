@@ -5,52 +5,53 @@ import java.util.List;
 
 public class Device {
 	
+
 	/**
-	 * Éè±¸ID
+	 * è®¾å¤‡ID
 	 */
 	private String deviceId;
 	/**
-	 * Éè±¸Ãû³Æ
+	 * è®¾å¤‡åç§°
 	 */
 	private String deviceName;
 	/**
-	 * Éè±¸ÀàĞÍ pc »òÕß Â·ÓÉÉè±¸
+	 * è®¾å¤‡ç±»å‹ pc æˆ–è€… è·¯ç”±è®¾å¤‡
 	 */
 	private DeviceType deviceType;
 	/**
-	 * ÔËĞĞÊ±¼ä
+	 * è¿è¡Œæ—¶é—´
 	 */
 	private String lastChangeTime;
 	/**
-	 * Éè±¸Î»ÖÃ
+	 * è®¾å¤‡ä½ç½®
 	 */
 	private String location;
 	/**
-	 * ×Ê²ú±êÇ©
+	 * èµ„äº§æ ‡ç­¾
 	 */
 	private String assetMark;
 	/**
-	 * ·şÎñ±êÇ©
+	 * æœåŠ¡æ ‡ç­¾
 	 */
 	private String serviceMark;
 	/**
-	 * ÁªÏµÈË
+	 * è”ç³»äºº
 	 */
 	private String contact;
 	/**
-	 * ÉÏ´ÎÉ¨ÃèÊ±¼ä
+	 * ä¸Šæ¬¡æ‰«ææ—¶é—´
 	 */
 	private Date lastScanTime;
 	/**
-	 * ÉÏ´ÎÉ¨Ãè×´Ì¬
+	 * ä¸Šæ¬¡æ‰«æçŠ¶æ€
 	 */
 	private int lastScanStautus;
 	/**
-	 * ÖÆÔìÉÌ
+	 * åˆ¶é€ å•†
 	 */
 	private String maker;
 	/**
-	 * ËùÊô²¿ÃÅ
+	 * æ‰€å±éƒ¨é—¨
 	 */
 	private String department;
 	

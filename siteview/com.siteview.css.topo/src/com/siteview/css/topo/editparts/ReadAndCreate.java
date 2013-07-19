@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 import com.siteview.css.topo.models.TopologyModel;
 
 public class ReadAndCreate {
-	/** ×ø±ê¶¨Î» */
+	/** ï¿½ï¿½ï¿½ê¶¨Î» */
 	final String TOP_LEFT = "TOP_LEFT";
 	final String TOP = "TOP";
 	final String TOP_RIGHT = "TOP_RIGHT";
@@ -27,21 +27,21 @@ public class ReadAndCreate {
 	final String BOTTOM = "BOTTOM";
 	final String BOTTOM_RIGHT = "BOTTOM_RIGHT";
 	
-	private final String filename = "C:\\ÍØÆËÍ¼\\css3.gml";
+	private final String filename = "C:\\ï¿½ï¿½ï¿½ï¿½Í¼\\css3.gml";
 
-	/**Éú³ÉOPI*/
+	/**ï¿½ï¿½ï¿½ï¿½OPI*/
 	private StringBuffer strContext = new StringBuffer("");
-	/**Éú³Égml*/
+	/**ï¿½ï¿½ï¿½ï¿½gml*/
 	private StringBuffer strGml = new StringBuffer("");
 
 	/**
-	 * ¶ÁÈ¡½Úµã
+	 * ï¿½ï¿½È¡ï¿½Úµï¿½
 	 */
 	public Map<String, String> readNode() {
 		Map<String, String> map = new HashMap<String, String>();
 		Reader reader = null;
 		try {
-			// Ò»´Î¶ÁÒ»¸ö×Ö·û
+			// Ò»ï¿½Î¶ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½
 			reader = new InputStreamReader(new FileInputStream(filename));
 			int tempchar;
 			StringBuffer d = new StringBuffer("");
@@ -56,7 +56,7 @@ public class ReadAndCreate {
 			Pattern pattern = Pattern.compile("node\\[.*\\]");
 			Matcher matcher = pattern.matcher(d.toString().replaceAll(" ", ""));
 			if (matcher.find()) {
-				// Òª»ñµÃ1.Æðµã2.ÖÕµã3.ÄÄ¸ölabel4.ÒÔ¼°±¸×¢ÐÅÏ¢
+				// Òªï¿½ï¿½ï¿½1.ï¿½ï¿½ï¿½2.ï¿½Õµï¿½3.ï¿½Ä¸ï¿½label4.ï¿½Ô¼ï¿½ï¿½ï¿½×¢ï¿½ï¿½Ï¢
 				String[] spitNode = matcher.group(0).split("node");
 				if (spitNode != null) {
 					for (String str : spitNode) {
@@ -83,7 +83,7 @@ public class ReadAndCreate {
 	}
 
 	/**
-	 * ¶ÁÈ¡±ß
+	 * ï¿½ï¿½È¡ï¿½ï¿½
 	 * 
 	 * @return
 	 */
@@ -92,7 +92,7 @@ public class ReadAndCreate {
 		List list = new ArrayList();
 		Reader reader = null;
 		try {
-			// Ò»´Î¶ÁÒ»¸ö×Ö·û
+			// Ò»ï¿½Î¶ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½
 			reader = new InputStreamReader(new FileInputStream(filename));
 			int tempchar;
 			StringBuffer d = new StringBuffer("");
@@ -107,7 +107,7 @@ public class ReadAndCreate {
 			Pattern pattern = Pattern.compile("node\\[.*\\]");
 			Matcher matcher = pattern.matcher(d.toString().replaceAll(" ", ""));
 			if (matcher.find()) {
-				// Òª»ñµÃ1.Æðµã2.ÖÕµã3.ÄÄ¸ölabel4.ÒÔ¼°±¸×¢ÐÅÏ¢
+				// Òªï¿½ï¿½ï¿½1.ï¿½ï¿½ï¿½2.ï¿½Õµï¿½3.ï¿½Ä¸ï¿½label4.ï¿½Ô¼ï¿½ï¿½ï¿½×¢ï¿½ï¿½Ï¢
 				String[] spitEdge = matcher.group(0).split("edge");
 				if (spitEdge != null) {
 					for (String strE : spitEdge) {
@@ -150,7 +150,7 @@ public class ReadAndCreate {
 	
 	
 	/**
-	 * Éú³ÉOPIÍ·²¿
+	 * ï¿½ï¿½ï¿½ï¿½OPIÍ·ï¿½ï¿½
 	 */
 	public void CreateHead() {
 		strContext
@@ -192,7 +192,7 @@ public class ReadAndCreate {
 	}
 
 	/**
-	 * ´´½¨OPI½Úµã
+	 * ï¿½ï¿½ï¿½ï¿½OPIï¿½Úµï¿½
 	 * 
 	 * @param wuid
 	 * @param x
@@ -259,7 +259,7 @@ public class ReadAndCreate {
 	}
 
 	/**
-	 * ´´½¨OPIÁ¬½Ó±ß
+	 * ï¿½ï¿½ï¿½ï¿½OPIï¿½ï¿½ï¿½Ó±ï¿½
 	 * @param src
 	 * @param tgt
 	 */
@@ -288,7 +288,7 @@ public class ReadAndCreate {
 	}
 
 	/**
-	 * Éú³ÉOPI½áÊø
+	 * ï¿½ï¿½ï¿½ï¿½OPIï¿½ï¿½ï¿½ï¿½
 	 */
 	public void CreateOver() {
 		strContext.append("\n</display>");
@@ -296,7 +296,7 @@ public class ReadAndCreate {
 	}
 
 	/**
-	 * Éú³Éopi
+	 * ï¿½ï¿½ï¿½ï¿½opi
 	 */
 	public void load() {
 		CreateHead();
@@ -305,7 +305,7 @@ public class ReadAndCreate {
 	}
 
 	/**
-	 * ´´½¨OPI½ÚµãºÍ±ß
+	 * ï¿½ï¿½ï¿½ï¿½OPIï¿½Úµï¿½Í±ï¿½
 	 */
 	final int modeWidth = 2 * TopologyModel.WIDTH;
 	private String s2[];
@@ -318,7 +318,7 @@ public class ReadAndCreate {
 	public void CreateNodeAndEdge() {
 		Map map = readNode();
 		Iterator iterator = map.keySet().iterator();
-		while (iterator.hasNext()) {// ´´½¨±ß
+		while (iterator.hasNext()) {// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			String key = (String) iterator.next();
 			String value = (String) map.get(key);
 			String spit[] = value.split("-");
@@ -343,7 +343,7 @@ public class ReadAndCreate {
 			x1=Integer.parseInt(s5[0]);
 			y1=Integer.parseInt(s5[1]);
 			
-			// ÅÐ¶ÏÉÏÏÂ·½
+			// ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½Â·ï¿½
 			if (x - x1 <= modeWidth
 					&& x - x1 >= -modeWidth) {
 				if (y - y1 > 0) {
@@ -355,7 +355,7 @@ public class ReadAndCreate {
 					x1y1 = TOP;
 				}
 			}
-			// ÅÐ¶Ï×óÓÒ·½
+			// ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½Ò·ï¿½
 			if (y - y1 <= modeWidth
 					&& y - y1 >= -modeWidth) {
 				if (x - x1 > 0) {
@@ -393,7 +393,7 @@ public class ReadAndCreate {
 	
 	
 	/**
-	 * Éú³ÉgmlÍ·²¿
+	 * ï¿½ï¿½ï¿½ï¿½gmlÍ·ï¿½ï¿½
 	 */
 	public void DrawHead() {
 		strGml.append("Creator	\"yFiles\" ");
@@ -405,23 +405,23 @@ public class ReadAndCreate {
 	}
 	
 	/**
-	 * Task:Éú³Égml½Úµã
+	 * Task:ï¿½ï¿½ï¿½ï¿½gmlï¿½Úµï¿½
 	 * 
 	 * @param x
 	 * @param y
 	 * @param w
 	 * @param h
-	 * @param id
-	 * @param name
+	 * @param key
+	 * @param key2
 	 * @param type
 	 * @param color
 	 * @param outline
 	 */
-	public void Drawnode(int x, int y, int w, int h, int id, int name,
+	public void Drawnode(int x, int y, int w, int h, String key, String key2,
 			String type, String color, String outline) {
 		strGml.append("\t node\n \t[\n");
-		strGml.append("\t\t id \"" + id + "\"\n");
-		strGml.append("\t\t label \"" + name + "\"\n");
+		strGml.append("\t\t id \"" + key + "\"\n");
+		strGml.append("\t\t label \"" + key2 + "\"\n");
 		strGml.append("\t\t graphics\n \t\t[ \n");
 		strGml.append("\t\t\t x " + x + "\n");
 		strGml.append("\t\t\t y " + y + "\n");
@@ -432,16 +432,16 @@ public class ReadAndCreate {
 		strGml.append("\t\t\t outline \"" + outline + "\"\n");
 		strGml.append("\t\t ] \n");
 		strGml.append("\t\t LabelGraphics\n \t\t [ \n");
-		strGml.append("\t\t\t text \"" + name + "\"\n");//±êÊ¶Â·ÓÉip
+		strGml.append("\t\t\t text \"" + key2 + "\"\n");//ï¿½ï¿½Ê¶Â·ï¿½ï¿½ip
 		strGml.append("\t\t\t fontSize 12\n");
 		strGml.append("\t\t\t fontName \"Dialog\"\n");
-		strGml.append("\t\t\t anchor \"c\"\n");//macµØÖ·
+		strGml.append("\t\t\t anchor \"c\"\n");//macï¿½ï¿½Ö·
 		strGml.append("\t\t ] \n");
 		strGml.append("\t ] \n");
 	}
 	
 	/**
-	 * Task:Éú³Égml±ß
+	 * Task:ï¿½ï¿½ï¿½ï¿½gmlï¿½ï¿½
 	 * 
 	 * @param source
 	 * @param target
@@ -471,7 +471,7 @@ public class ReadAndCreate {
 	}
 	
 	/**
-	 * Éú³Égml½áÊø
+	 * ï¿½ï¿½ï¿½ï¿½gmlï¿½ï¿½ï¿½ï¿½
 	 */
 	public void DrawOver() {
 		strGml.append("] \n");
@@ -479,18 +479,18 @@ public class ReadAndCreate {
 	}
 	
 	/**
-	 * ±£´æÎÄ¼þ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
 	 */
 	public void SaveFile(StringBuffer sBuffer,String file){
-		// ÉèÖÃÒ»¸öÄ¬ÈÏÎÄ¼þ¼ÐÂ·¾¶
-		String path = "C:\\ÍØÆËÍ¼\\";
+		// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ä¬ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Â·ï¿½ï¿½
+		String path = "C:\\ï¿½ï¿½ï¿½ï¿½Í¼\\";
 		File fileUpdate = new File(path);
 		if (fileUpdate.exists() == false) {
 			fileUpdate.mkdirs();
 		} else {
-			System.out.println("ÎÄ¼þÂ·¾¶´æÔÚ:" + path);
+			System.out.println("ï¿½Ä¼ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:" + path);
 		}
-		// ´´½¨gmlÎÄ¼þ
+		// ï¿½ï¿½ï¿½ï¿½gmlï¿½Ä¼ï¿½
 		File f = new File(path + file);
 		OutputStream out = null;
 		try {

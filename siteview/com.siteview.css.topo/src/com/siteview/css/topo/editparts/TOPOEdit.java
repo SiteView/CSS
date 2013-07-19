@@ -7,10 +7,7 @@ import java.io.InputStream;
 import java.util.*;
 
 import org.csstudio.opibuilder.editor.OPIEditor;
-import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.DisplayModel;
-import org.csstudio.opibuilder.widgets.model.ImageModel;
 import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.IPath;
@@ -22,7 +19,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import com.siteview.css.topo.common.TopoData;
-import com.siteview.css.topo.models.TopologyModel;
 import com.siteview.snmp.common.ScanParam;
 import com.siteview.snmp.pojo.DevicePro;
 import com.siteview.snmp.pojo.Edge;
@@ -83,8 +79,6 @@ public class TOPOEdit extends OPIEditor {
 				ipList.add(leftIp + "-" + rightIp);
 			}
 		}
-
-		/** 生成gml文件 */
 		// 画头部
 		red.DrawHead();
 		// 画部件
@@ -109,28 +103,28 @@ public class TOPOEdit extends OPIEditor {
 		/** 界面展示 */
 //		// 测试数据
 //		List testList = new ArrayList();
-//		// 模型节点
+//		// 妯″瀷鑺傜偣
 //		ImageModel[] model = new ImageModel[15];
 //
-//		// 连接模型
+//		// 杩炴帴妯″瀷
 //		ConnectionModel[] cModels = new ConnectionModel[model.length];
 //
 //		for (int i = 0; i < model.length; i++) {
-//			// 创建 i个模型
+//			// 鍒涘缓 i涓ā鍨�
 //			model[i] = new ImageModel();
-//			// 创建i个连接线模型
+//			// 鍒涘缓i涓繛鎺ョ嚎妯″瀷
 //			cModels[i] = new ConnectionModel(displayModel);
-//			// 设置模型坐标
+//			// 璁剧疆妯″瀷鍧愭爣
 //			getDisplayModel().addChild(model[i]);
 //		}
-//		// 如果添加了模型。需要先在这添加 allIp
+//		// 濡傛灉娣诲姞浜嗘ā鍨嬨�闇�鍏堝湪杩欐坊鍔�allIp
 //		String t = "0-1,0-2,0-3,1-4,1-5,1-6,2-7,2-8,2-9,3-10,3-11,3-12,3-13,3-14";
 //		String test[] = t.split(",");
 //		for (int i = 0; i < test.length; i++) {
 //			testList.add(test[i]);
 //		}
-//		// 设置了连接的边 没有确定具体位置
-//		Iterator it = testList.iterator();// 迭代模拟数据
+//		// 璁剧疆浜嗚繛鎺ョ殑杈�娌℃湁纭畾鍏蜂綋浣嶇疆
+//		Iterator it = testList.iterator();// 杩唬妯℃嫙鏁版嵁
 //		String mStr = "";
 //		String spitStr[];
 //		for (int i = 0; i < test.length; i++) {
@@ -139,14 +133,14 @@ public class TOPOEdit extends OPIEditor {
 //			cModels[i].connect(model[Integer.parseInt(spitStr[0])], BOTTOM,
 //					model[Integer.parseInt(spitStr[1])], TOP);
 //		}
-//		// 解析gml3获取模型坐标,设置连接坐标
-//		Map<String, String> map = red.readNode();// 在界面展示
+//		// 瑙ｆ瀽gml3鑾峰彇妯″瀷鍧愭爣,璁剧疆杩炴帴鍧愭爣
+//		Map<String, String> map = red.readNode();// 鍦ㄧ晫闈㈠睍绀�
 //		Iterator its = map.keySet().iterator();
 //		while (its.hasNext()) {
 //			String key = (String) its.next();
 //			String value = map.get(key);
 //			String[] values = value.split("-");
-//			// 设置坐标
+//			// 璁剧疆鍧愭爣
 //			model[Integer.parseInt(key)].setX(Integer.parseInt(values[0]));
 //			model[Integer.parseInt(key)].setY(Integer.parseInt(values[1]));
 //		}
@@ -155,7 +149,7 @@ public class TOPOEdit extends OPIEditor {
 		/**
 		 * 生成正确的opi 1.解析gml3文件 2.获得坐标及其连接方位
 		 */
-		red.load();// 生成opi
+		//red.load();// 生成opi
 	}
 
 	/**

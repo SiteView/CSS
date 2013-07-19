@@ -13,11 +13,11 @@ public class TopoData {
 	
 	public static boolean isInit = false;
 	/**
-	 * 边信息
+	 * 杈圭殑闆嗗悎
 	 */
 	public static List<Edge> edgeList = new ArrayList<Edge>();
 	/**
-	 * 设备信息
+	 * 璁惧闆嗗悎
 	 */
 	public static Map<String, IDBody> deviceList = new HashMap<String, IDBody>();
 }
