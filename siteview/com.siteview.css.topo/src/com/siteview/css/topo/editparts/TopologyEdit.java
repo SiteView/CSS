@@ -41,7 +41,6 @@ public class TopologyEdit extends AbstractPVWidgetEditPart {
 					return false;
 				}
 				String newValueClassname = newValue.getClass().getName();
-				System.out.println(newValueClassname);
 				//((TopologyFigure)figure).setValue(ValueUtil.getDouble((IValue)newValue));
 				topoFigure.setLabelValue(ValueUtil.getString((IValue)newValue));
 				topoFigure.changeBackGroundColor(ValueUtil.getDouble((IValue)newValue));

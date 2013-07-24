@@ -54,7 +54,7 @@ public class TopologyFigure extends Figure{
 		valueLabel.setForegroundColor(RED_COLOR);
 		rec = new MyRectangle();
 		labelSize = valueLabel.getPreferredSize();
-		//ÉèÖÃ²¼¾Ö
+		//ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½
 		setLayoutManager(new TopologyLayout());
 		add(valueLabel, TopologyLayout.VALUE_LABEL);
 		add(rec,TopologyLayout.REC);
@@ -83,11 +83,11 @@ public class TopologyFigure extends Figure{
 	}
 	public void changeBackGroundColor(double value){
 		if(value>50){
-			rec.getParent().getParent().setBackgroundColor(RED_COLOR);
+			rec.getParent().setBackgroundColor(RED_COLOR);
 		}else if(value >30){
-			rec.getParent().getParent().setBackgroundColor(BLUE_COLOR);
+			rec.getParent().setBackgroundColor(BLUE_COLOR);
 		}else{
-			rec.getParent().getParent().setBackgroundColor(GRAY_COLOR);
+			rec.getParent().setBackgroundColor(GRAY_COLOR);
 		}
 		repaint();
 	}

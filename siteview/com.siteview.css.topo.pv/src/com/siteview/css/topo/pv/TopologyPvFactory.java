@@ -10,6 +10,7 @@ import org.csstudio.utility.pv.simu.SimulatedPV;
 import org.csstudio.utility.pv.simu.StaticPV;
 import org.csstudio.utility.pv.simu.Value;
 
+
 public class TopologyPvFactory implements IPVFactory {
 
 	 /** PV type prefix */
@@ -24,6 +25,8 @@ public class TopologyPvFactory implements IPVFactory {
 		if(value == null){
 			if(name.equals("topo")){
 				value = new TopologyValue(name);
+			}else if(name.equals("flow")){
+				value = new FlowValue(name,"192.168.9.1",10008);
 			}
 			if (value instanceof DynamicValue)
 				return new SimulatedPV(PREFIX, (DynamicValue) value);

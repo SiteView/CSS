@@ -21,6 +21,10 @@ import com.siteview.snmp.util.ThreadTaskPool;
  *
  */
 public class MonitorControler {
+
+	public MonitorControler(){
+		
+	}
 	/**
 	 * 界面通过这个变量停止流量监控
 	 */
@@ -28,7 +32,7 @@ public class MonitorControler {
 	private Monitor monitor = new Monitor();
 
 	//流量信息 key:设备IP地址 value:设备各端口总流出、入流量
-	public Map<String,List<FlowInfo>> flowMap = new HashMap<String, List<FlowInfo>>();
+	public static Map<String,List<FlowInfo>> flowMap = new HashMap<String, List<FlowInfo>>();
 	public static boolean stop = false;
 	/**
 	 * 需要监控的设备列表
@@ -40,24 +44,48 @@ public class MonitorControler {
 	 * @param edges
 	 */
 	private List<Edge> edges = new ArrayList<Edge>();
-	
+	/**
+	 * 根据ip和端口索引获取总流量
+	 * @param ip ip地址
+	 * @param index 端口索引
+	 * @return
+	 */
+	public static long getFlowMap(String ip,int index){
+		if(!flowMap.isEmpty()){
+			List<FlowInfo> infos = flowMap.get(ip);
+			for(FlowInfo  i : infos){
+				if(i.getIfIndex() == index){
+					return (i.getInFlow() + i.getOutFlow());
+				}
+			}
+		}
+		return 0;
+	}
 	public MonitorControler(Map<String, IDBody> deviceList,List<Edge> edges){
 		this.deviceList = deviceList;
 		this.edges = edges;
 	}
 	public void start(){
-		while(!isStop){
-			long start = System.currentTimeMillis();
-			handler();
-			flowMap.clear();
-			System.out.println("用时" + (System.currentTimeMillis() - start));
-			System.out.println("");
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		Thread thread = new Thread(
+				new Runnable() {
+					
+					@Override
+					public void run() {
+						while(!isStop){
+							long start = System.currentTimeMillis();
+							handler();
+							flowMap.clear();
+							System.out.println("用时" + (System.currentTimeMillis() - start));
+							System.out.println("");
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				});
+		thread.start();
 	}
 	private void handler(){
 		for(final Entry<String, IDBody> entry : deviceList.entrySet()){
