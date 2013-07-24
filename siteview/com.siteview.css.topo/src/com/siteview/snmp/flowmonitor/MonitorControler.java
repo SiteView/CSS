@@ -101,6 +101,7 @@ public class MonitorControler {
 								info.setOutFlow(iftab.getIfOutOctets());
 								info.setDesRight(edge.getIp_right());
 								info.setIfMac(iftab.getIfPhysAddress());
+								info.setIfIndex(iftab.getIfIndex());
 								infos.add(info);
 							}
 						}
