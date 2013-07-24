@@ -1,28 +1,71 @@
 package com.siteview.snmp.scan;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.snmp4j.CommunityTarget;
+import org.snmp4j.Snmp;
+import org.snmp4j.TransportMapping;
 import org.snmp4j.smi.OID;
+import org.snmp4j.transport.DefaultUdpTransportMapping;
+import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TableEvent;
+import org.snmp4j.util.TableUtils;
 
 
 import com.siteview.snmp.base.BaseTableRequest;
+import com.siteview.snmp.common.ScanParam;
+import com.siteview.snmp.common.SnmpPara;
 import com.siteview.snmp.constants.OIDConstants;
 import com.siteview.snmp.pojo.InterfaceTable;
+import com.siteview.snmp.pojo.IpAddressTable;
+import com.siteview.snmp.util.ScanUtils;
 import com.siteview.snmp.util.Utils;
 
-public class InterfaceTableScan extends BaseTableRequest {
+public class InterfaceTableScan {
 	
 	public static final OID defaultEndOID = new OID("23");
 
 	public static OID _OID = OIDConstants.ifTable; 
-	@Override
-	public Map<String, Object> resolute(List<TableEvent> l) {
-		Map<String, Object> ifTables = new HashMap<String, Object>();
+	/**
+	 * è·å–ipaddressè¡¨æ•°æ®
+	 * @param spr
+	 * @return
+	 */
+	public Map<String,InterfaceTable> getInterfaceables(SnmpPara spr){
+		Map<String,InterfaceTable> result = new HashMap<String, InterfaceTable>();
+		CommunityTarget target = ScanUtils.buildGetPduCommunityTarget(spr.getIp(), 161, spr.getCommunity(), spr.getTimeout(), spr.getRetry(), Integer.parseInt(spr.getSnmpver()));
+		Snmp snmp = new Snmp();
+		TransportMapping transport1 = null;
+		try {
+			transport1 = new DefaultUdpTransportMapping();
+			snmp = new Snmp(transport1);
+			snmp.listen();
+			TableUtils utils = new TableUtils(snmp,new DefaultPDUFactory());
+			utils.setMaxNumRowsPerPDU(5);
+			OID[] columnOIDs = new OID[]{
+					_OID
+			};
+			result =  resoluteTable(utils.getTable(target, columnOIDs, new OID("1"), defaultEndOID)); 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(snmp != null){
+				try {
+					snmp.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+	public Map<String, InterfaceTable> resoluteTable(List<TableEvent> l) {
+		Map<String, InterfaceTable> ifTables = new HashMap<String, InterfaceTable>();
 		for (TableEvent t : l) {
 			String varible = t.getColumns()[0].toString();
 			String[] varibleSplit = varible.split("=");
@@ -89,24 +132,33 @@ public class InterfaceTableScan extends BaseTableRequest {
 	}
 	public static void main(String[] args) {
 		InterfaceTableScan scan = new InterfaceTableScan();
-		Map<String, Object> tabs = scan.getTablePojos(_OID);
-		scan.setEnd(defaultEndOID);
-		Set<Entry<String, Object>> sets = tabs.entrySet();
-		for(Entry<String, Object> obj : sets){
+		
+		SnmpPara spr = new SnmpPara();
+		spr.setCommunity("public");
+		
+		spr.setIp("192.168.0.248");
+		spr.setRetry(2);
+		spr.setTimeout(200);
+		
+		Map<String, InterfaceTable> tabs = scan.getInterfaceables(spr);
+		
+		for(Entry<String, InterfaceTable> obj : tabs.entrySet()){
 			InterfaceTable table = (InterfaceTable)obj.getValue();
 			String status = "";
 			if(table.isUsed()){
-				status = "Õı³£";
+				status = "ä½¿ç”¨ä¸­...";
+				System.out.println("index " + obj.getKey() +"çŠ¶æ€ï¼š" + status);
 			}else if(table.isDown()){
-				status = "¹Ø±Õ";
+				status = "æœªä½¿ç”¨";
 			}else if(table.isTesting()){
-				status = "²âÊÔ...";
+				status = "æµ‹è¯•ä¸­...";
 			}else if(table.isError()){
-				status = "´íÎó";
+				status = "é”™è¯¯";
 			}else {
-				status = "ÆäËü";
+				status = "å…¶å®ƒ";
 			}
-			System.out.println("index Îª" + obj.getKey() +"×´Ì¬Îª£º" + status);
+			
 		}
 	}
+	
 }

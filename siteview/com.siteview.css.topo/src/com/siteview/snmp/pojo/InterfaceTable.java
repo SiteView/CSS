@@ -31,13 +31,13 @@ public class InterfaceTable {
 	/** @pdOid 149018c3-f616-48bf-a4e6-7b83450a6a36 */
 	private String inoctetsOid;
 	/**
-	 * ÉÌÆ·½ÓÊÕµÄ×Ö½Ú×ÜÊı
+	 * å•†å“æ¥æ”¶çš„å­—èŠ‚æ€»æ•°
 	 * 
 	 * @pdOid 240619de-f9cf-42d6-b105-a2fea1b7828e
 	 */
 	private long ifInoctets;
 	/**
-	 * ÊäÈë¹ã²¥°üÊı
+	 * è¾“å…¥å¹¿æ’­åŒ…æ•°
 	 * 
 	 * @pdOid 554602b0-763b-43c6-b9c7-80391c5547ac
 	 */
@@ -45,13 +45,14 @@ public class InterfaceTable {
 	/** @pdOid 8c7cd3b5-7667-4f5f-84f0-6afeff392318 */
 	private long ifinUcastPkts;
 	/**
-	 * ÊäÈë°ü¶ªÆúÊı
+	 * è¾“å…¥åŒ…ä¸¢å¼ƒæ•°
 	 * 
 	 * @pdOid 24744e00-0616-44db-8d4a-a6e93ea30ca6
 	 */
 	private long ifInDiscards;
+	
 	/**
-	 * ÊäÈë°ü´íÎóÊı
+	 * è¾“å…¥åŒ…é”™è¯¯æ•°
 	 * 
 	 * @pdOid 790785d0-9f41-4e2f-9b95-fb57a6a5a1c1
 	 */
@@ -82,7 +83,7 @@ public class InterfaceTable {
 	private int ifInUnknownProtos;
 
 	/**
-	 * ÅĞ¶Ï½Ó¿ÚÊÇ·ñÕı³£Ê¹ÓÃÖĞ
+	 * åˆ¤æ–­æ¥å£æ˜¯å¦æ­£å¸¸ä½¿ç”¨ä¸­
 	 * 
 	 * @return
 	 */
@@ -91,7 +92,7 @@ public class InterfaceTable {
 	}
 
 	/**
-	 * ½Ó¿ÚÁ¬½ÓÊ§°Ü
+	 * æ¥å£è¿æ¥å¤±è´¥
 	 * 
 	 * @return
 	 */
@@ -100,7 +101,7 @@ public class InterfaceTable {
 	}
 
 	/**
-	 * ½Ó¿ÚÊÇ·ñ¼ºÍ£ÓÃ
+	 * æ¥å£æ˜¯å¦å·±åœç”¨
 	 * 
 	 * @return
 	 */
@@ -109,7 +110,7 @@ public class InterfaceTable {
 	}
 
 	/**
-	 * ½Ó¿ÚÊÇ·ñÕıÔÚ²âÊÔÖĞ
+	 * æ¥å£æ˜¯å¦æ­£åœ¨æµ‹è¯•ä¸­
 	 * 
 	 * @return
 	 */

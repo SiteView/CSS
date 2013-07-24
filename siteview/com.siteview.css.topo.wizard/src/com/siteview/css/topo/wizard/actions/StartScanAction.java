@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.persistence.XMLUtil;
@@ -48,6 +49,7 @@ import org.osgi.framework.Bundle;
 import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.wizard.common.GlobalData;
 import com.siteview.snmp.common.ScanParam;
+import com.siteview.snmp.flowmonitor.MonitorControler;
 import com.siteview.snmp.scan.NetScan;
 import com.siteview.snmp.util.IoUtils;
 /**
@@ -61,6 +63,8 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 	private ScanParam scanParam;
 	
 	private IWorkbench workbench ;
+	private boolean scaned = false;
+	private CountDownLatch scanCound;
 	//拓扑扫描工具
 	private NetScan scan;
 	public static final String TOPO_OPI_FILENAME = "topo.opi";
@@ -82,13 +86,6 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 				return;
 			}
 		}
-		try {
-			drawTopo(scan);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			showError("创建文件失败", e1.getMessage());
-			return;
-		}
 		workbench = PlatformUI.getWorkbench();
 		//如果用户从界面配置了扫描参数，以配置的参数信息扫描
 		if(GlobalData.isConfiged){
@@ -96,28 +93,41 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 		}else{
 			//否则从上次保存的配置信息扫描
 			scanParam = IoUtils.readScanParam();
-			if(scanParam == null || (scanParam.getScan_scales().isEmpty() && scanParam.getScan_seeds().isEmpty())){
-				showError("扫描参数初始化失败", "必须配置扫描种子或者扫描IP范围！");
-				return;
-			}
+		}
+		if(scanParam == null || (scanParam.getScan_scales().isEmpty() && scanParam.getScan_seeds().isEmpty())){
+			showError("扫描参数初始化失败", "必须配置扫描种子或者扫描IP范围！");
+			return;
 		}
 		//扫描进度条
 		ProgressMonitorDialog pmd = new ProgressMonitorDialog(workbench.getActiveWorkbenchWindow().getShell());
+		scanCound = new CountDownLatch(1);
 		try {
-			pmd.run(false, false, new WithProgress());
+			pmd.run(true, false, new WithProgress());
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-			showError("扫描失败", e.getMessage());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			showError("扫描失败", e.getMessage());
+		}
+		try {
+			scanCound.await();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			if(scaned)
+				drawTopo(scan);
+			MonitorControler monitor = new MonitorControler(scan.getDevid_list(),scan.getTopo_edge_list());
+			monitor.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+			showError("展示拓扑图失败", e.getMessage());
 		}
 		
 	}
+	
 	class WithProgress implements IRunnableWithProgress{
 		@Override
-		public void run(IProgressMonitor monitor)
-				throws InvocationTargetException, InterruptedException {
+		public void run(IProgressMonitor monitor){
 			monitor.beginTask("正在扫描网络结构..." + "", IProgressMonitor.UNKNOWN);  
 			/**
 			 * 执行的任务
@@ -125,20 +135,20 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 			Map<String, Map<String, String>> special_oid_list = new ConcurrentHashMap<String, Map<String, String>>();
 			scan = new NetScan(null, special_oid_list, scanParam);
 			try{
-				
 				scan.scan();
 				monitor.worked(50);
 				//缓存边数据
 				TopoData.isInit = true;
 				TopoData.edgeList = scan.getTopo_edge_list();
 				TopoData.deviceList = scan.getDevid_list();
-				drawTopo(scan);
 				monitor.worked(100);
+				scaned = true;
 			}catch (Exception e) {
 				TopoData.isInit = false;
-				MessageDialog.openError(workbench.getActiveWorkbenchWindow().getShell(), "Error", e.getMessage());
+				showError("扫描失败", e.getMessage());
 			}finally{
 				monitor.done();
+				scanCound.countDown();
 			}
 		}
 		

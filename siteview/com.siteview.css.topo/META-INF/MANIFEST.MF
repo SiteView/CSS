@@ -22,7 +22,8 @@ Export-Package: com.siteview.css.topo.models,
  com.siteview.snmp.scan,
  com.siteview.snmp.model,
  com.siteview.snmp.util,
- com.siteview.css.topo.common
+ com.siteview.css.topo.common,
+ com.siteview.snmp.flowmonitor
 Bundle-ClassPath: lib/commons-net-3.3-sources.jar,
  lib/commons-net-3.3.jar,
  lib/jpcap.jar,

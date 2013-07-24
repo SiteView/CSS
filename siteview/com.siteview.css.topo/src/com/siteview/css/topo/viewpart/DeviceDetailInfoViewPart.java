@@ -35,7 +35,6 @@ public class DeviceDetailInfoViewPart extends ViewPart{
 		GridLayout layout = new GridLayout(1,false);
 		parent.setLayout(layout);
 		createViewer(parent);
-		
 		Map<String,IDBody> bodys = new HashMap<String, IDBody>();
 		if(TopoData.deviceList.isEmpty())
 			IoUtils.readIdBodyData(bodys, "");

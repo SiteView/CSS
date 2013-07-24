@@ -26,8 +26,7 @@
          <menu
                id="sampleMenu"
                label="拓扑扫描(&amp;M)">
-               <separator
-                  name="sampleGroup">
+            <separator>
             </separator>
          </menu>
          <action
@@ -35,7 +34,7 @@
                icon="icons/css16.png"
                id="com.siteview.css.topo.wizard.actions.SampleAction"
                label="扫描配置(&amp;S)"
-               menubarPath="sampleMenu/sampleGroup"
+               menubarPath="sampleMenu/"
                toolbarPath="sampleGroup"
                tooltip="Scan Setting">
          </action>
@@ -44,7 +43,7 @@
                icon="icons/css16.png"
                id="com.siteview.css.topo.wizard.startScan"
                label="开始扫描(&amp;C)"
-               menubarPath="sampleMenu/sampleGroup"
+               menubarPath="sampleMenu/"
                toolbarPath="sampleGroup"
                tooltip="Start Scan">
          </action>
