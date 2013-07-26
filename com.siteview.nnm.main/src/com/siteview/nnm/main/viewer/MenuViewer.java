@@ -73,15 +73,22 @@ public class MenuViewer extends ViewPart {
 			e.printStackTrace();
 		}
 	}
-
+	/**
+	 * 从menu.xml文件组装菜单项
+	 * @param e 节点元素对象
+	 * @param parent 父节点对象
+	 * @param thisNode 当前节点对象
+	 */
 	public void buildNode(Element e,MenuItem parent,MenuItem thisNode){
 		List names = e.selectNodes("./name");
 		Element ename = (Element)names.get(0);
 		thisNode.setName(ename.getText());
 		
 		List imageNames = e.selectNodes("./imageName");
-		Element imageName = (Element)names.get(0);
-		thisNode.setImageName(imageName.getText());
+		if(imageNames.size() > 0){
+			Element imageName = (Element)imageNames.get(0);
+			thisNode.setImageName(imageName.getText());
+		}
 		
 		thisNode.setParent(parent);
 		parent.addChild(thisNode);
@@ -101,7 +108,11 @@ public class MenuViewer extends ViewPart {
 	public void setFocus() {
 
 	}
-
+	/**
+	 * treeview内容提供者
+	 * @author haiming.wang
+	 *
+	 */
 	class TreeContentProvide implements ITreeContentProvider {
 
 		@Override
@@ -135,7 +146,11 @@ public class MenuViewer extends ViewPart {
 		}
 
 	}
-
+	/**
+	 * treeviewlalel提供着
+	 * @author haiming.wang
+	 *
+	 */
 	class TreeLabelProvide implements ILabelProvider {
 
 		private Map<ImageDescriptor, Image> imageCache = new HashMap<ImageDescriptor, Image>(
@@ -163,7 +178,6 @@ public class MenuViewer extends ViewPart {
 
 		@Override
 		public Image getImage(Object element) {
-			ImageDescriptor descriptor = null;
 			MenuItem item = (MenuItem)element;
 			final Bundle bundle = Platform.getBundle("com.siteview.nnm.main");
 			URL url = bundle.getEntry("icons/"+item.getImageName());

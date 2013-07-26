@@ -1,4 +1,4 @@
-<!-- 本文件用于组织项目菜单 
+<!-- 本文件用于组织项目菜单  节点名称区分大小写
 	节点名称为 node 
 	子节点名name为菜单上显示的文字
 	如果新加入菜单项目，向该文件中加入node即可
@@ -21,6 +21,7 @@
 		<imageName>alt_window_16.gif</imageName>
 		<name>流量监控</name>
 		<node>
+			<imageName>alt_window_16.gif</imageName>
 			<name>阀值设置</name>
 		</node>
 	</node>
