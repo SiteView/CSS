@@ -1,0 +1,27 @@
+<!-- 本文件用于组织项目菜单 
+	节点名称为 node 
+	子节点名name为菜单上显示的文字
+	如果新加入菜单项目，向该文件中加入node即可
+	在生产环境要将此文件copy到  %{workspace}、.metadata\.plugins\org.eclipse.pde.core\com.siteview.nnm.main.application 文件夹下
+ -->
+<menu>
+	<node>
+		<name>拓扑结构</name>
+		<imageName>alt_window_16.gif</imageName>
+		<node>
+			<imageName>alt_window_16.gif</imageName>
+			<name>拓扑扫描</name>
+		</node>
+		<node>
+			<imageName>alt_window_16.gif</imageName>
+			<name>设备详细</name>
+		</node>
+	</node>
+	<node>
+		<imageName>alt_window_16.gif</imageName>
+		<name>流量监控</name>
+		<node>
+			<name>阀值设置</name>
+		</node>
+	</node>
+</menu>

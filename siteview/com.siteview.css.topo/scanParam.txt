@@ -1,0 +1,8 @@
+depth=5
+community_get_dft=public
+community_set_dft=public
+retrytimes=3
+threadCount=50
+scanScales=
+filterScales=
+scanSeeds=192.168.0.248

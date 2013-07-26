@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Main
+Bundle-SymbolicName: com.siteview.nnm.main; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.siteview.nnm.main.Activator
+Bundle-Vendor: SITEVIEW
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: lib/dom4j-1.6.1.jar,
+ .,
+ lib/jaxen-1.1.1.jar
