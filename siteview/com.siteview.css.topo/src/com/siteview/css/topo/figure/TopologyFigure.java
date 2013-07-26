@@ -1,5 +1,8 @@
 package com.siteview.css.topo.figure;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.csstudio.swt.widgets.figureparts.RoundScale;
 import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
@@ -20,6 +23,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Pattern;
 
+import com.siteview.snmp.pojo.Edge;
+
 public class TopologyFigure extends Figure{
 
 	private final static Font DEFAULT_LABEL_FONT = CustomMediaFactory.getInstance().getFont(
@@ -29,6 +34,8 @@ public class TopologyFigure extends Figure{
 	private double max = 100;
 	private double value = 50;
 	private Label valueLabel;
+	private List<Rectangle> topoNodes = new ArrayList<Rectangle>();
+	private List<Edge> edges = new ArrayList<Edge>();
 	private final static double SPACE_ANGLE = 45;
 	private MyRectangle rec;
 	public final static double ALPHA = SPACE_ANGLE * Math.PI/180;  
@@ -45,6 +52,10 @@ public class TopologyFigure extends Figure{
 	
 	private final static Color RED_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_RED);
 	Dimension labelSize;
+	public TopologyFigure(List<Edge> edges){
+		this();
+		//初始化数据
+	}
 	public TopologyFigure(){
 		super();
 		
@@ -257,6 +268,13 @@ public class TopologyFigure extends Figure{
 	}
 	public void setLabelValue(String value){
 		this.valueLabel.setText(value);
+	}
+	public void setXYPoint(Point p){
+		this.valueLabel.setLocation(p);
+		
+	}
+	public void setXYPoint(Double x,Double y){
+		setXYPoint(new Point(x, y));
 	}
 	
 }

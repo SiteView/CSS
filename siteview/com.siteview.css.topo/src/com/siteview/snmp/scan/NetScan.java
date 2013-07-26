@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 
 import org.eclipse.ui.IWorkbench;
@@ -31,6 +32,7 @@ import com.siteview.snmp.pojo.RouterStandbyItem;
 import com.siteview.snmp.util.IoUtils;
 import com.siteview.snmp.util.PropertiesUtils;
 import com.siteview.snmp.util.ScanUtils;
+import com.siteview.snmp.util.ThreadTaskPool;
 import com.siteview.snmp.util.Utils;
 
 /**
@@ -268,7 +270,41 @@ public class NetScan implements Runnable {
 		long end = System.currentTimeMillis();
 		System.out.println("用时" + (end - start));
 		formatData();
+		// 保存没有机器名的设备
+//		Map<String, IDBody> noHostNameDeviceMap = new HashMap<String, IDBody>();
+//		for (Entry<String, IDBody> id : devid_list.entrySet()) {
+//			IDBody body = id.getValue();
+//			// 通过ping 得到机器名称
+//			if (Utils.isIp(id.getKey())
+//					&& Utils.isEmptyOrBlank(body.getSysName())) {
+//				noHostNameDeviceMap.put(id.getKey(), body);
+//			}
+//
+//		}
+//		if (!noHostNameDeviceMap.isEmpty()) {
+//			getHostNameLatch = new CountDownLatch(noHostNameDeviceMap.size());
+//			for (Entry<String, IDBody> id : devid_list.entrySet()) {
+//				ThreadTaskPool.getInstance().excute(
+//						new GetHostNameThread(id.getValue(), id.getKey()));
+//			}
+//			try {
+//				long s = System.currentTimeMillis();
+//				getHostNameLatch.await();
+//				System.out.println("\t" + "用时："
+//						+ (System.currentTimeMillis() - s));
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		for (Entry<String, IDBody> id : devid_list.entrySet()) {
+//			IDBody body = id.getValue();
+//			System.out.println("\t" + id.getKey() + "设备类型" + body.getDevType()
+//					+ "name: " + body.getSysName());
+//
+//		}
 		saveFormatData();
+		
+		
 
 		if (devid_list.isEmpty()) {
 			topo_edge_list.clear();
@@ -320,6 +356,21 @@ public class NetScan implements Runnable {
 		}
 		long theend = System.currentTimeMillis();
 		System.out.println("is end by " + (theend - start));
+	}
+	private CountDownLatch getHostNameLatch;
+	class GetHostNameThread implements Runnable{
+		private IDBody body ;
+		private String ip ;
+		public GetHostNameThread(IDBody b,String ip){
+			this.body = b;
+			this.ip = ip;
+		}
+		@Override
+		public void run() {
+			body.setSysName(ScanUtils.getHostName(ip));
+			getHostNameLatch.countDown();
+		}
+		
 	}
 	public void scanBySeedsArp(List<String> seedList){
 		seedsArp.clear();

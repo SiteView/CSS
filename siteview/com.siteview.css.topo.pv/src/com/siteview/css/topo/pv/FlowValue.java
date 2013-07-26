@@ -16,12 +16,12 @@ public class FlowValue extends DynamicValue {
 		super(name);
 		this.ip = ip;
 		this.ifindex = ifindex;
+		//设置刷新时间为5秒
+		update_period = 5000;
 	}
 
 	@Override
 	protected void update() {
-		System.out.print(MonitorControler.flowMap.size());
-		System.out.println(MonitorControler.getFlowMap(ip, ifindex));
 		setValue((double)mc.getFlowMap(ip, ifindex));
 	}
 

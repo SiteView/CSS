@@ -26,7 +26,7 @@ public class TopologyPvFactory implements IPVFactory {
 			if(name.equals("topo")){
 				value = new TopologyValue(name);
 			}else if(name.equals("flow")){
-				value = new FlowValue(name,"192.168.9.1",10008);
+				value = new FlowValue(name,"192.168.9.1",9);
 			}
 			if (value instanceof DynamicValue)
 				return new SimulatedPV(PREFIX, (DynamicValue) value);

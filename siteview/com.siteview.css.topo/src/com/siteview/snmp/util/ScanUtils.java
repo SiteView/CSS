@@ -1,5 +1,7 @@
 package com.siteview.snmp.util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -203,7 +205,23 @@ public class ScanUtils {
 		return tbl.get(dest[0]) + tbl.get(dest[1]) + tbl.get(dest[2])
 				+ tbl.get(dest[3]);
 	}
-	
-	
+	/**
+	 * 通过IP地址获取pc的机器名称
+	 * @param ip ip地址
+	 * @return
+	 */
+	public static String getHostName(String ip){
+		if(!Utils.isIp(ip)){
+			return "";
+		}
+		try {
+			InetAddress pingAddr=InetAddress.getByName(ip);
+			return pingAddr.getCanonicalHostName();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return "";
+		}
+		
+	}
 
 }

@@ -235,6 +235,9 @@ public class IoUtils {
 		return writeData("DeviceInfos_Frm.txt", buildDeviceLine(devid_list));
 	}
 
+	public static boolean readFrmDevIDList(Map<String,IDBody> devid_list){
+		return true;
+	}
 	// 读取设备ip列表
 	public static boolean readDeviceIpList(Vector<String> devip_list)
 	{
@@ -554,7 +557,6 @@ public class IoUtils {
 			fr = new FileReader(getProductPath() + File.separator + "DeviceInfos.txt");
 			br = new BufferedReader(fr);
 			String line = "";
-			System.out.println("asdf");
 			while ((line = br.readLine()) != null) {
 				String[] vstr = line.split("\\[::\\]");
 				if (vstr.length == 14) {

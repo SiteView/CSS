@@ -36,9 +36,10 @@ public class DeviceDetailInfoViewPart extends ViewPart{
 		parent.setLayout(layout);
 		createViewer(parent);
 		Map<String,IDBody> bodys = new HashMap<String, IDBody>();
-		if(TopoData.deviceList.isEmpty())
+		if(TopoData.deviceList.isEmpty()){
 			IoUtils.readIdBodyData(bodys, "");
-		else{
+			TopoData.deviceList = bodys;
+		}else{
 			bodys = TopoData.deviceList;
 		}
 		if(bodys.isEmpty()){

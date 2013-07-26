@@ -2,6 +2,7 @@ package com.siteview.snmp.pojo;
 
 public class FlowInfo {
 
+	private long time;
 	/**
 	 * 源节点IP
 	 */
@@ -62,5 +63,11 @@ public class FlowInfo {
 	}
 	public void setIfMac(String ifMac) {
 		this.ifMac = ifMac;
+	}
+	public long getTime() {
+		return time;
+	}
+	public void setTime(long time) {
+		this.time = time;
 	}
 }
