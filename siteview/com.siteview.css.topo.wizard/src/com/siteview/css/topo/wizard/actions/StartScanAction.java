@@ -37,6 +37,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -114,10 +115,11 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 			e1.printStackTrace();
 		}
 		try {
-			if(scaned)
+			if(scaned){
 				drawTopo(scan);
-			MonitorControler monitor = new MonitorControler(scan.getDevid_list(),scan.getTopo_edge_list());
-			monitor.start();
+				MonitorControler monitor = new MonitorControler(scan.getDevid_list(),scan.getTopo_edge_list());
+				monitor.start();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			showError("’π æÕÿ∆ÀÕº ß∞‹", e.getMessage());
@@ -145,6 +147,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 				scaned = true;
 			}catch (Exception e) {
 				TopoData.isInit = false;
+				scaned = false;
 				showError("…®√Ë ß∞‹", e.getMessage());
 			}finally{
 				monitor.done();
@@ -169,9 +172,14 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 		URI uri = new URI("/"+TOPO_PROJECTNAME+"/" + TOPO_OPI_FILENAME);
 		IPath path = FileUtil.toPath(uri);
 		IFile file = createFileHandle(path);
+		FileEditorInput input = new FileEditorInput(file);
+		IEditorPart topoEdit  = window.getActivePage().findEditor(input);
+		if(topoEdit != null){
+			window.getActivePage().closeEditor(topoEdit, false);
+		}
 		createFile(file, getInitialContents());
 		window.getActivePage()
-				.openEditor(new FileEditorInput(file) ,
+				.openEditor(input ,
 						"com.siteview.css.topo.editparts.TOPOEdit");
 	}
 	public void createTopologyPro() throws CoreException {
