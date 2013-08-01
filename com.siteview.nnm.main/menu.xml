@@ -10,6 +10,10 @@
 		<imageName>alt_window_16.gif</imageName>
 		<node>
 			<imageName>alt_window_16.gif</imageName>
+			<name>扫描配置</name>
+		</node>
+		<node>
+			<imageName>alt_window_16.gif</imageName>
 			<name>拓扑扫描</name>
 		</node>
 		<node>

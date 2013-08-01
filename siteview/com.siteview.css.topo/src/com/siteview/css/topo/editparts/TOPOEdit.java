@@ -8,16 +8,25 @@ import java.util.*;
 
 import org.csstudio.opibuilder.editor.OPIEditor;
 import org.csstudio.opibuilder.model.DisplayModel;
+import org.csstudio.opibuilder.widgets.model.ImageModel;
 import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.graph.Node;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
+
+import ILOG.Diagrammer.GraphicContainer;
+import ILOG.Diagrammer.GraphicObject;
+import ILOG.Diagrammer.Rectangle2D;
+import ILOG.Diagrammer.GraphLayout.TreeLayout;
+import ILOG.Diagrammer.GraphLayout.TreeLayoutMode;
+
 import com.siteview.css.topo.common.TopoData;
 import com.siteview.snmp.common.ScanParam;
 import com.siteview.snmp.pojo.DevicePro;
@@ -77,27 +86,34 @@ public class TOPOEdit extends OPIEditor {
 				leftIp = edge.getIp_left();
 				rightIp = edge.getIp_right();
 				ipList.add(leftIp + "-" + rightIp);
+				System.out.println(leftIp+"-"+rightIp);
+			}
+		}
+		
+		if (TopoData.isInit) {
+			for (int i = 0; i < TopoData.deviceList.size(); i++) {
+				System.out.println(TopoData.deviceList.get(i));
 			}
 		}
 		// 画头部
-		red.DrawHead();
-		// 画部件
-		Map deviceList = TopoData.deviceList;// 获取扫描数据
-		Iterator ii = deviceList.keySet().iterator();
-		while (ii.hasNext()) {
-			String key = (String) ii.next();
-			red.Drawnode(482, 84, 122, 122, key, key, "rectangle", "#FFCC00",
-					"#000000");
-		}
+//		red.DrawHead();
+//		// 画部件
+//		Map deviceList = TopoData.deviceList;// 获取扫描数据
+//		Iterator ii = deviceList.keySet().iterator();
+//		while (ii.hasNext()) {
+//			String key = (String) ii.next();
+//			red.Drawnode(482, 84, 122, 122, key, key, "rectangle", "#FFCC00",
+//					"#000000");
+//		}
 		// 画边
-		Iterator iterator = ipList.iterator();
-		while (iterator.hasNext()) {
-			String string = (String) iterator.next();
-			String[] intIp = string.split("-");
-			red.Drawedge(intIp[0], intIp[1], "备注信息", "#000000", "standard");
-		}
+//		Iterator iterator = ipList.iterator();
+//		while (iterator.hasNext()) {
+//			String string = (String) iterator.next();
+//			String[] intIp = string.split("-");
+//			red.Drawedge(intIp[0], intIp[1], "备注信息", "#000000", "standard");
+//		}
 		// 生成结束
-		red.DrawOver();
+//		red.DrawOver();
 
 		//TreeLayout treeLayout = new TreeLayout();
 		/** 界面展示 */
@@ -144,7 +160,28 @@ public class TOPOEdit extends OPIEditor {
 //			model[Integer.parseInt(key)].setX(Integer.parseInt(values[0]));
 //			model[Integer.parseInt(key)].setY(Integer.parseInt(values[1]));
 //		}
-
+		
+		TopoNode topoNode = new TopoNode(null, displayModel, null);
+		topoNode.set_Bounds(new Rectangle2D());
+		
+		TopoGraph container = new  TopoGraph(this.getDisplayModel());
+		
+		for(int i=0; i < TopoData.deviceList.size(); i++){
+			container.addNode(new TopoNode(container,new ImageModel(),TopoData.deviceList.get(i))) ;
+		}
+		
+		for(int i=0; i < TopoData.edgeList.size(); i++){
+			Edge edge = (Edge) TopoData.edgeList.get(i);
+			leftIp = edge.getIp_left();
+			rightIp = edge.getIp_right();
+			container.addLink(leftIp, rightIp);
+		}
+		TreeLayout treeLayout = new TreeLayout();
+		
+		treeLayout.set_LayoutMode(TreeLayoutMode.Radial);
+		
+		treeLayout.Layout();
+		
 		// 生成opi
 		/**
 		 * 生成正确的opi 1.解析gml3文件 2.获得坐标及其连接方位
