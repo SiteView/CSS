@@ -12,17 +12,17 @@ public class TopoNode extends GraphicObject {
 
 	private IDBody topoData;
 	protected AbstractWidgetModel model;
-	
-	public TopoNode(GraphicContainer parent,AbstractWidgetModel nodeModel, IDBody data) {
-		super(parent);
+
+	public TopoNode(GraphicContainer parent, String id,
+			AbstractWidgetModel nodeModel, IDBody data) {
+		super(parent, id);
 		model = nodeModel;
 		setTopoData(data);
 	}
-	
+
 	public void set_Bounds(Rectangle2D boundingBox) {
-		model.setBounds((int)boundingBox.get_X(), (int)boundingBox.get_Y(), (int)boundingBox.get_Width(), 
-				(int)boundingBox.get_Height());
-//		model.setBounds(x,y,60,30);
+		model.setBounds((int) boundingBox.get_X(), (int) boundingBox.get_Y(),
+				(int) boundingBox.get_Width(), (int) boundingBox.get_Height());
 	}
 
 	public AbstractWidgetModel getMode() {
@@ -30,7 +30,7 @@ public class TopoNode extends GraphicObject {
 	}
 
 	public void transform(float x, float y) {
-		model.setLocation((int)x, (int)y);
+		model.setLocation((int) x, (int) y);
 	}
 
 	@Override
