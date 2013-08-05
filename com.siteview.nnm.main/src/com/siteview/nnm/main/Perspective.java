@@ -11,8 +11,8 @@ public class Perspective implements IPerspectiveFactory {
 	
 	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
-		layout.setFixed(true);
-		layout.addView(MenuViewer.ID, SWT.LEFT , 0.2f, layout.getEditorArea());
+		layout.setFixed(false);
+		layout.addView(MenuViewer.ID, SWT.LEFT , 0.4f, layout.getEditorArea());
 	}
 
 }

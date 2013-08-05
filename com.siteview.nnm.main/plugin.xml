@@ -14,18 +14,13 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Perspective"
+            name="nnm"
             class="com.siteview.nnm.main.Perspective"
             id="com.siteview.nnm.main.perspective">
       </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
-      <view
-            name="View"
-            class="com.siteview.nnm.main.View"
-            id="com.siteview.nnm.main.view">
-      </view>
       <view
             class="com.siteview.nnm.main.viewer.MenuViewer"
             icon="icons/alt_window_16.gif"

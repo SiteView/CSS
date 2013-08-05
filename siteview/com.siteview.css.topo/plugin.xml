@@ -31,6 +31,12 @@
             name="TOPO Editor"
             matchingStrategy="org.csstudio.opibuilder.editor.OPIEditorMatcher">
       </editor>
+      <editor
+            class="com.siteview.css.topo.editparts.ShowDeviceEditor"
+            default="false"
+            id="com.siteview.css.topo.ShowDeviceEditor"
+            name="设备列表">
+      </editor>
    </extension>
  <extension
        point="org.eclipse.ui.views">

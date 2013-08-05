@@ -1,59 +1,61 @@
 package com.siteview.nnm.main.viewer;
 
-import java.awt.MenuItem;
-import java.io.File;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.EventObject;
 import java.util.Vector;
 
 
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
+import com.siteview.css.topo.editparts.DeviceEditrInput;
+import com.siteview.css.topo.editparts.ShowDeviceEditor;
+import com.siteview.css.topo.wizard.common.GlobalData;
+import com.siteview.css.topo.wizard.scan.ScanDialog;
+import com.siteview.css.topo.wizard.scan.SomeWizard;
 import com.siteview.nnm.main.mib.DwSnmpMibOutputHandler;
 import com.siteview.nnm.main.mib.MenuTreeRecord;
 import com.siteview.nnm.main.mib.DwSnmpMibTreeBuilder;
 import com.siteview.nnm.main.pojo.MenuNode;
+import com.siteview.nnm.main.utils.BaseUtils;
+import com.siteview.nnm.main.utils.DrawTopo;
+import com.siteview.nnm.main.utils.StartScan;
 
 public class MenuViewer extends ViewPart {
 
+	
 	public final static String ID = "com.siteview.nnm.main.treeview";
 
+	public static int type ;
 	private TreeViewer tv;
-
 	private MenuNode root;
 	DwSnmpMibOutputHandler output = new DwSnmpMibOutputHandler();
-	private Window window;
 	private Composite parent;
-
+	
 	@Override
 	public void createPartControl(Composite parent) {
 		this.parent = parent;
@@ -70,6 +72,7 @@ public class MenuViewer extends ViewPart {
 			MenuTreeRecord record = new MenuTreeRecord();
 			record.name = "拓扑图管理";
 			record.number=1000;
+			record.type = "topoMgr";
 			record.parent = "root";
 			record.imgUri = "拓扑图管理.ico";
 			
@@ -78,14 +81,16 @@ public class MenuViewer extends ViewPart {
 			
 			MenuTreeRecord recordscan = new MenuTreeRecord();
 			recordscan.name = "扫描配置";
-			recordscan.number=1001;
+			recordscan.number=10001;
+			recordscan.type = "topoMgr";
 			recordscan.parent = "root";
 			MenuNode topoScanMenu = new MenuNode(recordscan);
 			topoMenu.add(topoScanMenu);
 			
 			MenuTreeRecord recordsetting = new MenuTreeRecord();
 			recordsetting.name = "拓扑扫描";
-			recordsetting.number=1002;
+			recordsetting.number=10002;
+			recordsetting.type = "topoMgr";
 			recordsetting.parent = "root";
 			MenuNode topoSettingMenu = new MenuNode(recordsetting);
 			topoMenu.add(topoSettingMenu);
@@ -94,6 +99,7 @@ public class MenuViewer extends ViewPart {
 			MenuTreeRecord deviceRecord = new MenuTreeRecord();
 			deviceRecord.name = "设备管理";
 			deviceRecord.number = 3000;
+			deviceRecord.type = "deviceMgr";
 			deviceRecord.parent = "root";
 			deviceRecord.imgUri = "设备管理.ico";
 			MenuNode deviceMgr = new MenuNode(deviceRecord);
@@ -102,11 +108,76 @@ public class MenuViewer extends ViewPart {
 			MenuTreeRecord deviceType = new MenuTreeRecord();
 			deviceType.name = "设备类型";
 			deviceType.imgUri = "设备类型.ico";
-			deviceType.number = 3000;
+			deviceType.number = 30001;
+			deviceType.type = "deviceMgr";
 			deviceType.parent = "设备管理";
 			MenuNode deviceTypeNode = new MenuNode(deviceType);
-			
 			deviceMgr.add(deviceTypeNode);
+			{
+				MenuTreeRecord deviceType1 = new MenuTreeRecord();
+				deviceType1.name = "二层交换机";
+				deviceType1.imgUri = "设备类型.ico";
+				deviceType1.number = 300011;
+				deviceType1.type = "deviceMgr";
+				deviceType1.parent = "设备类型";
+				MenuNode deviceType1Node = new MenuNode(deviceType1);
+				deviceTypeNode.add(deviceType1Node);
+				
+				MenuTreeRecord deviceType2= new MenuTreeRecord();
+				deviceType2.name = "三层交换机";
+				deviceType2.imgUri = "设备类型.ico";
+				deviceType2.number = 300012;
+				deviceType2.type = "deviceMgr";
+				deviceType2.parent = "设备类型";
+				MenuNode deviceType2Node = new MenuNode(deviceType2);
+				deviceTypeNode.add(deviceType2Node);
+				
+				MenuTreeRecord deviceType3= new MenuTreeRecord();
+				deviceType3.name = "路由器";
+				deviceType3.imgUri = "设备类型.ico";
+				deviceType3.number = 300013;
+				deviceType3.type = "deviceMgr";
+				deviceType3.parent = "设备类型";
+				MenuNode deviceType3Node = new MenuNode(deviceType3);
+				deviceTypeNode.add(deviceType3Node);
+				
+				MenuTreeRecord deviceType4= new MenuTreeRecord();
+				deviceType4.name = "防火墙";
+				deviceType4.imgUri = "设备类型.ico";
+				deviceType4.number = 300014;
+				deviceType4.type = "deviceMgr";
+				deviceType4.parent = "设备类型";
+				MenuNode deviceType4Node = new MenuNode(deviceType4);
+				deviceTypeNode.add(deviceType4Node);
+				
+				MenuTreeRecord deviceType5= new MenuTreeRecord();
+				deviceType5.name = "服务器";
+				deviceType5.imgUri = "设备类型.ico";
+				deviceType5.number = 300015;
+				deviceType5.type = "deviceMgr";
+				deviceType5.parent = "设备类型";
+				MenuNode deviceType5Node = new MenuNode(deviceType5);
+				deviceTypeNode.add(deviceType5Node);
+				
+				MenuTreeRecord deviceType6= new MenuTreeRecord();
+				deviceType6.name = "PC终端";
+				deviceType6.imgUri = "设备类型.ico";
+				deviceType6.number = 300016;
+				deviceType6.type = "deviceMgr";
+				deviceType6.parent = "设备类型";
+				MenuNode deviceType6Node = new MenuNode(deviceType6);
+				deviceTypeNode.add(deviceType6Node);
+				
+				MenuTreeRecord deviceType7= new MenuTreeRecord();
+				deviceType7.name = "其它";
+				deviceType7.imgUri = "设备类型.ico";
+				deviceType7.number = 300017;
+				deviceType7.type = "deviceMgr";
+				deviceType7.parent = "设备类型";
+				MenuNode deviceType7Node = new MenuNode(deviceType7);
+				deviceTypeNode.add(deviceType7Node);
+			}
+			
 			
 			
 		}
@@ -492,67 +563,65 @@ public class MenuViewer extends ViewPart {
 		monitorReportNode.add(monitorReportNode9);
 		
 	}
-	void showtree(MenuNode mibBrowserMenu) {
-		MenuTreeRecord record = (MenuTreeRecord) mibBrowserMenu.getUserObject();
-		System.out.println(record);
-		Enumeration<MenuNode> nodes = mibBrowserMenu.children();
-		while (nodes.hasMoreElements()) {
-			showtree(nodes.nextElement());
-		}
-	}
-	public void sortMibTree(MenuNode mibBrowserMenu) {
-		if (mibBrowserMenu.isLeaf()) {
-			return;
-		}
-		
-		if (mibBrowserMenu.getChildCount() > 0) {
-			Collections.sort(mibBrowserMenu.getChildrenVector());
-			for (MenuNode node : mibBrowserMenu.getChildrenVector()) {
-				sortMibTree(node);
+	private void doListener(EventObject event){
+		ISelection selection = tv.getSelection();
+        // 得到选中的项，注意方法是将得到的选项转换成 IStructuredSelection，再调用 getFirstElement 方法
+        Object object = ((IStructuredSelection) selection).getFirstElement();
+        MenuNode item = (MenuNode)object;
+        MenuTreeRecord record = (MenuTreeRecord)item.getUserObject();
+        ShowDeviceEditor.type = record.number;
+        //拓扑图管理菜单
+        if(record.type.equals("topoMgr")){
+        	//打开扫描配置向导
+        	if(record.number == 10001){
+        		ScanDialog dialog = new ScanDialog(Display.getCurrent().getActiveShell(),new SomeWizard());
+        		dialog.open();
+        	}
+        	//拓扑扫描
+        	if(record.number == 10002){
+        		if(GlobalData.isConfiged)
+        			StartScan.getInstance(parent).scanTopo();
+        		DrawTopo.getInstance(parent).showTopo();
+        	}
+        }else if(record.type.equals("mib")){
+        	if(record.number == 2000){
+        		//2000
+        		BaseUtils.showError(parent, "", "");
+        	}
+        }else if(record.type.equals("deviceMgr")){
+        	try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new DeviceEditrInput(),
+						ShowDeviceEditor.ID);
+			} catch (PartInitException e) {
+				e.printStackTrace();
 			}
-		}
+        }
+//		showError("", ((MenuTreeRecord)item.getUserObject()).syntax);
+	
 	}
 	private void hookDoubleClickAction(){
+		tv.addOpenListener(new IOpenListener() {
+			
+			@Override
+			public void open(OpenEvent event) {
+				doListener(event);
+			}
+		});
 		tv.addDoubleClickListener(new IDoubleClickListener() {
 			
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
-				ISelection selection = tv.getSelection();
-		        // 得到选中的项，注意方法是将得到的选项转换成 IStructuredSelection，再调用 getFirstElement 方法
-		        Object object = ((IStructuredSelection) selection).getFirstElement();
-		        MenuNode item = (MenuNode)object;
-				showError("", ((MenuTreeRecord)item.getUserObject()).syntax);
+				doListener(event);
 			}
 		});
 	}
-	private void showError(String title,String conent){
-		MessageBox dialog = new MessageBox(parent.getShell(), SWT.ICON_ERROR);
-		dialog.setMessage(conent);
-		dialog.setText(title);
-		dialog.open();
-	}
+	
+	
+	
 	public String getProductPath(){
 		Location location = Platform.getConfigurationLocation();
 		URL url = location.getURL();
 		return url.getPath();
-	}
-	public void initNode() {
-		String path = getProductPath() + File.separator + "menu.xml";
-		URL xmlUrl = Platform.getBundle("com.siteview.nnm.main").getEntry(
-				"menu.xml");
-		SAXReader reader = new SAXReader();
-		try {
-			Document doc = reader.read(new File(path));
-			String xpath = "/menu/node";
-			List list = doc.selectNodes(xpath);
-			Iterator i = list.iterator();
-			while (i.hasNext()) {
-				Element e = (Element)i.next();
-//				buildNode(e,root,node);
-			}
-		} catch (DocumentException e) {
-			e.printStackTrace();
-		}
 	}
 	@Override
 	public void setFocus() {
@@ -575,6 +644,7 @@ public class MenuViewer extends ViewPart {
 			
 		}
 
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		public Object[] getElements(Object inputElement) {
 			Vector v = ((MenuNode)inputElement).getChildrenVector();
@@ -582,6 +652,7 @@ public class MenuViewer extends ViewPart {
 			return v.toArray();
 		}
 
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		public Object[] getChildren(Object parentElement) {
 			Vector v = ((MenuNode)parentElement).getChildrenVector();
@@ -607,8 +678,6 @@ public class MenuViewer extends ViewPart {
 	 */
 	class TreeLabelProvide implements ILabelProvider {
 
-		private Map<ImageDescriptor, Image> imageCache = new HashMap<ImageDescriptor, Image>(
-				20);
 
 		@Override
 		public void addListener(ILabelProviderListener listener) {
@@ -660,7 +729,6 @@ public class MenuViewer extends ViewPart {
 			final Bundle bundle = Platform.getBundle("com.siteview.nnm.main");
 			System.out.println(imgUrl);
 			URL url = bundle.getEntry("icons/NNM_NewIcon/NodeIcon/"+imgUrl);
-			System.out.println(url.toString());
 			return ImageDescriptor.createFromURL(url).createImage();
 		}
 		@Override
@@ -670,44 +738,11 @@ public class MenuViewer extends ViewPart {
 			MenuTreeRecord record = (MenuTreeRecord)item.getUserObject();
 			String Text = record.name;
 			if(record.number < 1000 && !record.name.equals("root") && !record.name.equals("Variables/Textual Conventions") &&!record.name.equals("Orphans")){
-				String recoString = record.name;
 				Text = Text + "[" + record.number + "]";
 				
 			}
 			return(Text);
 		}
 
-	}
-	public static void main(String[] args) {
-		
-		MenuTreeRecord record = new MenuTreeRecord();
-		record.name="1";
-		record.number = 1;
-		MenuNode rootNode = new MenuNode(record);
-		
-		MenuTreeRecord c1 = new MenuTreeRecord();
-		c1.name="c1";
-		c1.number = 1;
-		MenuNode node1 = new MenuNode(c1);
-		
-		MenuTreeRecord c3 = new MenuTreeRecord();
-		c3.name="c3";
-		c3.number = 3;
-		MenuNode node3 = new MenuNode(c3);
-		
-		MenuTreeRecord c2 = new MenuTreeRecord();
-		c2.name="c2";
-		c2.number = 2;
-		MenuNode node2 = new MenuNode(c2);
-		
-		rootNode.addMenuNode(node2);
-		rootNode.addMenuNode(node3);
-		rootNode.addMenuNode(node1);
-		
-		MenuViewer v = new MenuViewer();
-		v.showtree(rootNode);
-		v.sortMibTree(rootNode);
-		System.out.println("\t\t end");
-		v.showtree(rootNode);
 	}
 }

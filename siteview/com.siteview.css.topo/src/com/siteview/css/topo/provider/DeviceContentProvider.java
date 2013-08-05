@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import com.siteview.snmp.model.Pair;
 import com.siteview.snmp.pojo.IDBody;
 
 public class DeviceContentProvider implements IStructuredContentProvider {
@@ -23,7 +24,7 @@ public class DeviceContentProvider implements IStructuredContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		List<IDBody> list = (List<IDBody>)inputElement;
+		List<Pair<String, IDBody>> list = (List<Pair<String, IDBody>>)inputElement;
 		System.out.println(list.size());
 		return list.toArray();
 	}

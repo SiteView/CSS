@@ -7,7 +7,11 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
+import com.siteview.css.topo.common.TopoData;
+import com.siteview.css.topo.editparts.ShowDeviceEditor;
 import com.siteview.snmp.constants.CommonDef;
+import com.siteview.snmp.model.Pair;
+import com.siteview.snmp.pojo.Edge;
 import com.siteview.snmp.pojo.IDBody;
 
 public class DeviceLabelProvider implements ITableLabelProvider {
@@ -40,35 +44,59 @@ public class DeviceLabelProvider implements ITableLabelProvider {
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		IDBody body = (IDBody)element;
+		Pair<String, IDBody> pair = (Pair<String, IDBody>)element;
 		switch (columnIndex) {
 		case 0:
 			
-			return body.getSysName();//设备名称
+			return pair.getFirst();//ip
 		case 1:
-			return body.getSysOid();//设备OID
+			return pair.getSecond().getSysName();//设备名称
 		case 2:
-			return body.getBaseMac();//mac地址
-		case 3: //设备类型
-			if(body.getDevType().equals(CommonDef.SWITCH)){
-				return "二层交换";
-			}else if(body.getDevType().equals(CommonDef.ROUTE_SWITCH)){
-				return "三层交换";
-			}else if(body.getDevType().equals(CommonDef.SERVER)){
-				return "服务器设备";
-			}else if(body.getDevType().equals(CommonDef.ROUTER)){
-				return "路由器";
-			}else if(body.getDevType().equals(CommonDef.FIREWALL)){
-				return "防火墙";
-			}else if(body.getDevType().equals(CommonDef.PC)){
-				return "pc";
-			}else{
-				return "其它";
+			//如果是点击的PC此列显示连接设备的ip 否则 显示设备型号
+			if(ShowDeviceEditor.type == 300016){
+				return getEdge(pair.getFirst()).getIp_left();
 			}
+			return pair.getSecond().getDevModel();
+		case 3: //设备类型
+			return formatMac(pair.getSecond().getBaseMac());
+		case 4:
+			//如果是点击的PC此列显示连接设备的ip 否则 显示设备型号
+			if(ShowDeviceEditor.type == 300016){
+				return getEdge(pair.getFirst()).getInf_left();
+			}
+			return pair.getSecond().getDevFactory();
 		default:
 			break;
 		}
 		return null;
 	}
-
+	private String formatMac(String mac){
+		int start = 0;
+		int tmpL = 2;
+		StringBuffer sb = new StringBuffer("");
+		if(mac.length() == 12){
+			while(tmpL <=12){
+				sb.append(mac.substring(start,tmpL)).append(" ");
+				start = tmpL;
+				tmpL += 2;
+			}
+			return sb.toString();
+		}
+		return mac;
+	}
+	private Edge getEdge(String rightIp){
+		for(Edge edge : TopoData.edgeList){
+			if(edge.getIp_right().equals(rightIp)){
+				if(edge.getIp_left().startsWith("DUMB")){
+					for(Edge dumpEdge : TopoData.edgeList){
+						if(dumpEdge.getIp_right().equals(edge.getIp_left())){
+							return dumpEdge;
+						}
+					}
+				}
+				return edge;
+			}
+		}
+		return null;
+	}
 }
