@@ -27,6 +27,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
@@ -34,28 +36,39 @@ import org.osgi.framework.Bundle;
 
 import com.siteview.css.topo.editparts.DeviceEditrInput;
 import com.siteview.css.topo.editparts.ShowDeviceEditor;
-import com.siteview.css.topo.wizard.common.GlobalData;
 import com.siteview.css.topo.wizard.scan.ScanDialog;
 import com.siteview.css.topo.wizard.scan.SomeWizard;
+import com.siteview.itsm.nnm.scan.core.StartScan;
+import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.scan.MibScan;
+import com.siteview.nnm.main.edit.MibEditorInput;
+import com.siteview.nnm.main.edit.MibEditorPart;
 import com.siteview.nnm.main.mib.DwSnmpMibOutputHandler;
 import com.siteview.nnm.main.mib.MenuTreeRecord;
 import com.siteview.nnm.main.mib.DwSnmpMibTreeBuilder;
 import com.siteview.nnm.main.pojo.MenuNode;
 import com.siteview.nnm.main.utils.BaseUtils;
 import com.siteview.nnm.main.utils.DrawTopo;
-import com.siteview.nnm.main.utils.StartScan;
 
 public class MenuViewer extends ViewPart {
 
 	
 	public final static String ID = "com.siteview.nnm.main.treeview";
 
+	MibScan mibScan;
 	public static int type ;
+	MibEditorInput input = new MibEditorInput();
 	private TreeViewer tv;
 	private MenuNode root;
 	DwSnmpMibOutputHandler output = new DwSnmpMibOutputHandler();
 	private Composite parent;
-	
+	private IWorkbenchWindow window;
+	DwSnmpMibTreeBuilder treeSupport = null;
+	@Override
+	public void init(IViewSite site) throws PartInitException {
+		super.init(site);
+		this.window = site.getWorkbenchWindow();
+	}
 	@Override
 	public void createPartControl(Composite parent) {
 		this.parent = parent;
@@ -194,7 +207,7 @@ public class MenuViewer extends ViewPart {
 			root.add(mibBrowserMenu);
 			
 			
-			DwSnmpMibTreeBuilder treeSupport = new DwSnmpMibTreeBuilder(mibBrowserMenu);
+			treeSupport = new DwSnmpMibTreeBuilder(mibBrowserMenu);
 			output = new DwSnmpMibOutputHandler();
 			treeSupport.setOutput(output);
 			String projectdir = getProductPath();
@@ -218,7 +231,7 @@ public class MenuViewer extends ViewPart {
 			ipMgr.name = "IP资源管理";
 			ipMgr.type = "ipMgr";
 			ipMgr.number = 4000;
-			ipMgr.imgUri = "pcmgr.bmp";
+			ipMgr.imgUri = "PC_Blue.ico";
 			MenuNode ipMgrNode = new MenuNode(ipMgr);
 			root.add(ipMgrNode);
 			
@@ -226,7 +239,7 @@ public class MenuViewer extends ViewPart {
 			subnetRecord.name = "子网";
 			subnetRecord.type = "ipMgr";
 			subnetRecord.number = 40001;
-			subnetRecord.imgUri = "pcmgr.bmp";
+			subnetRecord.imgUri = "PC_Blue.ico";
 			MenuNode subnetNode = new MenuNode(subnetRecord);
 			ipMgrNode.add(subnetNode);
 			
@@ -234,7 +247,7 @@ public class MenuViewer extends ViewPart {
 			ipmac1.name = "IP-MAC基准数据";
 			ipmac1.type = "ipMgr";
 			ipmac1.number = 40002;
-			ipmac1.imgUri = "pcmgr.bmp";
+			ipmac1.imgUri = "PC_Blue.ico";
 			MenuNode ipmac1Node = new MenuNode(ipmac1);
 			ipMgrNode.add(ipmac1Node);
 			
@@ -242,7 +255,7 @@ public class MenuViewer extends ViewPart {
 			ipmac2.name = "IP-MAC异动查询";
 			ipmac2.type = "ipMgr";
 			ipmac2.number = 40003;
-			ipmac2.imgUri = "pcmgr.bmp";
+			ipmac2.imgUri = "PC_Blue.ico";
 			MenuNode ipmac2Node = new MenuNode(ipmac2);
 			ipMgrNode.add(ipmac2Node);
 			
@@ -254,7 +267,7 @@ public class MenuViewer extends ViewPart {
 			dragRecord.name = "告警管理";
 			dragRecord.type = "dragMgr";
 			dragRecord.number = 5000;
-			dragRecord.imgUri = "pcmgr.bmp";
+			dragRecord.imgUri = "PC_Blue.ico";
 			MenuNode dragRecordNode = new MenuNode(dragRecord);
 			root.add(dragRecordNode);
 			
@@ -262,7 +275,7 @@ public class MenuViewer extends ViewPart {
 			dragtypeRecord.name = "告警方式";
 			dragtypeRecord.type = "logMgr";
 			dragtypeRecord.number = 50001;
-			dragtypeRecord.imgUri = "pcmgr.bmp";
+			dragtypeRecord.imgUri = "PC_Blue.ico";
 			MenuNode dragtypeNode = new MenuNode(dragtypeRecord);
 			dragRecordNode.add(dragtypeNode);
 			
@@ -270,7 +283,7 @@ public class MenuViewer extends ViewPart {
 			dragset.name = "告警设置";
 			dragset.type = "dragMgr";
 			dragset.number = 50002;
-			dragset.imgUri = "pcmgr.bmp";
+			dragset.imgUri = "PC_Blue.ico";
 			MenuNode dragsetNode = new MenuNode(dragset);
 			dragRecordNode.add(dragsetNode);
 			
@@ -278,7 +291,7 @@ public class MenuViewer extends ViewPart {
 			dragReportRecord.name = "告警记录";
 			dragReportRecord.type = "dragMgr";
 			dragReportRecord.number = 50003;
-			dragReportRecord.imgUri = "pcmgr.bmp";
+			dragReportRecord.imgUri = "PC_Blue.ico";
 			MenuNode dragReportNode = new MenuNode(dragReportRecord);
 			dragRecordNode.add(dragReportNode);
 			{
@@ -287,7 +300,7 @@ public class MenuViewer extends ViewPart {
 				dragcurrent.name = "当前告警";
 				dragcurrent.type = "dragMgr";
 				dragcurrent.number = 500031;
-				dragcurrent.imgUri = "pcmgr.bmp";
+				dragcurrent.imgUri = "PC_Blue.ico";
 				MenuNode dragcurrentNode = new MenuNode(dragcurrent);
 				dragReportNode.add(dragcurrentNode);
 				
@@ -295,7 +308,7 @@ public class MenuViewer extends ViewPart {
 				draghis.name = "历史告警";
 				draghis.type = "dragMgr";
 				draghis.number = 500032;
-				draghis.imgUri = "pcmgr.bmp";
+				draghis.imgUri = "PC_Blue.ico";
 				MenuNode draghisNode = new MenuNode(draghis);
 				dragReportNode.add(draghisNode);
 			}
@@ -327,7 +340,7 @@ public class MenuViewer extends ViewPart {
 		sysRecord.name = "系统设置";
 		sysRecord.type = "sysset";
 		sysRecord.number = 8000;
-		sysRecord.imgUri = "pcmgr.bmp";
+		sysRecord.imgUri = "PC_Blue.ico";
 		MenuNode sysRecordNode = new MenuNode(sysRecord);
 		root.add(sysRecordNode);
 
@@ -335,7 +348,7 @@ public class MenuViewer extends ViewPart {
 		sysRecord1.name = "用户管理";
 		sysRecord1.type = "sysset";
 		sysRecord1.number = 80001;
-		sysRecord1.imgUri = "pcmgr.bmp";
+		sysRecord1.imgUri = "PC_Blue.ico";
 		MenuNode sysRecordNode1 = new MenuNode(sysRecord1);
 		sysRecordNode.add(sysRecordNode1);
 		
@@ -345,7 +358,7 @@ public class MenuViewer extends ViewPart {
 			sysRecord11.name = "用户";
 			sysRecord11.type = "sysset";
 			sysRecord11.number = 800011;
-			sysRecord11.imgUri = "pcmgr.bmp";
+			sysRecord11.imgUri = "PC_Blue.ico";
 			MenuNode sysRecordNode11 = new MenuNode(sysRecord11);
 			sysRecordNode1.add(sysRecordNode11);
 			
@@ -353,7 +366,7 @@ public class MenuViewer extends ViewPart {
 			sysRecord12.name = "用户组";
 			sysRecord12.type = "sysset";
 			sysRecord12.number = 800012;
-			sysRecord12.imgUri = "pcmgr.bmp";
+			sysRecord12.imgUri = "PC_Blue.ico";
 			MenuNode sysRecordNode12 = new MenuNode(sysRecord12);
 			sysRecordNode1.add(sysRecordNode12);
 			
@@ -361,7 +374,7 @@ public class MenuViewer extends ViewPart {
 			sysRecord13.name = "设备组";
 			sysRecord13.type = "sysset";
 			sysRecord13.number = 800013;
-			sysRecord13.imgUri = "pcmgr.bmp";
+			sysRecord13.imgUri = "PC_Blue.ico";
 			MenuNode sysRecordNode13 = new MenuNode(sysRecord13);
 			sysRecordNode1.add(sysRecordNode13);
 			{
@@ -373,7 +386,7 @@ public class MenuViewer extends ViewPart {
 		logRecord2.name = "数据管理";
 		logRecord2.type = "sysset";
 		logRecord2.number = 80002;
-		logRecord2.imgUri = "pcmgr.bmp";
+		logRecord2.imgUri = "PC_Blue.ico";
 		MenuNode sysRecordNode2 = new MenuNode(logRecord2);
 		sysRecordNode.add(sysRecordNode2);
 		{
@@ -382,7 +395,7 @@ public class MenuViewer extends ViewPart {
 			logRecord21.name = "采集管理";
 			logRecord21.type = "sysset";
 			logRecord21.number = 800021;
-			logRecord21.imgUri = "pcmgr.bmp";
+			logRecord21.imgUri = "PC_Blue.ico";
 			MenuNode sysRecordNode21 = new MenuNode(logRecord21);
 			sysRecordNode2.add(sysRecordNode21);
 			
@@ -390,7 +403,7 @@ public class MenuViewer extends ViewPart {
 			logRecord22.name = "数据管理";
 			logRecord22.type = "sysset";
 			logRecord22.number = 800021;
-			logRecord22.imgUri = "pcmgr.bmp";
+			logRecord22.imgUri = "PC_Blue.ico";
 			MenuNode sysRecordNode22 = new MenuNode(logRecord22);
 			sysRecordNode2.add(sysRecordNode22);
 		}
@@ -399,7 +412,7 @@ public class MenuViewer extends ViewPart {
 		logRecord3.name = "SysLog配置";
 		logRecord3.type = "sysset";
 		logRecord3.number = 80003;
-		logRecord3.imgUri = "pcmgr.bmp";
+		logRecord3.imgUri = "PC_Blue.ico";
 		MenuNode sysRecordNode3 = new MenuNode(logRecord3);
 		sysRecordNode.add(sysRecordNode3);
 
@@ -407,7 +420,7 @@ public class MenuViewer extends ViewPart {
 		logRecord4.name = "报表生成配置";
 		logRecord4.type = "sysset";
 		logRecord4.number = 80004;
-		logRecord4.imgUri = "pcmgr.bmp";
+		logRecord4.imgUri = "PC_Blue.ico";
 		MenuNode sysRecordNode4 = new MenuNode(logRecord4);
 		sysRecordNode.add(sysRecordNode4);
 	}
@@ -420,7 +433,7 @@ public class MenuViewer extends ViewPart {
 		logRecord.name = "日志管理";
 		logRecord.type = "logMgr";
 		logRecord.number = 7000;
-		logRecord.imgUri = "pcmgr.bmp";
+		logRecord.imgUri = "PC_Blue.ico";
 		MenuNode logRecordNode = new MenuNode(logRecord);
 		root.add(logRecordNode);
 		
@@ -428,7 +441,7 @@ public class MenuViewer extends ViewPart {
 		logRecord1.name = "操作日志";
 		logRecord1.type = "logMgr";
 		logRecord1.number = 70001;
-		logRecord1.imgUri = "pcmgr.bmp";
+		logRecord1.imgUri = "PC_Blue.ico";
 		MenuNode dragtypeNode1 = new MenuNode(logRecord1);
 		logRecordNode.add(dragtypeNode1);
 		
@@ -436,7 +449,7 @@ public class MenuViewer extends ViewPart {
 		logRecord2.name = "扫描日志";
 		logRecord2.type = "logMgr";
 		logRecord2.number = 70002;
-		logRecord2.imgUri = "pcmgr.bmp";
+		logRecord2.imgUri = "PC_Blue.ico";
 		MenuNode dragsetNode2 = new MenuNode(logRecord2);
 		logRecordNode.add(dragsetNode2);
 		
@@ -449,7 +462,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportRecord.name = "监测报表";
 		monitorReportRecord.type = "monitorReportMgr";
 		monitorReportRecord.number = 6000;
-		monitorReportRecord.imgUri = "pcmgr.bmp";
+		monitorReportRecord.imgUri = "PC_Blue.ico";
 		MenuNode monitorReportNode = new MenuNode(monitorReportRecord);
 		root.add(monitorReportNode);
 		
@@ -457,7 +470,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportRecord1.name = "设备状态实时分析";
 		monitorReportRecord1.type = "monitorReportMgr";
 		monitorReportRecord1.number = 60001;
-		monitorReportRecord1.imgUri = "pcmgr.bmp";
+		monitorReportRecord1.imgUri = "PC_Blue.ico";
 		MenuNode monitortypeNode1 = new MenuNode(monitorReportRecord1);
 		monitorReportNode.add(monitortypeNode1);
 		
@@ -467,7 +480,7 @@ public class MenuViewer extends ViewPart {
 			monitorReportRecord11.name = "设备商品状态实时分析";
 			monitorReportRecord11.type = "monitorReportMgr";
 			monitorReportRecord11.number = 600011;
-			monitorReportRecord11.imgUri = "pcmgr.bmp";
+			monitorReportRecord11.imgUri = "PC_Blue.ico";
 			MenuNode monitorReportRecord11Node = new MenuNode(monitorReportRecord11);
 			monitortypeNode1.add(monitorReportRecord11Node);
 			
@@ -475,7 +488,7 @@ public class MenuViewer extends ViewPart {
 			monitorReportRecord12.name = "CPU&MEM实时分析";
 			monitorReportRecord12.type = "monitorReportMgr";
 			monitorReportRecord12.number = 600011;
-			monitorReportRecord12.imgUri = "pcmgr.bmp";
+			monitorReportRecord12.imgUri = "PC_Blue.ico";
 			MenuNode monitorReportRecord12Node = new MenuNode(monitorReportRecord12);
 			monitortypeNode1.add(monitorReportRecord12Node);
 		} 
@@ -484,7 +497,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportRecord2.name = "历史监测查询";
 		monitorReportRecord2.type = "monitorReportMgr";
 		monitorReportRecord2.number = 60002;
-		monitorReportRecord2.imgUri = "pcmgr.bmp";
+		monitorReportRecord2.imgUri = "PC_Blue.ico";
 		MenuNode monitorsetNode2 = new MenuNode(monitorReportRecord2);
 		monitorReportNode.add(monitorsetNode2);
 		
@@ -494,7 +507,7 @@ public class MenuViewer extends ViewPart {
 			monitorReportRecord21.name = "端口历史数据查询";
 			monitorReportRecord21.type = "monitorReportMgr";
 			monitorReportRecord21.number = 600021;
-			monitorReportRecord21.imgUri = "pcmgr.bmp";
+			monitorReportRecord21.imgUri = "PC_Blue.ico";
 			MenuNode monitorReportRecord12Node = new MenuNode(monitorReportRecord21);
 			monitorsetNode2.add(monitorReportRecord12Node);
 			
@@ -502,7 +515,7 @@ public class MenuViewer extends ViewPart {
 			monitorReportRecord22.name = "CPU&MEM历史数据查询";
 			monitorReportRecord22.type = "monitorReportMgr";
 			monitorReportRecord22.number = 600021;
-			monitorReportRecord22.imgUri = "pcmgr.bmp";
+			monitorReportRecord22.imgUri = "PC_Blue.ico";
 			MenuNode monitorReportRecord22Node = new MenuNode(monitorReportRecord22);
 			monitorsetNode2.add(monitorReportRecord22Node);
 		} 
@@ -510,7 +523,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportRecord3.name = "网络设备监测查询";
 		monitorReportRecord3.type = "monitorReportMgr";
 		monitorReportRecord3.number = 60003;
-		monitorReportRecord3.imgUri = "pcmgr.bmp";
+		monitorReportRecord3.imgUri = "PC_Blue.ico";
 		MenuNode monitorReportNode3 = new MenuNode(monitorReportRecord3);
 		monitorReportNode.add(monitorReportNode3);
 		
@@ -518,7 +531,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportRecord4.name = "设备性能分析报表";
 		monitorReportRecord4.type = "monitorReportMgr";
 		monitorReportRecord4.number = 60004;
-		monitorReportRecord4.imgUri = "pcmgr.bmp";
+		monitorReportRecord4.imgUri = "PC_Blue.ico";
 		MenuNode monitorReportNode4 = new MenuNode(monitorReportRecord4);
 		monitorReportNode.add(monitorReportNode4);
 		
@@ -526,7 +539,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportRecord5.name = "设备端口使用率";
 		monitorReportRecord5.type = "monitorReportMgr";
 		monitorReportRecord5.number = 60005;
-		monitorReportRecord5.imgUri = "pcmgr.bmp";
+		monitorReportRecord5.imgUri = "PC_Blue.ico";
 		MenuNode monitorReportNode5 = new MenuNode(monitorReportRecord5);
 		monitorReportNode.add(monitorReportNode5);
 		
@@ -534,7 +547,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportRecord6.name = "网络整体性能分析";
 		monitorReportRecord6.type = "monitorReportMgr";
 		monitorReportRecord6.number = 60006;
-		monitorReportRecord6.imgUri = "pcmgr.bmp";
+		monitorReportRecord6.imgUri = "PC_Blue.ico";
 		MenuNode monitorReportNode6 = new MenuNode(monitorReportRecord6);
 		monitorReportNode.add(monitorReportNode6);
 		
@@ -542,7 +555,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportRecord7.name = "设备故障趋势分析";
 		monitorReportRecord7.type = "monitorReportMgr";
 		monitorReportRecord7.number = 60007;
-		monitorReportRecord7.imgUri = "pcmgr.bmp";
+		monitorReportRecord7.imgUri = "PC_Blue.ico";
 		MenuNode monitorReportNode7 = new MenuNode(monitorReportRecord7);
 		monitorReportNode.add(monitorReportNode7);
 		
@@ -550,7 +563,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportRecord8.name = "SysLog查询";
 		monitorReportRecord8.type = "monitorReportMgr";
 		monitorReportRecord8.number = 60008;
-		monitorReportRecord8.imgUri = "pcmgr.bmp";
+		monitorReportRecord8.imgUri = "PC_Blue.ico";
 		MenuNode monitorReportNode8 = new MenuNode(monitorReportRecord8);
 		monitorReportNode.add(monitorReportNode8);
 		
@@ -558,7 +571,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportRecord9.name = "自动生成报表";
 		monitorReportRecord9.type = "monitorReportMgr";
 		monitorReportRecord9.number = 60009;
-		monitorReportRecord9.imgUri = "pcmgr.bmp";
+		monitorReportRecord9.imgUri = "PC_Blue.ico";
 		MenuNode monitorReportNode9 = new MenuNode(monitorReportRecord9);
 		monitorReportNode.add(monitorReportNode9);
 		
@@ -567,8 +580,8 @@ public class MenuViewer extends ViewPart {
 		ISelection selection = tv.getSelection();
         // 得到选中的项，注意方法是将得到的选项转换成 IStructuredSelection，再调用 getFirstElement 方法
         Object object = ((IStructuredSelection) selection).getFirstElement();
-        MenuNode item = (MenuNode)object;
-        MenuTreeRecord record = (MenuTreeRecord)item.getUserObject();
+        MenuNode node = (MenuNode)object;
+        MenuTreeRecord record = (MenuTreeRecord)node.getUserObject();
         ShowDeviceEditor.type = record.number;
         //拓扑图管理菜单
         if(record.type.equals("topoMgr")){
@@ -584,10 +597,22 @@ public class MenuViewer extends ViewPart {
         		DrawTopo.getInstance(parent).showTopo();
         	}
         }else if(record.type.equals("mib")){
-        	if(record.number == 2000){
-        		//2000
-        		BaseUtils.showError(parent, "", "");
-        	}
+        	try {
+				IEditorPart editorPart = window.getActivePage().findEditor(
+						input);
+				if (editorPart == null) {
+					window.getActivePage().openEditor(input, MibEditorPart.ID);
+				}
+				MibEditorPart part = (MibEditorPart) editorPart;
+				if (record.number != 2000 && record.number != 20001) {
+					String oid = treeSupport.oidSupport.getNodeOid(node);
+					MibEditorPart.oidText.setText(oid);
+				}
+				
+			} catch (PartInitException e) {
+				e.printStackTrace();
+			}
+        	
         }else if(record.type.equals("deviceMgr")){
         	try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new DeviceEditrInput(),
@@ -600,13 +625,13 @@ public class MenuViewer extends ViewPart {
 	
 	}
 	private void hookDoubleClickAction(){
-		tv.addOpenListener(new IOpenListener() {
-			
-			@Override
-			public void open(OpenEvent event) {
-				doListener(event);
-			}
-		});
+//		tv.addOpenListener(new IOpenListener() {
+//			
+//			@Override
+//			public void open(OpenEvent event) {
+//				doListener(event);
+//			}
+//		});
 		tv.addDoubleClickListener(new IDoubleClickListener() {
 			
 			@Override
@@ -708,19 +733,19 @@ public class MenuViewer extends ViewPart {
 				MenuNode parantNode = (MenuNode)item.getParent();
 					if("".equals(record.syntax)){
 						if(item.isLeaf()){
-							imgUrl = "2.bmp";
+							imgUrl = "2.ico";
 						}else
-							imgUrl = "node.bmp";
+							imgUrl = "01.ico";
 					}else if(record.syntax.indexOf("SEQUENCE")>=0){
-						imgUrl = "51.bmp";
+						imgUrl = "4.ico";
 					}else if((record.syntax.indexOf("SEQUENCE")<0) && (record.syntax.indexOf("Entry") > 0)){
 						imgUrl = "6.ico";
 					}else{	
 						MenuTreeRecord pRecord = (MenuTreeRecord)parantNode.getUserObject();
 						if(pRecord.syntax.indexOf("Entry") > -1){
-							imgUrl = "51.bmp";
+							imgUrl = "4.ico";
 						}else{
-							imgUrl = "2.bmp";
+							imgUrl = "2.ico";
 						}
 					}
 			}else{

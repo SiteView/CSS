@@ -1,13 +1,15 @@
 package com.siteview.nnm.main.mib;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.JTree;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.TreeSelectionModel;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
@@ -29,10 +31,18 @@ public class DwSnmpOidSupport
         MenuTreeRecord  nodeInfo = (MenuTreeRecord )node.getUserObject();
 		if(nodeInfo.recordType==nodeInfo.recVariable) return(nodeInfo.name + "-" + nodeInfo.syntax);
 		try	{
-			TreeNode[] nodePath= node.getPath();
+			TreeNode[] nodePath1= node.getPath();
+			List<TreeNode> nodePathList = new ArrayList<TreeNode>();
+			for(int i=0;i<nodePath1.length;i++){
+				MenuTreeRecord re = (MenuTreeRecord)(((DefaultMutableTreeNode)nodePath1[i]).getUserObject());
+				if(re != null && re.number != 2000){
+					nodePathList.add(nodePath1[i]);
+				}
+			}
+			Object[] nodePath = nodePathList.toArray();
 		 	MenuTreeRecord recTemp;
 			if (nodePath.length < 2 ) return(".");
-			for(int i=2;i<nodePath.length;i++)	{
+			for(int i=1;i<nodePath.length;i++)	{
 				recTemp=(MenuTreeRecord)(((DefaultMutableTreeNode)nodePath[i]).getUserObject());
 				//System.out.println(recTemp.name + "  " + recTemp.number);
 				strPath=strPath.concat("." + String.valueOf (recTemp.number ));

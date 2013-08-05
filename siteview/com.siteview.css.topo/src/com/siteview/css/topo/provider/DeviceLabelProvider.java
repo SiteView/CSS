@@ -7,12 +7,11 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.editparts.ShowDeviceEditor;
-import com.siteview.snmp.constants.CommonDef;
-import com.siteview.snmp.model.Pair;
-import com.siteview.snmp.pojo.Edge;
-import com.siteview.snmp.pojo.IDBody;
+import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
 
 public class DeviceLabelProvider implements ITableLabelProvider {
 
@@ -85,10 +84,10 @@ public class DeviceLabelProvider implements ITableLabelProvider {
 		return mac;
 	}
 	private Edge getEdge(String rightIp){
-		for(Edge edge : TopoData.edgeList){
+		for(Edge edge : GlobalData.edgeList){
 			if(edge.getIp_right().equals(rightIp)){
 				if(edge.getIp_left().startsWith("DUMB")){
-					for(Edge dumpEdge : TopoData.edgeList){
+					for(Edge dumpEdge : GlobalData.edgeList){
 						if(dumpEdge.getIp_right().equals(edge.getIp_left())){
 							return dumpEdge;
 						}

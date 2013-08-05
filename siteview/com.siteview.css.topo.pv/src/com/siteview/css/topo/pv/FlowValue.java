@@ -2,7 +2,8 @@ package com.siteview.css.topo.pv;
 
 import org.csstudio.utility.pv.simu.DynamicValue;
 
-import com.siteview.snmp.flowmonitor.MonitorControler;
+import com.siteview.itsm.nnm.scan.core.snmp.flowmonitor.MonitorControler;
+
 
 public class FlowValue extends DynamicValue {
 

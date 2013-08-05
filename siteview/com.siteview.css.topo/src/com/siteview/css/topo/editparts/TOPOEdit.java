@@ -30,12 +30,12 @@ import ILOG.Diagrammer.GraphLayout.ForceDirectedLayoutReport;
 import ILOG.Diagrammer.GraphLayout.TreeLayout;
 import ILOG.Diagrammer.GraphLayout.TreeLayoutMode;
 
-import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.models.TopologyModel;
-import com.siteview.snmp.common.ScanParam;
-import com.siteview.snmp.pojo.DevicePro;
-import com.siteview.snmp.pojo.Edge;
-import com.siteview.snmp.pojo.IDBody;
+import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
+import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.DevicePro;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
 
 public class TOPOEdit extends OPIEditor {
 	/** 坐标定位 */
@@ -123,7 +123,7 @@ public class TOPOEdit extends OPIEditor {
 
 		TopoGraph container = new TopoGraph(displayModel);
 
-		for (Entry<String, IDBody> entry : TopoData.deviceList.entrySet()) {
+		for (Entry<String, IDBody> entry : GlobalData.deviceList.entrySet()) {
 			String ip = entry.getKey();
 			// entry.getValue();
 			container.addNode(new TopoNode(container, ip, new TopologyModel(),
@@ -133,8 +133,8 @@ public class TOPOEdit extends OPIEditor {
 		String leftIp;
 		String rightIp;
 
-		for (int i = 0; i < TopoData.edgeList.size(); i++) {
-			Edge edge = (Edge) TopoData.edgeList.get(i);
+		for (int i = 0; i < GlobalData.edgeList.size(); i++) {
+			Edge edge = (Edge) GlobalData.edgeList.get(i);
 			leftIp = edge.getIp_left();
 			rightIp = edge.getIp_right();
 			if (leftIp.startsWith("DUMP")) {
@@ -154,8 +154,8 @@ public class TOPOEdit extends OPIEditor {
 
 		}
 
-		for (int i = 0; i < TopoData.edgeList.size(); i++) {
-			Edge edge = (Edge) TopoData.edgeList.get(i);
+		for (int i = 0; i < GlobalData.edgeList.size(); i++) {
+			Edge edge = (Edge) GlobalData.edgeList.get(i);
 			leftIp = edge.getIp_left();
 			rightIp = edge.getIp_right();
 			//System.out.println(leftIp + "<-->" + rightIp);

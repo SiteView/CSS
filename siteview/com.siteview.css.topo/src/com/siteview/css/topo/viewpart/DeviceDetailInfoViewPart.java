@@ -17,11 +17,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
-import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.provider.DeviceContentProvider;
 import com.siteview.css.topo.provider.DeviceLabelProvider;
-import com.siteview.snmp.pojo.IDBody;
-import com.siteview.snmp.util.IoUtils;
+import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
+import com.siteview.itsm.nnm.scan.core.snmp.util.IoUtils;
 
 public class DeviceDetailInfoViewPart extends ViewPart{
 	public static final String ID = "com.siteview.css.topo.devicelistview";
@@ -36,11 +36,11 @@ public class DeviceDetailInfoViewPart extends ViewPart{
 		parent.setLayout(layout);
 		createViewer(parent);
 		Map<String,IDBody> bodys = new HashMap<String, IDBody>();
-		if(TopoData.deviceList.isEmpty()){
+		if(GlobalData.deviceList.isEmpty()){
 			IoUtils.readIdBodyData(bodys, "");
-			TopoData.deviceList = bodys;
+			GlobalData.deviceList = bodys;
 		}else{
-			bodys = TopoData.deviceList;
+			bodys = GlobalData.deviceList;
 		}
 		if(bodys.isEmpty()){
 			MessageBox msgDialog = new MessageBox(parent.getShell(), SWT.ICON_WARNING);

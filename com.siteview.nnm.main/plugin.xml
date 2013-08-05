@@ -55,5 +55,14 @@
          </menu>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.siteview.nnm.main.edit.MibEditorPart"
+            default="false"
+            id="com.siteview.nnm.main.mibbrowser"
+            name="Mib浏览">
+      </editor>
+   </extension>
 
 </plugin>

@@ -7,7 +7,6 @@ import org.csstudio.swt.widgets.figureparts.RoundScale;
 import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.AbstractLayout;
-import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
@@ -23,7 +22,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Pattern;
 
-import com.siteview.snmp.pojo.Edge;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
+
 
 public class TopologyFigure extends Figure{
 
@@ -94,11 +94,11 @@ public class TopologyFigure extends Figure{
 	}
 	public void changeBackGroundColor(double value){
 		if(value>50){
-			rec.getParent().setBackgroundColor(RED_COLOR);
+			rec.setForegroundColor(RED_COLOR);
 		}else if(value >30){
-			rec.getParent().setBackgroundColor(BLUE_COLOR);
+			rec.setForegroundColor(BLUE_COLOR);
 		}else{
-			rec.getParent().setBackgroundColor(GRAY_COLOR);
+			rec.setForegroundColor(GRAY_COLOR);
 		}
 		repaint();
 	}

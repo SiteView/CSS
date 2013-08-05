@@ -8,7 +8,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
-import com.siteview.snmp.util.Utils;
+import com.siteview.itsm.nnm.scan.core.snmp.util.Utils;
+
 
 /**
  * 点击扫描时打开dialog

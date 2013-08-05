@@ -6,5 +6,5 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SITEVIEW
 Require-Bundle: org.csstudio.utility.pv;bundle-version="3.1.0",
  org.csstudio.utility.pv.simu;bundle-version="3.1.0",
- com.siteview.css.topo;bundle-version="1.0.0"
+ com.siteview.itsm.nnm.scan.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

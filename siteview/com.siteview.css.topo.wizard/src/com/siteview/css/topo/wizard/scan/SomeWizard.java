@@ -8,12 +8,13 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
-import com.siteview.css.topo.wizard.common.GlobalData;
-import com.siteview.snmp.common.ScanParam;
-import com.siteview.snmp.model.Pair;
-import com.siteview.snmp.util.IoUtils;
-import com.siteview.snmp.util.ScanUtils;
-import com.siteview.snmp.util.Utils;
+import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
+import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
+import com.siteview.itsm.nnm.scan.core.snmp.util.IoUtils;
+import com.siteview.itsm.nnm.scan.core.snmp.util.ScanUtils;
+import com.siteview.itsm.nnm.scan.core.snmp.util.Utils;
+
 
 /**
  * …®√ËœÚµº

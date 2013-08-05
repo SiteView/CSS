@@ -12,19 +12,16 @@ Require-Bundle: org.csstudio.opibuilder.widgets;bundle-version="3.2.0",
  org.csstudio.swt.widgets;bundle-version="2.0.2",
  org.csstudio.opibuilder.editor;bundle-version="3.1.4",
  org.eclipse.ui.ide;bundle-version="3.7.0",
- com.siteview.css.topo.topoimage;bundle-version="1.0.0"
+ com.siteview.css.topo.topoimage;bundle-version="1.0.0",
+ com.siteview.itsm.nnm.scan.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Export-Package: com.siteview.css.topo.models,
+Export-Package: 
+ com.siteview.css.topo.models,
  com.siteview.css.topo.feedBack,
  com.siteview.css.topo.editparts,
- com.siteview.css.topo.figure,
- com.siteview.snmp.common,
- com.siteview.snmp.scan,
- com.siteview.snmp.model,
- com.siteview.snmp.util,
- com.siteview.css.topo.common,
- com.siteview.snmp.flowmonitor
+ com.siteview.css.topo.figure
+ 
 Bundle-ClassPath: lib/commons-net-3.3-sources.jar,
  lib/commons-net-3.3.jar,
  lib/jpcap.jar,

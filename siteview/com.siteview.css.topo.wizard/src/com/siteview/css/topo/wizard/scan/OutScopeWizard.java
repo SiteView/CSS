@@ -16,7 +16,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
-import com.siteview.snmp.model.Pair;
+import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
+
 
 /**
  * ÅÅ³ý·¶Î§Ïòµ¼

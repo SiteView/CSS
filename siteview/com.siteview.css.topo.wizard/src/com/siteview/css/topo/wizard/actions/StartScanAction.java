@@ -47,12 +47,11 @@ import org.eclipse.ui.internal.ide.filesystem.FileSystemSupportRegistry;
 import org.eclipse.ui.part.FileEditorInput;
 import org.osgi.framework.Bundle;
 
-import com.siteview.css.topo.common.TopoData;
-import com.siteview.css.topo.wizard.common.GlobalData;
-import com.siteview.snmp.common.ScanParam;
-import com.siteview.snmp.flowmonitor.MonitorControler;
-import com.siteview.snmp.scan.NetScan;
-import com.siteview.snmp.util.IoUtils;
+import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
+import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.flowmonitor.MonitorControler;
+import com.siteview.itsm.nnm.scan.core.snmp.scan.NetScan;
+import com.siteview.itsm.nnm.scan.core.snmp.util.IoUtils;
 /**
  * ¿ªÊ¼ÍØÆËÉ¨ÃèµÄaction
  * @author haiming.wang
@@ -140,13 +139,13 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 				scan.scan();
 				monitor.worked(50);
 				//»º´æ±ßÊý¾Ý
-				TopoData.isInit = true;
-				TopoData.edgeList = scan.getTopo_edge_list();
-				TopoData.deviceList = scan.getDevid_list();
+				GlobalData.isInit = true;
+				GlobalData.edgeList = scan.getTopo_edge_list();
+				GlobalData.deviceList = scan.getDevid_list();
 				monitor.worked(100);
 				scaned = true;
 			}catch (Exception e) {
-				TopoData.isInit = false;
+				GlobalData.isInit = false;
 				scaned = false;
 				showError("É¨ÃèÊ§°Ü", e.getMessage());
 			}finally{

@@ -41,7 +41,7 @@ public class DwSnmpMibTreeBuilder implements DwMibParserInterface,Runnable
 		rootRec.name = "root";
 		rootRec.type = "mib";
 		rootRec.parent="MIB Browser";
-		rootRec.number=1;
+		rootRec.number=20001;
 		rootNode=new MenuNode(rootRec);
 		
 		MenuTreeRecord rootOrphanRec=new MenuTreeRecord();

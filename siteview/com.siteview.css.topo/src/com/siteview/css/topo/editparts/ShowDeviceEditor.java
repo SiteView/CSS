@@ -16,12 +16,12 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.provider.DeviceContentProvider;
 import com.siteview.css.topo.provider.DeviceLabelProvider;
-import com.siteview.snmp.constants.CommonDef;
-import com.siteview.snmp.model.Pair;
-import com.siteview.snmp.pojo.IDBody;
+import com.siteview.itsm.nnm.scan.core.snmp.constants.CommonDef;
+import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
 
 public class ShowDeviceEditor extends EditorPart {
 
@@ -63,11 +63,11 @@ public class ShowDeviceEditor extends EditorPart {
 		tv.setLabelProvider(new DeviceLabelProvider());
 		List<Pair<String, IDBody>> dataList = new ArrayList<Pair<String, IDBody>>();
 		//根据点击的菜单类型添加数据
-		if (!TopoData.deviceList.isEmpty()) {
+		if (!GlobalData.deviceList.isEmpty()) {
 			if (type != 0) {
 				// 添加二层交换设备
 				if (type == 300011) {
-					for (Entry<String, IDBody> entry : TopoData.deviceList
+					for (Entry<String, IDBody> entry : GlobalData.deviceList
 							.entrySet()) {
 						if (entry.getValue().getDevType()
 								.equals(CommonDef.SWITCH))
@@ -75,7 +75,7 @@ public class ShowDeviceEditor extends EditorPart {
 									.getKey(), entry.getValue()));
 					}
 				} else if (type == 300012) {// 三层交换
-					for (Entry<String, IDBody> entry : TopoData.deviceList
+					for (Entry<String, IDBody> entry : GlobalData.deviceList
 							.entrySet()) {
 						if (entry.getValue().getDevType()
 								.equals(CommonDef.ROUTE_SWITCH))
@@ -83,7 +83,7 @@ public class ShowDeviceEditor extends EditorPart {
 									.getKey(), entry.getValue()));
 					}
 				} else if (type == 300013) {// 路由器
-					for (Entry<String, IDBody> entry : TopoData.deviceList
+					for (Entry<String, IDBody> entry : GlobalData.deviceList
 							.entrySet()) {
 						if (entry.getValue().getDevType()
 								.equals(CommonDef.ROUTER))
@@ -91,7 +91,7 @@ public class ShowDeviceEditor extends EditorPart {
 									.getKey(), entry.getValue()));
 					}
 				} else if (type == 300014) {// 防火墙
-					for (Entry<String, IDBody> entry : TopoData.deviceList
+					for (Entry<String, IDBody> entry : GlobalData.deviceList
 							.entrySet()) {
 						if (entry.getValue().getDevType()
 								.equals(CommonDef.FIREWALL))
@@ -99,7 +99,7 @@ public class ShowDeviceEditor extends EditorPart {
 									.getKey(), entry.getValue()));
 					}
 				} else if (type == 300015) {
-					for (Entry<String, IDBody> entry : TopoData.deviceList
+					for (Entry<String, IDBody> entry : GlobalData.deviceList
 							.entrySet()) {
 						if (entry.getValue().getDevType()
 								.equals(CommonDef.SERVER))
@@ -107,14 +107,14 @@ public class ShowDeviceEditor extends EditorPart {
 									.getKey(), entry.getValue()));
 					}
 				} else if (type == 300016) {
-					for (Entry<String, IDBody> entry : TopoData.deviceList
+					for (Entry<String, IDBody> entry : GlobalData.deviceList
 							.entrySet()) {
 						if (entry.getValue().getDevType().equals(CommonDef.PC))
 							dataList.add(new Pair<String, IDBody>(entry
 									.getKey(), entry.getValue()));
 					}
 				} else if (type == 300017) {
-					for (Entry<String, IDBody> entry : TopoData.deviceList
+					for (Entry<String, IDBody> entry : GlobalData.deviceList
 							.entrySet()) {
 						if (entry.getValue().getDevType()
 								.equals(CommonDef.OTHER))
@@ -123,7 +123,7 @@ public class ShowDeviceEditor extends EditorPart {
 					}
 				}
 			}else{
-				for (Entry<String, IDBody> entry : TopoData.deviceList
+				for (Entry<String, IDBody> entry : GlobalData.deviceList
 						.entrySet()) {
 						dataList.add(new Pair<String, IDBody>(entry
 								.getKey(), entry.getValue()));

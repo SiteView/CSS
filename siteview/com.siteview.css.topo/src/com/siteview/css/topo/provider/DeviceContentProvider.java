@@ -5,20 +5,19 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.siteview.snmp.model.Pair;
-import com.siteview.snmp.pojo.IDBody;
+import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
+
 
 public class DeviceContentProvider implements IStructuredContentProvider {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// TODO Auto-generated method stub
 
 	}
 
