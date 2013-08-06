@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Search
+Bundle-SymbolicName: core.businessobject.pv.search;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: core.businessobject.pv.search.Activator
+Require-Bundle: org.eclipse.rap.ui,
+ org.eclipse.core.runtime,
+ Siteview.lib;bundle-version="1.0.0",
+ org.csstudio.utility.pv;bundle-version="3.1.0",
+ org.csstudio.utility.pv.simu;bundle-version="3.1.0",
+ javax.servlet;bundle-version="3.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

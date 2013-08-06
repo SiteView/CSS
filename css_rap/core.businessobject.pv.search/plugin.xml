@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.csstudio.utility.pv.pvfactory">
+      <PVFactory
+            class="core.businessobject.pv.search.BusObPVSearch"
+            name="core.businessobject.pv.search.BusObPVSearch"
+            prefix="bo">
+      </PVFactory>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.branding">
+      <branding
+            body="html/body.html"
+            defaultEntrypointId="core.businessobject.pv.search.ServerConfig"
+            favicon="html/Core.ico"
+            id="core.businessobject.pv.search.ServerConfig.branding"
+            servletName="connectionconfig"
+            themeId="org.eclipse.rap.design.example.business.theme"
+            title="连接配置">
+      </branding>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.entrypoint">
+      <entrypoint
+            class="core.businessobject.pv.search.ServerConfig"
+            id="core.businessobject.pv.search.ServerConfig"
+            parameter="connectionconfig">
+      </entrypoint>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.themes">
+      <theme
+            file="theme/theme.css"
+            id="org.eclipse.rap.design.example.business.theme">
+      </theme>
+   </extension>
+
+</plugin>
