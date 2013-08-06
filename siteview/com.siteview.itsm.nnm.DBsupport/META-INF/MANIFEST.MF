@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: DBsupport
+Bundle-SymbolicName: com.siteview.itsm.nnm.DBsupport; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.siteview.itsm.nnm.dbsupport.Activator
+Bundle-Vendor: SITEVIEW
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ Siteview.Forms.Common;bundle-version="1.0.0",
+ Siteview.lib;bundle-version="1.0.0",
+ Siteview.Windows.Forms;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy

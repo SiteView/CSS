@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="Sample Action Set"
+            visible="true"
+            id="com.siteview.itsm.nnm.DBsupport.actionSet">
+         <menu
+               label="Sample &amp;Menu"
+               id="sampleMenu">
+            <separator
+                  name="sampleGroup">
+            </separator>
+         </menu>
+         <action
+               toolbarPath="sampleGroup"
+               tooltip="Hello, Eclipse world"
+               label="&amp;Sample Action"
+               class="com.siteview.itsm.nnm.dbsupport.actions.SampleAction"
+               menubarPath="sampleMenu/sampleGroup"
+               id="com.siteview.itsm.nnm.dbsupport.actions.SampleAction"
+               icon="icons/sample.gif">
+         </action>
+      </actionSet>
+   </extension>
+
+</plugin>
