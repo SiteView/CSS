@@ -12,10 +12,11 @@ import Siteview.QueryInfoToGet;
 import Siteview.SearchCriteria;
 import Siteview.SiteviewException;
 import Siteview.SiteviewQuery;
+import Siteview.thread.IPrincipal;
 
 public class BusObSearch {
 	
-	public Map<Class<?>,Object> searchBusOb(String busobname,String findfieldname,Map<String,String> expression) throws SiteviewException{
+	public Map<Class<?>,Object> searchBusOb(String busobname,String findfieldname,Map<String,String> expression,IPrincipal pal) throws SiteviewException{
 		SiteviewQuery siteviewQuery = new SiteviewQuery();
 		siteviewQuery.AddBusObQuery(busobname,QueryInfoToGet.RequestedFields,findfieldname);
 		if(expression.size()>0){
@@ -38,6 +39,7 @@ public class BusObSearch {
 			
 		}
 		
+		Siteview.thread.Thread.set_CurrentPrincipal(pal);
 		DataTable dt = BusObConnection.getBusObApi().get_BusObService().get_SimpleQueryResolver().ResolveQueryToBusObDataTable(siteviewQuery);
 		
 		if(dt == null){
@@ -56,12 +58,14 @@ public class BusObSearch {
 				return valueMap;
 			}
 		}
+		
 	}
 	
 	public static void main(String[] args) throws SiteviewException {
 		BusObSearch search = new BusObSearch();
 		Map<String,String> map = new HashMap<String,String>();
-		map.put("monitorid","BEC27AFD44C44456B2C392E7DF516063");
-		System.out.println(search.searchBusOb("EccDyn", "monitordesc", map).get(String.class));
+		map.put("monitorid","E7DE33A3108644D4921B6D82D9E83BF0");
+		System.out.println(search.searchBusOb("EccDyn", "monitordesc", map,BusObConnection.getPrincipal()).get(String.class));
 	}
+	
 }

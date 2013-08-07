@@ -7,6 +7,8 @@ import org.csstudio.utility.pv.IPVFactory;
 import org.csstudio.utility.pv.PV;
 import org.csstudio.utility.pv.simu.DynamicValue;
 import org.csstudio.utility.pv.simu.SimulatedPV;
+import org.csstudio.utility.pv.simu.StaticPV;
+import org.csstudio.utility.pv.simu.TextValue;
 import org.csstudio.utility.pv.simu.Value;
 
 public class BusObPVSearch implements IPVFactory {
@@ -19,25 +21,19 @@ public class BusObPVSearch implements IPVFactory {
 	public PV createPV(String name) {
 		try {
 			if(name.trim().length()!=0){
-				String[] params1 = name.split("\\?");
-				String busobname = params1[0];
-				String[] params2 = params1[1].split("@");
-				String[] expressions = params2[0].split("&&");
-				String findfieldname = params2[1];
-				Map<String,String> expressionMap = new HashMap<String,String>();
-				for(String expression:expressions){
-					String[] params3 = expression.split("=");
-					expressionMap.put(params3[0].trim(),params3[1].trim());
-				}
 				MonitorValue value = new MonitorValue(name);
 				values.put(name,value);
 				return new SimulatedPV(PREFIX, (DynamicValue) value);
 			}
+			else{
+				throw new Exception("È±ÉÙ²ÎÊý!");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			Value value = new TextValue(name,e.getMessage());
+			values.put(name,value);
+			return new StaticPV(PREFIX,value);
 		}
-		return null;
-		
 	}
 
 }

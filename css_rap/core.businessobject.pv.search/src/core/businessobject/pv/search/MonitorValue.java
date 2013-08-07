@@ -3,13 +3,16 @@ package core.businessobject.pv.search;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.csstudio.data.values.INumericMetaData;
 import org.csstudio.data.values.ISeverity;
 import org.csstudio.data.values.TimestampFactory;
 import org.csstudio.data.values.ValueFactory;
 import org.csstudio.data.values.IValue.Quality;
 import org.csstudio.utility.pv.simu.DynamicValue;
 
+import Siteview.Convert;
 import Siteview.SiteviewException;
+import Siteview.thread.IPrincipal;
 
 public class MonitorValue extends DynamicValue{
 
@@ -37,20 +40,18 @@ public class MonitorValue extends DynamicValue{
 	protected void update() {
 		try {
 			final ISeverity severity = ValueFactory.createOKSeverity();
-			Map<Class<?>,Object> valueMap = busobsearch.searchBusOb(busobname, findfieldname, expressionMap);
+			Map<Class<?>,Object> valueMap = busobsearch.searchBusOb(busobname, findfieldname, expressionMap,BusObConnection.getPrincipal());
 			if(valueMap!=null){
 				Class<?> currentClass = valueMap.keySet().iterator().next();
 				if(currentClass!=null){
-//					if(currentClass == String.class){
-//						
-//					}
-//					else{
-//						setValue(ValueFactory.createDoubleValue(TimestampFactory.now(), severity, severity.toString(), 1, Quality.Original,new double[] { used }
-//					}
-					setValue(ValueFactory.createStringValue(TimestampFactory.now(), severity, severity.toString(), Quality.Original,new String[]{valueMap.get(currentClass).toString()}));
+					if(currentClass == String.class){
+						setValue(ValueFactory.createStringValue(TimestampFactory.now(), severity, severity.toString(), Quality.Original,new String[]{valueMap.get(currentClass).toString()}));
+					}
+					else{
+						setValue(Convert.ToDouble(valueMap.get(currentClass)));
+					}
 				}
 			}
-			
 		} catch (SiteviewException e) {
 			e.printStackTrace();
 		}

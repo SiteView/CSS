@@ -10,10 +10,13 @@ import Siteview.ResourceUtils;
 import Siteview.SiteviewException;
 import Siteview.Api.ISiteviewApi;
 import Siteview.Api.SiteviewApi;
+import Siteview.thread.IPrincipal;
+import Siteview.thread.Thread;
 
 public class BusObConnection {
 	
 	private static ISiteviewApi siteviewapi;
+	private static IPrincipal pal;
 	
 	public static ISiteviewApi getBusObApi() throws SiteviewException{
 		if(siteviewapi == null||!siteviewapi.get_Connected()){
@@ -26,12 +29,20 @@ public class BusObConnection {
 			authentication.set_Password(logininfo[2]);
 			if(api.Login(authentication)){
 				siteviewapi = api;
+				pal = Thread.get_CurrentPrincipal();
 			}
 			else{
 				throw new SiteviewException("µÇÂ¼Ê§°Ü!");
 			}
 		}
 		return siteviewapi;
+	}
+	
+	public static IPrincipal getPrincipal() throws SiteviewException{
+		if(pal==null){
+			getBusObApi();
+		}
+		return pal;
 	}
 	
 	public static String[] getlogininfo() throws SiteviewException{
