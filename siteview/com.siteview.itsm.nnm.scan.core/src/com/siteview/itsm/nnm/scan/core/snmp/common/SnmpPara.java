@@ -1,6 +1,6 @@
 package com.siteview.itsm.nnm.scan.core.snmp.common;
 
-public class SnmpPara {
+public class SnmpPara implements Comparable<SnmpPara>{
 	private String ip;
 	private String community;
 	private int timeout = 300;
@@ -65,6 +65,11 @@ public class SnmpPara {
 
 	public void setSnmpver(String snmpver) {
 		this.snmpver = snmpver;
+	}
+
+	@Override
+	public int compareTo(SnmpPara o) {
+		return 0;
 	}
 
 }

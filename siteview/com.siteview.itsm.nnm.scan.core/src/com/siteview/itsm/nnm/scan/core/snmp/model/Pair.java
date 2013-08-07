@@ -1,5 +1,11 @@
 package com.siteview.itsm.nnm.scan.core.snmp.model;
 
+import java.io.Serializable;
+import java.util.Comparator;
+
+import com.siteview.itsm.nnm.scan.core.snmp.util.ScanUtils;
+import com.siteview.itsm.nnm.scan.core.snmp.util.Utils;
+
 /**
  * һ���򵥵ļ�ֵ�Ե����ݽṹ
  * ����getFirst getSecond����������ȡ��һ�����͵ڶ������ݡ�
@@ -8,7 +14,8 @@ package com.siteview.itsm.nnm.scan.core.snmp.model;
  * @param <K>
  * @param <V>
  */
-public class Pair<K,V> {
+@SuppressWarnings({ "rawtypes", "serial" })
+public class Pair<K extends Comparable,V> implements Serializable,Comparable<Pair<K,V>>{
 	
 	private K key;
 	
@@ -39,5 +46,15 @@ public class Pair<K,V> {
 	@Override
 	public String toString() {
 		return "[first value = " +getFirst() + "second value = " + getSecond()+"]";
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public int compareTo(Pair<K, V> o) {
+		if(Utils.isIp(o.getFirst().toString())){
+			return ScanUtils.ipToLong(this.getFirst().toString()) > ScanUtils.ipToLong(o.getFirst().toString()) ? 1:-1;
+		}
+		return this.getFirst().compareTo(o.getFirst());
 	}
 }

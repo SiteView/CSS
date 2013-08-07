@@ -25,14 +25,35 @@ public class CommonDef {
 	/**
 	 * 锟借备锟斤拷锟斤拷
 	 */
-	public static final String ROUTE_SWITCH = "0";	//涓夊眰浜ゆ崲
-	public static final String SWITCH = "1";		//浜屽眰浜ゆ崲
-	public static final String ROUTER = "2";		//璺敱鍣�
-	public static final String FIREWALL = "3";		//闃茬伀澧�
-	public static final String SERVER = "4";		//鏈嶅姟鍣ㄨ澶囨垨鑰呭紑鍚簡snmp鏈嶅姟鐨刾c
+	public static final String ROUTE_SWITCH = "0";	//三层交换
+	public static final String SWITCH = "1";		//二层交换
+	public static final String ROUTER = "2";		//路由器
+	public static final String FIREWALL = "3";		//防火墙
+	public static final String SERVER = "4";		//服务器，开启了snmp服务的设备
 	public static final String PC = "5";			//pc
-	public static final String OTHER = "6";			//鍏跺畠
+	public static final String OTHER = "6";			//其它
 	
+	public static String getDeviceTypeByTypeId(String typeid){
+		if(typeid.equals(ROUTE_SWITCH)){
+			return "三层交换";
+		}
+		if(typeid.equals(SWITCH)){
+			return "二层交换";
+		}
+		if(typeid.equals(ROUTER)){
+			return "路由器";
+		}
+		if(typeid.equals(FIREWALL)){
+			return "防火墙";
+		}
+		if(typeid.equals(SERVER)){
+			return "服务器";
+		}
+		if(typeid.equals(PC)){
+			return "PC";
+		}
+		return "其它设备";
+	}
 	
 	public static final String ERR_AFT_LOG = "Err_Aft_log.txt";
 	public static final String ERR_ARP_LOG = "Err_Arp_log.txt";

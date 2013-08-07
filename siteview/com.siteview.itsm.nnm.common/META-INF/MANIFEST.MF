@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Common
+Bundle-SymbolicName: com.siteview.itsm.nnm.common;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.siteview.itsm.nnm.common.Activator
+Bundle-Vendor: SITEVIEW
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.siteview.itsm.nnm.scan.core;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Export-Package: com.siteview.itsm.nnm.common,
+ com.siteview.itsm.nnm.common.editor.ipResourceMgr

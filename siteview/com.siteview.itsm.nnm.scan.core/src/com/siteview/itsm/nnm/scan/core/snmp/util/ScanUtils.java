@@ -62,6 +62,7 @@ public class ScanUtils {
 			return new Pair<String, String>(ipStrMin, ipStrMax);
 		}
 	}
+	
 	/**
 	 * IP地址转换成数字long
 	 * @param ip 
@@ -127,6 +128,9 @@ public class ScanUtils {
 	}
 
 	public static void main(String[] args) {
+		Pair<String,String> result = getScaleByIPMask(new Pair<String,String>("192.168.0.0","255.255.255.0"));
+		System.out.println(result.getFirst() + "" + result.getSecond());
+		//System.out.println(getSubnetByIPMask("192.168.0.248","255.255.255.0"));
 		// long i = ipToLong("192.168.0.248");
 		// System.out.println(i);
 		// System.out.println(longToIp(i));
@@ -148,6 +152,18 @@ public class ScanUtils {
 		long numMin1 = ipToLong(scaleB.getFirst());
 		long numMax1 = ipToLong(scaleB.getSecond());
 		return (numMin0 <= numMin1 && numMax1 <= numMax0);
+	}
+	/**
+	 * 判断ip是否属于一个范围
+	 * @param ip
+	 * @param scale
+	 * @return
+	 */
+	public static boolean ipInScale(String ip,Pair<String,String> scale){
+		long numMin = ipToLong(scale.getFirst());
+		long numMax = ipToLong(scale.getSecond());
+		long num = ipToLong(ip);
+		return (num >= numMin && num <=numMax);
 	}
 
 	// trim指示是否保留空串，默认为保留。
@@ -223,5 +239,4 @@ public class ScanUtils {
 		}
 		
 	}
-
 }

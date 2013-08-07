@@ -20,6 +20,7 @@ import com.siteview.itsm.nnm.scan.core.snmp.common.AuxParam;
 import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
 import com.siteview.itsm.nnm.scan.core.snmp.common.SnmpPara;
 import com.siteview.itsm.nnm.scan.core.snmp.constants.CommonDef;
+import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
 import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Bgp;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.DevicePro;
@@ -29,6 +30,7 @@ import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.IfRec;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.RouteItem;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.RouterStandbyItem;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.SubnetInfo;
 import com.siteview.itsm.nnm.scan.core.snmp.util.IoUtils;
 import com.siteview.itsm.nnm.scan.core.snmp.util.PropertiesUtils;
 import com.siteview.itsm.nnm.scan.core.snmp.util.ScanUtils;
@@ -66,6 +68,8 @@ public class NetScan implements Runnable {
 	private Map<String, IDBody> topo_entity_list = new HashMap<String, IDBody>();
 	private Vector<String> seedsArp = new Vector<String>();
 	private IWorkbench workbench;
+	//子网所有设备 ｛子网号：<设备ip,设备详细信息>｝
+	private Map<SubnetInfo,Map<String,IDBody>> subnetDeviceMap = new HashMap<SubnetInfo,Map<String,IDBody>>();
 	
 	public List<Edge> getTopo_edge_list() {
 		return topo_edge_list;
@@ -82,7 +86,7 @@ public class NetScan implements Runnable {
 	public void stop(){
 		siReader.stop();
 	}
-	// 规范化后的设备AFT或ARP数据 {sourceIP,{infInx,[destIP]}}
+	
 	public void init(ScanParam sp, AuxParam ap) {
 		this.scanParam = sp;
 		this.myParam = ap;
@@ -110,22 +114,20 @@ public class NetScan implements Runnable {
 
 	public void readMyScanConfigFile() {
 		myParam = new AuxParam();
-		// myParam.scan_type = "1"; //扫描类型
-		myParam.setScan_type("0"); // 扫描类型
-		myParam.setSeed_type("0");// 种子方式 
-		myParam.setPing_type("1");// 执行ping
-		myParam.setComp_type("1");// 补充类型
-		// myParam.dumb_type = "0"; //生成dumb
-		myParam.setDumb_type("1"); // 生成dumb
-		myParam.setArp_read_type("0");// 不读取2层交换机的arp数据
-		myParam.setNbr_read_type("0");// 不读取邻居表
-		myParam.setRt_read_type("0");// 不读取路由表 恢复路由表 
-		myParam.setVrrp_read_type("0");// 不读取VRRP,HSRP 
-		myParam.setBgp_read_type("0");
-		myParam.setSnmp_version("0");// 自适应SNMP版本
-		myParam.setTracert_type("0");// 不执行trace route
-		myParam.setFilter_type("0"); // 不清除扫描范围外的ip 
-		myParam.setCommit_pc("1"); // 提交PC到SVDB 
+		myParam.setScan_type("0"); 		// 扫描类型
+		myParam.setSeed_type("0");		// 种子方式 
+		myParam.setPing_type("1");		// 执行ping
+		myParam.setComp_type("1");		// 补充类型
+		myParam.setDumb_type("1"); 		// 生成dumb
+		myParam.setArp_read_type("0");	// 不读取2层交换机的arp数据
+		myParam.setNbr_read_type("0");	// 不读取邻居表
+		myParam.setRt_read_type("0");	// 不读取路由表 恢复路由表 
+		myParam.setVrrp_read_type("0");	// 不读取VRRP,HSRP 
+		myParam.setBgp_read_type("0");	// 不读取bgp
+		myParam.setSnmp_version("0");	// 自适应SNMP版本
+		myParam.setTracert_type("0");	// 不执行trace route
+		myParam.setFilter_type("0"); 	// 不清除扫描范围外的ip 
+		myParam.setCommit_pc("1"); 		// 提交PC到SVDB 
 
 		PropertiesUtils.load(IoUtils.getProductPath() + "scanconfig.properties");
 		myParam.setScan_type(PropertiesUtils.getValue("SCAN_TYPE"));
@@ -354,6 +356,26 @@ public class NetScan implements Runnable {
 				// 分析失败日志
 			}
 		}
+		//存储分网段设备数据
+		for (Entry<String, IDBody> e : devid_list.entrySet()) {
+			if (!e.getKey().startsWith("DUMB")) {
+				// 分子网保存设备
+				for (Entry<SubnetInfo, Map<String, IDBody>> entry : subnetDeviceMap
+						.entrySet()) {
+					String subN = entry.getKey().getSubnetNum();
+					String subIp = subN.split("/")[0];
+					Pair<String, String> subScale = ScanUtils
+							.getScaleByIPMask(new Pair<String, String>(subIp,
+									entry.getKey().getMask()));
+					if (ScanUtils.ipInScale(e.getKey(), subScale)) {
+						entry.getValue().put(e.getKey(), e.getValue());
+						break;
+					}
+				}
+			}
+		}
+		GlobalData.subnetDeviceMap.clear();
+		GlobalData.subnetDeviceMap = this.subnetDeviceMap;
 		long theend = System.currentTimeMillis();
 		System.out.println("is end by " + (theend - start));
 	}
@@ -612,6 +634,8 @@ public class NetScan implements Runnable {
 			scaned.clear();
 		if (toscan != null)
 			toscan.clear();
+		//子网IP列表
+		List<String> subnetL = new ArrayList<String>();
 		// 从种子发现子网
 		for (String seedIp : seedList) {
 			List<Pair<String, String>> maskList = new ArrayList<Pair<String, String>>();
@@ -620,10 +644,21 @@ public class NetScan implements Runnable {
 					.getIpMaskList(new SnmpPara(seedIp,
 							getCommunity_Get(seedIp), scanParam.getTimeout(),
 							scanParam.getRetrytimes()), maskList);
+			
 			for (int i = 0; i < maskList.size(); i++) {
 				// 分析子网
 				Pair<String, String> scale_cur = ScanUtils
 						.getScaleByIPMask(maskList.get(i));
+				//得到子网号
+				String subS = ScanUtils.getSubnetByIPMask(maskList.get(i).getFirst(), maskList.get(i).getSecond());
+				SubnetInfo info = new SubnetInfo();
+				info.setMask(maskList.get(i).getSecond());
+				info.setSubnetNum(subS);
+				if(!subnetDeviceMap.containsKey(info)){
+					subnetDeviceMap.put(info, new HashMap<String,IDBody>());
+				}
+				if(!subnetL.contains(subS))
+					subnetL.add(subS);
 				boolean bExist = false;
 				for (int j = 0; j < toscan.size(); j++) {
 					String first = toscan.get(j).getFirst();
@@ -637,9 +672,9 @@ public class NetScan implements Runnable {
 				if (!bExist) {
 					toscan.add(scale_cur);
 				}
-
 			}
 		}
+		
 		for (int depth = 0; depth < scanParam.getDepth(); depth++) {
 			List<Pair<String, String>> scale_list_cur = new ArrayList<Pair<String, String>>();
 			Utils.collectionCopyAll(scale_list_cur, toscan);
@@ -655,7 +690,7 @@ public class NetScan implements Runnable {
 				}
 			}
 		}
-
+		
 		devid_list = siReader.getDevid_list_visited();
 		return true;
 	}

@@ -29,6 +29,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setShowPerspectiveBar(true);
 		configurer.setShowStatusLine(true);
 		configurer.setTitle("NNM");
+		
 	}
 	@Override
 	public void postWindowOpen() {
@@ -37,6 +38,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		getWindowConfigurer().getWindow().getShell().setMaximized(true);
 		StartScan scan = StartScan.getInstance(getWindowConfigurer().getWindow().getShell());
 		if(!scan.scaned)
-			StartScan.getInstance(getWindowConfigurer().getWindow().getShell()).scanTopo();
+			scan.scanTopo();
 	}
 }

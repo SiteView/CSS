@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
+import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.SubnetInfo;
 
 
 public class GlobalData {
@@ -28,4 +30,9 @@ public class GlobalData {
 	 * 全局的扫描参数
 	 */
 	public static ScanParam scanParam = new ScanParam();
+	/**
+	 * 子网列表
+	 */
+	public static Map<SubnetInfo,Map<String,IDBody>> subnetDeviceMap = new HashMap<SubnetInfo,Map<String,IDBody>>();
+	
 }

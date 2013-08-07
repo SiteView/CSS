@@ -34,7 +34,7 @@ public class Utils {
 		return false;
 	}
 	/**
-	 *����Ĳ�������Ϊ��
+	 *传入的参数不能为空
 	 * @param value
 	 * @return
 	 */
@@ -45,7 +45,7 @@ public class Utils {
 		return Integer.parseInt(value);
 	}
 	/**
-	 * �������Ĳ���Ϊ�վͷ���0
+	 * 如果传入的参数为空就返回0
 	 * @param value
 	 * @return
 	 */
@@ -68,8 +68,8 @@ public class Utils {
 		}
 	}
 	/**
-	 * �Ƚ��������ϵ������Ƿ���ȣ���˳��Ƚϡ�
-	 * �����еĶ������ʵ�� Comparable�ӿ�
+	 * 比较两个集合的内容是否相等，按顺序比较。
+	 * 集合中的对象必须实现 Comparable接口
 	 * @param a
 	 * @param b
 	 * @return
@@ -99,6 +99,7 @@ public class Utils {
 			target.put(k, source.get(k));
 		}
 	}
+	@SuppressWarnings("unused")
 	public static void msain(String[] args) {
 		Map<String, Pair<String, String>> target = new HashMap<String, Pair<String, String>>(); 
 		Map<String, Pair<String, String>> src = new HashMap<String, Pair<String, String>>();
@@ -119,36 +120,8 @@ public class Utils {
 			System.out.println("key: " + key + " value : " + target.get(key));
 		}
 	}
-	@SuppressWarnings("unchecked")
 	public static Vector<VariableBinding> createVaribles(String middleFix){
 		Vector<VariableBinding> vbs = new Vector<VariableBinding>();
-//		Class clazz = OIDConstants.class;
-//		Field[] fields = clazz.getDeclaredFields();
-//		for(Field f:fields){
-//			String name = f.getName();
-//			if(name.indexOf("middleFix") > 0){
-//				String[] names = name.split("_");
-//				String methedName = "get"
-//						+ Utils.buildFirstLetterCapMethodName(names[0].toLowerCase()) 
-//						+ Utils.buildFirstLetterCapMethodName(names[1].toLowerCase())
-//						+ Utils.buildFirstLetterCapMethodName(names[2].toLowerCase());
-//				try {
-//					Method m = clazz.getMethod(methedName, null);
-//					OID oid = (OID)m.invoke(clazz, (Object[])null);
-//					vbs.add(new VariableBinding(oid));
-//				} catch (IllegalAccessException e) {
-//					e.printStackTrace();
-//				} catch (IllegalArgumentException e) {
-//					e.printStackTrace();
-//				} catch (InvocationTargetException e) {
-//					e.printStackTrace();
-//				} catch (NoSuchMethodException e) {
-//					e.printStackTrace();
-//				} catch (SecurityException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
 		return vbs;
 	}
 	public static String parseToHexString(String value){
@@ -162,7 +135,7 @@ public class Utils {
 		return hexStr;
 	}
 	/**
-	 * �ж�IP��ַ��ʽ�Ƿ���ȷ
+	 *  判断传入的字符串是否为ip地址格式。
 	 * @param src
 	 * @return
 	 */
@@ -175,5 +148,24 @@ public class Utils {
 		Matcher matcher = pattern.matcher(src);
 		return matcher.matches();
 	}
-	
+	/**
+	 * 格式化mac地址
+	 * @param mac 没有分隔符的mac地址 如 FFFFFFFFFFFF
+	 * @param seq 分隔符 如":"
+	 * @return FF:FF:FF:FF:FF:FF
+	 */
+	public static String formatMac(String mac,String seq){
+		int start = 0;
+		int tmpL = 2;
+		StringBuffer sb = new StringBuffer("");
+		if(mac.length() == 12){
+			while(tmpL <=12){
+				sb.append(mac.substring(start,tmpL)).append(seq);
+				start = tmpL;
+				tmpL += 2;
+			}
+			return sb.toString();
+		}
+		return mac;
+	}
 }

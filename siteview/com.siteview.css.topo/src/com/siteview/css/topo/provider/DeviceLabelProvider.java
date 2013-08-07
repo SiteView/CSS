@@ -12,6 +12,7 @@ import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
 import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
+import com.siteview.itsm.nnm.scan.core.snmp.util.Utils;
 
 public class DeviceLabelProvider implements ITableLabelProvider {
 
@@ -57,7 +58,7 @@ public class DeviceLabelProvider implements ITableLabelProvider {
 			}
 			return pair.getSecond().getDevModel();
 		case 3: //设备类型
-			return formatMac(pair.getSecond().getBaseMac());
+			return Utils.formatMac(pair.getSecond().getBaseMac()," ");
 		case 4:
 			//如果是点击的PC此列显示连接设备的ip 否则 显示设备型号
 			if(ShowDeviceEditor.type == 300016){
@@ -69,20 +70,7 @@ public class DeviceLabelProvider implements ITableLabelProvider {
 		}
 		return null;
 	}
-	private String formatMac(String mac){
-		int start = 0;
-		int tmpL = 2;
-		StringBuffer sb = new StringBuffer("");
-		if(mac.length() == 12){
-			while(tmpL <=12){
-				sb.append(mac.substring(start,tmpL)).append(" ");
-				start = tmpL;
-				tmpL += 2;
-			}
-			return sb.toString();
-		}
-		return mac;
-	}
+	
 	private Edge getEdge(String rightIp){
 		for(Edge edge : GlobalData.edgeList){
 			if(edge.getIp_right().equals(rightIp)){
