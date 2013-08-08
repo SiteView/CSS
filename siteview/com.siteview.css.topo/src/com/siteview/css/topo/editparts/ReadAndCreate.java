@@ -26,12 +26,12 @@ public class ReadAndCreate {
 	final String BOTTOM_LEFT = "BOTTOM_LEFT";
 	final String BOTTOM = "BOTTOM";
 	final String BOTTOM_RIGHT = "BOTTOM_RIGHT";
-	
+
 	private final String filename = "C:\\����ͼ\\css3.gml";
 
-	/**����OPI*/
+	/** ����OPI */
 	private StringBuffer strContext = new StringBuffer("");
-	/**����gml*/
+	/** ����gml */
 	private StringBuffer strGml = new StringBuffer("");
 
 	/**
@@ -129,17 +129,18 @@ public class ReadAndCreate {
 		}
 		return list;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List allInfo(){
+	public List allInfo() {
 		List li = new ArrayList();
 		Map map = readNode();
 		List list = readEdge();
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
 			String s = (String) iterator.next();
-			String str[]= s.split("-");
-			li.add(str[0]+":"+map.get(str[0])+","+str[1]+":"+map.get(str[1]));
+			String str[] = s.split("-");
+			li.add(str[0] + ":" + map.get(str[0]) + "," + str[1] + ":"
+					+ map.get(str[1]));
 		}
 		Iterator iterator2 = li.iterator();
 		while (iterator2.hasNext()) {
@@ -147,8 +148,7 @@ public class ReadAndCreate {
 		}
 		return li;
 	}
-	
-	
+
 	/**
 	 * ����OPIͷ��
 	 */
@@ -260,22 +260,24 @@ public class ReadAndCreate {
 
 	/**
 	 * ����OPI���ӱ�
+	 * 
 	 * @param src
 	 * @param tgt
 	 */
-	public void CreateEdge(String src, String tgt,String src_term,String tgt_term) {
+	public void CreateEdge(String src, String tgt, String src_term,
+			String tgt_term) {
 		strContext
 				.append("\n<connection typeId=\"org.csstudio.opibuilder.connection\" version=\"1.0.0\">");
 		strContext.append("\n<fill_arrow>true</fill_arrow>");
 		strContext.append("\n<widget_type>connection</widget_type>");
-		strContext.append("\n<src_term>"+src_term+"</src_term>");
+		strContext.append("\n<src_term>" + src_term + "</src_term>");
 		strContext.append("\n<arrow_length>15</arrow_length>");
 		strContext.append("\n<line_style>0</line_style>");
 		strContext.append("\n<line_color>");
 		strContext.append("\n<color red=\"0\" green=\"0\" blue=\"0\" />");
 		strContext.append("\n</line_color>");
 		strContext.append("\n<wuid>6e843118:13fbda91f83:-7fe7</wuid>");
-		strContext.append("\n<tgt_term>"+tgt_term+"</tgt_term>");
+		strContext.append("\n<tgt_term>" + tgt_term + "</tgt_term>");
 		strContext.append("\n<arrows>0</arrows>");
 		strContext.append("\n<anti_alias>true</anti_alias>");
 		strContext.append("\n<router>1</router>");
@@ -292,7 +294,7 @@ public class ReadAndCreate {
 	 */
 	public void CreateOver() {
 		strContext.append("\n</display>");
-		SaveFile(strContext,"css.opi");
+		SaveFile(strContext, "css.opi");
 	}
 
 	/**
@@ -314,6 +316,7 @@ public class ReadAndCreate {
 	private int y;
 	private int x1;
 	private int y1;
+
 	@SuppressWarnings("rawtypes")
 	public void CreateNodeAndEdge() {
 		Map map = readNode();
@@ -328,24 +331,23 @@ public class ReadAndCreate {
 		}
 		String xy = "";
 		String x1y1 = "";
-		List list =allInfo();
+		List list = allInfo();
 		Iterator info = list.iterator();
 
 		for (int i = 0; i < list.size(); i++) {
-			String s  = (String) info.next();
+			String s = (String) info.next();
 			String str[] = s.split(",");
 			s2 = str[0].split(":");
 			s4 = str[1].split(":");
 			String s3[] = s2[1].split("-");
 			String s5[] = s4[1].split("-");
 			x = Integer.parseInt(s3[0]);
-			y =Integer.parseInt(s3[1]);
-			x1=Integer.parseInt(s5[0]);
-			y1=Integer.parseInt(s5[1]);
-			
-			// �ж����·�
-			if (x - x1 <= modeWidth
-					&& x - x1 >= -modeWidth) {
+			y = Integer.parseInt(s3[1]);
+			x1 = Integer.parseInt(s5[0]);
+			y1 = Integer.parseInt(s5[1]);
+
+			//
+			if (x - x1 <= modeWidth && x - x1 >= -modeWidth) {
 				if (y - y1 > 0) {
 					xy = TOP;
 					x1y1 = BOTTOM;
@@ -355,9 +357,8 @@ public class ReadAndCreate {
 					x1y1 = TOP;
 				}
 			}
-			// �ж����ҷ�
-			if (y - y1 <= modeWidth
-					&& y - y1 >= -modeWidth) {
+			//
+			if (y - y1 <= modeWidth && y - y1 >= -modeWidth) {
 				if (x - x1 > 0) {
 					xy = LEFT;
 					x1y1 = RIGHT;
@@ -367,31 +368,26 @@ public class ReadAndCreate {
 					x1y1 = LEFT;
 				}
 			}
-			if (x - x1 > modeWidth
-					&& y - y1 > modeWidth) {
+			if (x - x1 > modeWidth && y - y1 > modeWidth) {
 				xy = TOP_LEFT;
 				x1y1 = BOTTOM_RIGHT;
 			}
-			if (x - x1 > modeWidth
-					&& y - y1 < -modeWidth) {
+			if (x - x1 > modeWidth && y - y1 < -modeWidth) {
 				xy = BOTTOM_LEFT;
 				x1y1 = TOP_RIGHT;
 			}
-			if (x - x1 < -modeWidth
-					&& y - y1 > modeWidth) {
+			if (x - x1 < -modeWidth && y - y1 > modeWidth) {
 				xy = TOP_RIGHT;
 				x1y1 = BOTTOM_LEFT;
 			}
-			if (x - x1 < -modeWidth
-					&& y - y1 < -modeWidth) {
+			if (x - x1 < -modeWidth && y - y1 < -modeWidth) {
 				xy = BOTTOM_RIGHT;
 				x1y1 = TOP_LEFT;
 			}
-			CreateEdge(s2[0], s4[0],xy, x1y1);
+			CreateEdge(s2[0], s4[0], xy, x1y1);
 		}
 	}
-	
-	
+
 	/**
 	 * ����gmlͷ��
 	 */
@@ -403,7 +399,7 @@ public class ReadAndCreate {
 		strGml.append("\n\tlabel	\"\"");
 		strGml.append("\n\tdirected	1 \n");
 	}
-	
+
 	/**
 	 * Task:����gml�ڵ�
 	 * 
@@ -432,14 +428,14 @@ public class ReadAndCreate {
 		strGml.append("\t\t\t outline \"" + outline + "\"\n");
 		strGml.append("\t\t ] \n");
 		strGml.append("\t\t LabelGraphics\n \t\t [ \n");
-		strGml.append("\t\t\t text \"" + key2 + "\"\n");//��ʶ·��ip
+		strGml.append("\t\t\t text \"" + key2 + "\"\n");// ��ʶ·��ip
 		strGml.append("\t\t\t fontSize 12\n");
 		strGml.append("\t\t\t fontName \"Dialog\"\n");
-		strGml.append("\t\t\t anchor \"c\"\n");//mac��ַ
+		strGml.append("\t\t\t anchor \"c\"\n");// mac��ַ
 		strGml.append("\t\t ] \n");
 		strGml.append("\t ] \n");
 	}
-	
+
 	/**
 	 * Task:����gml��
 	 * 
@@ -469,19 +465,19 @@ public class ReadAndCreate {
 		strGml.append("\t\t ] \n");
 		strGml.append("\t ] \n");
 	}
-	
+
 	/**
 	 * ����gml����
 	 */
 	public void DrawOver() {
 		strGml.append("] \n");
-		SaveFile(strGml,"css.gml");
+		SaveFile(strGml, "css.gml");
 	}
-	
+
 	/**
 	 * �����ļ�
 	 */
-	public void SaveFile(StringBuffer sBuffer,String file){
+	public void SaveFile(StringBuffer sBuffer, String file) {
 		// ����һ��Ĭ���ļ���·��
 		String path = "C:\\����ͼ\\";
 		File fileUpdate = new File(path);
