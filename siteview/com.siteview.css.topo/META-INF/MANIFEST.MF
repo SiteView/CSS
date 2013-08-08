@@ -27,4 +27,5 @@ Bundle-ClassPath: lib/commons-net-3.3-sources.jar,
  lib/jpcap.jar,
  lib/snmp4j-2.0.3.jar,
  lib/sqlitejdbc-v053.jar,
- .
+ .,
+ lib/dom4j-1.6.1.jar
