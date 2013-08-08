@@ -2,7 +2,6 @@
 
 import java.util.ArrayList;
 
-import org.csstudio.opibuilder.editor.OPIEditor;
 import org.csstudio.opibuilder.model.DisplayModel;
 
 /**
@@ -26,14 +25,16 @@ public class GraphicContainer {
 		nodes = new ArrayList<GraphicObject>();
 	}
 
-	public void addNode(GraphicObject node) {
-		for (int i = 0; i < nodes.size() - 1; i++) {
-			if (nodes.get(i).getId().equals(node.getId()))
-				return;
-		}
-		nodes.add(node);
-		diplayModel.addChild(node.getMode());
-	}
+	// Don't understand
+	// public void addNode(GraphicObject node) {
+	// System.out.println("--------------------"+nodes.size());
+	// for (int i = 0; i < nodes.size() - 1; i++) {
+	// if (nodes.get(i).getId().equals(node.getId()))
+	// return;
+	// }
+	// nodes.add(node);//添加所有节点信息
+	// diplayModel.addChild(node.getMode());
+	// }
 
 	public DisplayModel getDisplayModel() {
 		return diplayModel;

@@ -1,9 +1,5 @@
 ﻿package ILOG.Diagrammer.GraphLayout;
 
-import java.awt.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import system.ArgumentException;
 import system.Math;
 import system.Random;
@@ -146,7 +142,6 @@ public class ForceDirectedLayout extends GraphLayout {
 			this._vectNodesDy[i] /= 2f;
 		}
 		super.OnLayoutStepPerformedIfNeeded();
-
 	}
 
 	private void ComputeFromToIds() {
@@ -156,12 +151,10 @@ public class ForceDirectedLayout extends GraphLayout {
 
 			this._vectFromId[i] = this._layoutData
 					.GetIntIdentifier(this._graphModel.GetFrom(link));
-
 			this._vectToId[i] = this._layoutData
 					.GetIntIdentifier(this._graphModel.GetTo(link));
 		}
 		super.OnLayoutStepPerformedIfNeeded();
-
 	}
 
 	private void ComputeLinkForces(float linkLengthWeight,
@@ -455,7 +448,8 @@ public class ForceDirectedLayout extends GraphLayout {
 
 	// ------
 	private void DoLayout(Boolean redraw) {
-		InternalRect modifiedLayoutRegion = null;
+
+		InternalRect modifiedLayoutRegion = null;// 获得图片模型的位置及长宽 0 0 32 32
 		Boolean forceFitToLayoutRegion = this.get_ForceFitToLayoutRegion();
 		if (forceFitToLayoutRegion) {
 
@@ -476,7 +470,9 @@ public class ForceDirectedLayout extends GraphLayout {
 			this._limitedValue = 1000f;
 		}
 		InternalPoint centerPoint = null;
+
 		if (this._positionData.GetNumberOfFixedNodes() == 0) {
+
 			centerPoint = forceFitToLayoutRegion ? new InternalPoint(
 					modifiedLayoutRegion.X
 							+ (modifiedLayoutRegion.Width * 0.5f),
@@ -484,6 +480,7 @@ public class ForceDirectedLayout extends GraphLayout {
 							+ (modifiedLayoutRegion.Height * 0.5f))
 					: this._positionData.GetNodesBarycenter();
 		}
+
 		Random random = new Random(0);
 		float additionalNodeRepulsionWeight = 0f;
 		Integer allowedNumberOfIterations = this
@@ -493,7 +490,7 @@ public class ForceDirectedLayout extends GraphLayout {
 				.DoIterations(allowedNumberOfIterations, modifiedLayoutRegion,
 						centerPoint, forceFitToLayoutRegion,
 						additionalNodeRepulsionWeight, respectNodeSizes,
-						random, redraw);
+						random, redraw);// 1000
 		additionalNodeRepulsionWeight = this
 				.get_AdditionalNodeRepulsionWeight();
 		if (additionalNodeRepulsionWeight > 0f) {
@@ -501,7 +498,6 @@ public class ForceDirectedLayout extends GraphLayout {
 					forceFitToLayoutRegion, additionalNodeRepulsionWeight,
 					respectNodeSizes, random, redraw);
 		}
-
 		if (!this._nodesAlreadyPlaced
 				&& !this._positionData
 						.PlaceNodesAtPosition(redraw, centerPoint)) {
@@ -516,7 +512,6 @@ public class ForceDirectedLayout extends GraphLayout {
 	}
 
 	public float GetPreferredLength(java.lang.Object link) {
-
 		return LayoutParametersUtil.GetLinkParameter(this, link,
 				LINK_LENGTH_PROPERTY, (float) -1f);
 
@@ -607,14 +602,6 @@ public class ForceDirectedLayout extends GraphLayout {
 		// 1.模拟数据，相关连接模型 2.给模型设置坐标
 
 		Boolean redraw = false;
-		ArrayList<String> aList = new ArrayList<String>();
-		String t = "0-1,0-2,0-3,1-4,1-5,1-6,2-7,2-8,2-9,3-10,3-11,3-12,3-13,3-14";
-		String string[] = t.split(",");
-		for (int i = 0; i < string.length; i++) {
-			System.out.println(string[i]);
-			aList.add(string[i]);
-		}
-
 		this._graphModel = this.GetGraphModel();
 		this._layoutReport = (ForceDirectedLayoutReport) super
 				.GetLayoutReport();
@@ -622,6 +609,8 @@ public class ForceDirectedLayout extends GraphLayout {
 		this._layoutData.BeforeLayout(true, false, false, false);
 
 		this._topologicalData = this._layoutData.GetTopologicalData();// date
+
+		// this._topologicalData.GetNodes();
 
 		this._positionData = this._layoutData.GetPositionData();
 		if ((this._topologicalData == null) || (this._positionData == null)) {

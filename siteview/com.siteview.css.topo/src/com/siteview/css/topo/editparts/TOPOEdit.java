@@ -1,6 +1,5 @@
 package com.siteview.css.topo.editparts;
 
-import java.awt.geom.Rectangle2D;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -8,34 +7,38 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.csstudio.opibuilder.editor.OPIEditor;
-import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.DisplayModel;
+import org.csstudio.opibuilder.properties.FilePathProperty;
+import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.widgets.model.ImageModel;
 import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.draw2d.graph.Node;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
-import ILOG.Diagrammer.GraphicContainer;
+import system.ComponentModel.ISite;
+
 import ILOG.Diagrammer.GraphicObject;
+import ILOG.Diagrammer.Link;
+import ILOG.Diagrammer.Rectangle2D;
+import ILOG.Diagrammer.GraphLayout.CoordinatesMode;
 import ILOG.Diagrammer.GraphLayout.ForceDirectedLayout;
 import ILOG.Diagrammer.GraphLayout.ForceDirectedLayoutReport;
-import ILOG.Diagrammer.GraphLayout.TreeLayout;
-import ILOG.Diagrammer.GraphLayout.TreeLayoutMode;
+import ILOG.Diagrammer.GraphLayout.GraphLayoutRegionMode;
 
+import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.models.TopologyModel;
-import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
-import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
-import com.siteview.itsm.nnm.scan.core.snmp.pojo.DevicePro;
-import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
-import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
+import com.siteview.snmp.common.ScanParam;
+import com.siteview.snmp.pojo.DevicePro;
+import com.siteview.snmp.pojo.Edge;
+import com.siteview.snmp.pojo.IDBody;
 
 public class TOPOEdit extends OPIEditor {
 	/** 坐标定位 */
@@ -49,6 +52,7 @@ public class TOPOEdit extends OPIEditor {
 	final String BOTTOM_RIGHT = "BOTTOM_RIGHT";
 
 	public static final String PROP_IMAGE_FILE = "image_file";
+	public static final String PROP_AUTOSIZE = "auto_size";
 	private static final String[] FILE_EXTENSIONS = new String[] { "jpg",
 			"jpeg", "gif", "bmp", "png" };
 	int nnodes;
@@ -71,43 +75,6 @@ public class TOPOEdit extends OPIEditor {
 	protected void createGraphicalViewer(Composite parent) {
 		super.createGraphicalViewer(parent);
 		DisplayModel displayModel = getDisplayModel();
-		// 添加模型
-		// List testList = new ArrayList();
-		// TopologyModel[] model = new TopologyModel[15];
-		// ConnectionModel[] cModels = new ConnectionModel[model.length];
-		// for (int i = 0; i < model.length; i++) {
-		// model[i] = new TopologyModel();
-		// cModels[i] = new ConnectionModel(displayModel);
-		// displayModel.addChild(model[i]);
-		// }
-		// //设置连接模型
-		// String t =
-		// "0-1,0-2,0-3,1-4,1-5,1-6,2-7,2-8,2-9,3-10,3-11,3-12,3-13,3-14";
-		// String test[] = t.split(",");
-		// for (int i = 0; i < test.length; i++) {
-		// testList.add(test[i]);
-		// }
-		//
-		// Iterator it = testList.iterator();
-		// String mStr = "";
-		// String spitStr[];
-		// for (int i = 0; i < test.length; i++) {
-		// mStr = (String) it.next();
-		// spitStr = mStr.split("-");
-		// cModels[i].connect(model[Integer.parseInt(spitStr[0])], BOTTOM,
-		// model[Integer.parseInt(spitStr[1])], TOP);
-		// }
-
-		// Map<String, String> map = red.readNode();
-		// Iterator its = map.keySet().iterator();
-		// while (its.hasNext()) {
-		// String key = (String) its.next();
-		// String value = map.get(key);
-		// String[] values = value.split("-");
-		//
-		// model[Integer.parseInt(key)].setX(Integer.parseInt(values[0]));
-		// model[Integer.parseInt(key)].setY(Integer.parseInt(values[1]));
-		// }
 
 		// tree layout
 		// TreeLayout treeLayout = new TreeLayout();
@@ -118,54 +85,72 @@ public class TOPOEdit extends OPIEditor {
 		// force layout
 		ForceDirectedLayout forceLayout = new ForceDirectedLayout();
 		forceLayout.SetLayoutReport(new ForceDirectedLayoutReport());
-		forceLayout.set_PreferredLinksLength(3);
+		forceLayout.set_PreferredLinksLength(150);
 		forceLayout.set_RespectNodeSizes(true);
 
 		TopoGraph container = new TopoGraph(displayModel);
 
-		for (Entry<String, IDBody> entry : GlobalData.deviceList.entrySet()) {
-			String ip = entry.getKey();
+		for (Entry<String, IDBody> entry : TopoData.deviceList.entrySet()) {
+			String ip = entry.getKey();// 获取设备的所有ip包括亚设备的信息
+			// System.out.println(ip+"```````````````````````"+entry.getValue());
 			// entry.getValue();
-			container.addNode(new TopoNode(container, ip, new TopologyModel(),
-					entry.getValue()));
+			// 判断设备类型
+			ImageModel imageModel = new ImageModel();
+			imageModel.setWidth(32);
+			imageModel.setHeight(32);
+
+			if (ip.startsWith("DUMB")) {
+				imageModel.addProperty(new FilePathProperty(PROP_IMAGE_FILE,
+						"Image File", WidgetPropertyCategory.Basic, new Path(
+								"bmp_PC_Gray.bmp"), FILE_EXTENSIONS));
+				imageModel.setName(ip);
+			} else {
+				imageModel.addProperty(new FilePathProperty(PROP_IMAGE_FILE,
+						"Image File", WidgetPropertyCategory.Basic, new Path(
+								"bmp_PC_Blue.bmp"), FILE_EXTENSIONS));
+				imageModel.setName(ip);
+
+			}
+			container.addNode(new TopoNode(container, ip, imageModel, entry
+					.getValue()));
 		}
 
 		String leftIp;
 		String rightIp;
-
-		for (int i = 0; i < GlobalData.edgeList.size(); i++) {
-			Edge edge = (Edge) GlobalData.edgeList.get(i);
+		for (int i = 0; i < TopoData.edgeList.size(); i++) {
+			Edge edge = (Edge) TopoData.edgeList.get(i);
 			leftIp = edge.getIp_left();
 			rightIp = edge.getIp_right();
-			if (leftIp.startsWith("DUMP")) {
-				IDBody td = new IDBody();
-				td.setDevType("6");
-				td.getIps().add(leftIp);
-				container.addNode(new TopoNode(container, leftIp,
-						new TopologyModel(), td));
-			}
-			if (rightIp.startsWith("DUMP")) {
-				IDBody td = new IDBody();
-				td.setDevType("DUMP");
-				td.getIps().add(rightIp);
-				container.addNode(new TopoNode(container, rightIp,
-						new TopologyModel(), td));
-			}
-
-		}
-
-		for (int i = 0; i < GlobalData.edgeList.size(); i++) {
-			Edge edge = (Edge) GlobalData.edgeList.get(i);
-			leftIp = edge.getIp_left();
-			rightIp = edge.getIp_right();
-			//System.out.println(leftIp + "<-->" + rightIp);
+			// System.out.println(leftIp + "<-->" + rightIp);
 			container.addLink(leftIp, rightIp);
 		}
 
 		forceLayout.Attach(container);
 
 		forceLayout.Layout();
-
+		List<GraphicObject> afterLayoutNodes = container.getNodes();
+		if (afterLayoutNodes != null && afterLayoutNodes.size() > 0) {
+			int tmpWidth = 0;
+			for (GraphicObject object : afterLayoutNodes) {
+				if (object.isNode()) {
+					int tmpX = object.getMode().getX();
+					int tmpY = object.getMode().getY();
+					tmpWidth = object.getMode().getWidth();
+					int tmpHeight = object.getMode().getHeight();
+					// int centerX = (int)(tmpX + tmpWidth/2);
+					// int centerY = (int)(tmpY + tmpHeight/2);
+					// Point centerP = new Point(centerX, centerY);
+					// System.out.println("模型："+object.getId()+"x = " +
+					// tmpX+"-----"+"y = "+tmpY);
+				}
+				if (object.isLink()) {
+					Link link = (Link) object;
+					// System.out.println("起点："+link.getSource()+"  终点："+link.getTarget());
+					link.connect(tmpWidth * 2, link.getSource(),
+							link.getTarget());// 得到source，target的坐标
+				}
+			}
+		}
 	}
 
 	/**
@@ -210,9 +195,9 @@ public class TOPOEdit extends OPIEditor {
 	}
 
 	// ========================
-	private void buildLevelTree(Node v, int x) {
-		if (v.getOffsetIncoming() != 0) {
-
-		}
-	}
+	// private void buildLevelTree(Node v, int x) {
+	// if (v.getOffsetIncoming() != 0) {
+	//
+	// }
+	// }
 }
