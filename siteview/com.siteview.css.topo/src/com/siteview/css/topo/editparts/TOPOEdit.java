@@ -15,7 +15,6 @@ import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -23,17 +22,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
-import system.ComponentModel.ISite;
 
 import ILOG.Diagrammer.GraphicObject;
 import ILOG.Diagrammer.Link;
-import ILOG.Diagrammer.Rectangle2D;
-import ILOG.Diagrammer.GraphLayout.CoordinatesMode;
 import ILOG.Diagrammer.GraphLayout.ForceDirectedLayout;
 import ILOG.Diagrammer.GraphLayout.ForceDirectedLayoutReport;
-import ILOG.Diagrammer.GraphLayout.GraphLayoutRegionMode;
 
-import com.siteview.css.topo.models.TopologyModel;
 import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
 import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.DevicePro;
