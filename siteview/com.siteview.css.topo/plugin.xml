@@ -12,6 +12,15 @@
             name="Topology"
             typeId="com.siteview.css.topo.topology">
       </widget>
+      <widget
+            category="Monitors"
+            description="A Router"
+            editpart_class="com.siteview.css.topo.editparts.RouterEdit"
+            icon="icons/router.png"
+            model_class="com.siteview.css.topo.models.RouterModel"
+            name="Router"
+            typeId="com.siteview.css.topo.router">
+      </widget>
 	</extension>
  <extension
        point="org.csstudio.opibuilder.graphicalFeedbackFactory">

@@ -1,20 +1,20 @@
 package com.siteview.itsm.nnm.scan.core.snmp.pojo;
 
 /**
- * 杈圭粨鏋�
- * @author haiming.wang
+ * 鏉堝湱绮ㄩ弸锟� * @author haiming.wang
  *
  */
 public class Edge {
 
-	private String ip_left;		//左端点ip
-	private String pt_left;		//左端点port
-	private String inf_left;	//左端点inf
-	private String dsc_left;	//左端点描述信息
-	private String ip_right;	//右端点ip
-	private String pt_right;	//右端点port
-	private String inf_right;	//右端点inf
-	private String dsc_right;	//右端点描述信息
+	private String ip_left;		//宸︾鐐筰p
+	private String pt_left;		//宸︾鐐筽ort
+	private String inf_left;	//宸︾鐐筰nf
+	private String dsc_left;	//宸︾鐐规弿杩颁俊鎭�
+	private String ip_right;	//鍙崇鐐筰p
+	private String pt_right;	//鍙崇鐐筽ort
+	private String inf_right;	//鍙崇鐐筰nf
+	private String dsc_right;	//鍙崇鐐规弿杩颁俊鎭�	public String getIp_left() {
+	
 	public String getIp_left() {
 		return ip_left;
 	}
