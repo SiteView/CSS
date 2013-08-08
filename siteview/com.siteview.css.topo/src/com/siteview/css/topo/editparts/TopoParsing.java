@@ -10,19 +10,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TopoParsing {
-	
-	private Map<String, String> map=new HashMap<String,String>();
-	
-	
-	/**Task£º½âÎögml
+
+	private Map<String, String> map = new HashMap<String, String>();
+
+	/**
+	 * Taskï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gml
 	 * 
 	 */
 	public Map<String, String> readFileByChars() {
-		//System.out.println("¶ÁÎÄ¼þ~=======================");
+		// System.out.println("ï¿½ï¿½ï¿½Ä¼ï¿½~=======================");
 		Reader reader = null;
 		try {
-			// Ò»´Î¶ÁÒ»¸ö×Ö·û
-			reader = new InputStreamReader(new FileInputStream("C:\\ÍØÆËÍ¼\\css1.gml"));
+			// Ò»ï¿½Î¶ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½
+			reader = new InputStreamReader(new FileInputStream(
+					"C:\\ï¿½ï¿½ï¿½ï¿½Í¼\\css1.gml"));
 			int tempchar;
 			StringBuffer d = new StringBuffer("");
 			while ((tempchar = reader.read()) != -1) {
@@ -41,21 +42,26 @@ public class TopoParsing {
 					for (String str : spit) {
 						if (str.indexOf("id") == -1)
 							continue;
-						//System.out.println(str);
-						String key = str.substring(str.indexOf("id")+2, str.indexOf("label"));
-						String values=str.substring(str.indexOf("graphics")+1, str.indexOf("LabelGraphics"));
-						String x = values.substring(values.indexOf("x")+1, values.indexOf("y"));
-						String y = values.substring(values.indexOf("y")+1, values.indexOf("w"));
+						// System.out.println(str);
+						String key = str.substring(str.indexOf("id") + 2,
+								str.indexOf("label"));
+						String values = str.substring(
+								str.indexOf("graphics") + 1,
+								str.indexOf("LabelGraphics"));
+						String x = values.substring(values.indexOf("x") + 1,
+								values.indexOf("y"));
+						String y = values.substring(values.indexOf("y") + 1,
+								values.indexOf("w"));
 						map.put(key, x + "-" + y);
 					}
 				}
 			}
-//			Iterator it = map.keySet().iterator();
-//			while (it.hasNext()) {
-//				String key = (String) it.next();
-//				String value = map.get(key);
-//				System.out.println("key="+key+"-----value="+value);
-//			}
+			// Iterator it = map.keySet().iterator();
+			// while (it.hasNext()) {
+			// String key = (String) it.next();
+			// String value = map.get(key);
+			// System.out.println("key="+key+"-----value="+value);
+			// }
 			return map;
 		} catch (Exception e) {
 			e.printStackTrace();

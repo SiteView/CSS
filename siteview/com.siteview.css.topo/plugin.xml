@@ -73,5 +73,27 @@
        </action>
     </actionSet>
  </extension>
+ <extension
+       point="org.eclipse.ui.popupMenus">
+    <objectContribution
+          adaptable="false"
+          id="com.siteview.css.topo.topo"
+          objectClass="com.siteview.css.topo.editparts.TopologyEdit">
+       <action
+             class="com.siteview.css.topo.actions.ShowDeviceInfoAction"
+             enablesFor="1"
+             id="org.csstudio.opibuilder.widgets.showDeviceInfoAction"
+             label="查看设备信息"
+             menubarPath="topo"
+             tooltip="asdfasdfasadsf">
+       </action>
+       <action
+             class="com.siteview.css.topo.actions.ShowPanelAction"
+             id="com.siteview.css.topo.topopanel"
+             label="显示设备面板图"
+             menubarPath="topo">
+       </action>
+    </objectContribution>
+ </extension>
  
 </plugin>

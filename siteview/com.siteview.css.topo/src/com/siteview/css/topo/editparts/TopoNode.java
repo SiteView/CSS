@@ -34,6 +34,9 @@ public class TopoNode extends GraphicObject {
 		model.setLocation((int) x, (int) y);
 	}
 
+	/**
+	 * 如果用到的是这个模型为true 否则false
+	 */
 	@Override
 	public boolean isNode() {
 		return true;

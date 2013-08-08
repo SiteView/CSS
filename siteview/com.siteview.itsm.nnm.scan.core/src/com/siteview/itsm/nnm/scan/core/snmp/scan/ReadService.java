@@ -676,7 +676,7 @@ public class ReadService {
 					spr.getIp(), devid);
 			devid_list_valid.put(spr.getIp(), devid);
 			devid_list_visited.put(spr.getIp(), devid);
-			ip_visited_list.add(devid.getIps().get(0));
+			ip_visited_list.add(spr.getIp());//devid.getIps().get(0));
 			// ���������豸����ӵ�sproid_list�б���
 			if (devid.getDevType().equals("0")
 					|| devid.getDevType().equals("1")

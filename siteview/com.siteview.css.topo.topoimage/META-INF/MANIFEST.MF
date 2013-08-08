@@ -34,4 +34,5 @@ Export-Package: ILOG.Diagrammer,
  ILOG.Diagrammer.GraphLayout.Internal.RowColumnGrid,
  ILOG.Diagrammer.GraphLayout.Internal.SLLayout,
  ILOG.Diagrammer.GraphLayout.Internal.TLayout,
- ILOG.Diagrammer.Util
+ ILOG.Diagrammer.Util,
+ system.ComponentModel
