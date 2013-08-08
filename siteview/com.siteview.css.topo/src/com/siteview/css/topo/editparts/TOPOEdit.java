@@ -33,12 +33,12 @@ import ILOG.Diagrammer.GraphLayout.ForceDirectedLayout;
 import ILOG.Diagrammer.GraphLayout.ForceDirectedLayoutReport;
 import ILOG.Diagrammer.GraphLayout.GraphLayoutRegionMode;
 
-import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.models.TopologyModel;
-import com.siteview.snmp.common.ScanParam;
-import com.siteview.snmp.pojo.DevicePro;
-import com.siteview.snmp.pojo.Edge;
-import com.siteview.snmp.pojo.IDBody;
+import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
+import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.DevicePro;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
 
 public class TOPOEdit extends OPIEditor {
 	/** 坐标定位 */
@@ -90,7 +90,7 @@ public class TOPOEdit extends OPIEditor {
 
 		TopoGraph container = new TopoGraph(displayModel);
 
-		for (Entry<String, IDBody> entry : TopoData.deviceList.entrySet()) {
+		for (Entry<String, IDBody> entry : GlobalData.deviceList.entrySet()) {
 			String ip = entry.getKey();// 获取设备的所有ip包括亚设备的信息
 			// System.out.println(ip+"```````````````````````"+entry.getValue());
 			// entry.getValue();
@@ -117,8 +117,8 @@ public class TOPOEdit extends OPIEditor {
 
 		String leftIp;
 		String rightIp;
-		for (int i = 0; i < TopoData.edgeList.size(); i++) {
-			Edge edge = (Edge) TopoData.edgeList.get(i);
+		for (int i = 0; i < GlobalData.edgeList.size(); i++) {
+			Edge edge = (Edge) GlobalData.edgeList.get(i);
 			leftIp = edge.getIp_left();
 			rightIp = edge.getIp_right();
 			// System.out.println(leftIp + "<-->" + rightIp);
