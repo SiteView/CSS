@@ -2,7 +2,6 @@ package core.businessobject.pv.search;
 
 import java.awt.Event;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -13,9 +12,7 @@ import java.util.regex.Pattern;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.Node;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
@@ -25,8 +22,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
@@ -62,14 +57,15 @@ import Siteview.DatabaseEngine;
 import Siteview.DbConnectionDef;
 import Siteview.DbLoginMethod;
 import Siteview.FileBasedConnectionDefMgr;
+import Siteview.IAuthenticationBundle;
 import Siteview.IConnectionDefManager;
 import Siteview.InternalDbConnectionDef;
 import Siteview.ResourceUtils;
 import Siteview.ServerConnectionDef;
 import Siteview.SiteviewException;
 import Siteview.TestConnection;
-import Siteview.IO.IsolateStoreFile.IsolatedStorageFile;
-import Siteview.IO.IsolateStoreFile.IsolatedStorageFileOutputStream;
+import Siteview.Api.ISiteviewApi;
+import Siteview.Api.SiteviewApi;
 
 public class ConnectionManager extends Dialog {
 	private TabFolder tabFolder;
@@ -1250,14 +1246,13 @@ public class ConnectionManager extends Dialog {
 			}
 			if (flag){
 				MessageBox messageBox = new MessageBox(this.getShell(),SWT.ICON_INFORMATION);
-				messageBox.setText("连接测试");
+				messageBox.setText("登录测试");
 				messageBox.setMessage("连接成功！");
 				messageBox.open();
-				
 			}else{
 				MessageBox messageBox = new MessageBox(this.getShell(),SWT.ICON_ERROR);
 				messageBox.setText("连接测试");
-				String msg = "连接失败";
+				String msg = "数据库连接失败";
 				if (err[0]!=null && err[0].length()>0)
 					msg = msg + ",错误：" + err[0];
 				if (warn[0]!=null && warn[0].length()>0)
@@ -1277,6 +1272,27 @@ public class ConnectionManager extends Dialog {
 			
 		}
 		
+	}
+	
+	protected boolean testLogin(String[] err){ 
+		boolean flag = false;
+		try {
+			InternalDbConnectionDef dbdf = (InternalDbConnectionDef)m_curConnDef;
+			ISiteviewApi api = SiteviewApi.get_CreateInstance();
+			api.Connect(dbdf.get_Name().substring(dbdf.get_Name().indexOf("}")+1));
+			IAuthenticationBundle authentication = api.GetAuthenticationBundle();
+			authentication.set_UserType("User");
+			authentication.set_AuthenticationId(dbdf.GetUserId(0));
+			authentication.set_Password(dbdf.GetPassword(0));
+			flag = api.Login(authentication);
+			api.Disconnect();
+		} catch (Exception e) {
+			err[0] = e.getMessage();
+			flag= false;
+		}
+		finally{
+			return flag;
+		}
 	}
 	
 	private boolean testDatabaseConnection(TestConnection tc,DbConnectionDef def,int connectionType,String[] err,String[] warning) throws ArgumentException, SiteviewException{
