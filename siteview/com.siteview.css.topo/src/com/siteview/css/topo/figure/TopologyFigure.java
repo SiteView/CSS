@@ -1,30 +1,40 @@
 package com.siteview.css.topo.figure;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.csstudio.swt.widgets.figureparts.RoundScale;
 import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Pattern;
+import org.osgi.framework.Bundle;
 
-import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
+import com.siteview.snmp.pojo.Edge;
 
-
+/**
+ * pc
+ * @author Administrator
+ *
+ */
 public class TopologyFigure extends Figure{
 
 	private final static Font DEFAULT_LABEL_FONT = CustomMediaFactory.getInstance().getFont(
@@ -52,6 +62,7 @@ public class TopologyFigure extends Figure{
 	
 	private final static Color RED_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_RED);
 	Dimension labelSize;
+	private Color color = BLUE_COLOR;
 	public TopologyFigure(List<Edge> edges){
 		this();
 		//初始化数据
@@ -59,16 +70,25 @@ public class TopologyFigure extends Figure{
 	public TopologyFigure(){
 		super();
 		
-		valueLabel = new Label();		
-		valueLabel.setFont(DEFAULT_LABEL_FONT);
-		valueLabel.setText("IP:19.168.3.90");
-		valueLabel.setForegroundColor(RED_COLOR);
-		rec = new MyRectangle();
-		labelSize = valueLabel.getPreferredSize();
-		//���ò���
-		setLayoutManager(new TopologyLayout());
-		add(valueLabel, TopologyLayout.VALUE_LABEL);
-		add(rec,TopologyLayout.REC);
+//		valueLabel = new Label();		
+//		valueLabel.setFont(DEFAULT_LABEL_FONT);
+//		valueLabel.setText("IP:19.168.3.90");
+//		valueLabel.setForegroundColor(RED_COLOR);
+//		rec = new MyRectangle();
+//		labelSize = valueLabel.getPreferredSize();
+//		//���ò���
+//		setLayoutManager(new TopologyLayout());
+//		add(valueLabel, TopologyLayout.VALUE_LABEL);
+//		add(rec,TopologyLayout.REC);
+		
+		XYLayout layout = new XYLayout();
+		setLayoutManager(layout);
+		
+		MyRectangle mr = new MyRectangle();
+		Rectangle r = new Rectangle();
+		add(mr);
+		setConstraint(mr, r);
+		
 	}
 	@Override
 	protected void paintClientArea(Graphics graphics) {
@@ -92,13 +112,35 @@ public class TopologyFigure extends Figure{
 //				+ getClientArea().height - valueLength, getClientArea().width,
 //				valueLength);
 	}
+	
+	@Override
+	protected void paintFigure(Graphics graphics) {
+		super.paintFigure(graphics);
+		//获取当前编辑区域的坐标或者size
+		Rectangle bound = getBounds().getCopy();
+		//判断是哪个模型调用的这个Figure
+		
+		//当前项目中获取image的实体类 方法
+		final Bundle bundle = Platform.getBundle("com.siteview.css.topo");
+		final URL url = bundle.getEntry("icons/bmp_PC_Blue.bmp");
+		Image image = ImageDescriptor.createFromURL(url).createImage();
+//		System.out.println(image.getImageData().width + " "
+//				+ image.getImageData().height);
+//		graphics.setBackgroundPattern(new Pattern(Display.getCurrent(), image));
+		//把图片填充到编辑区域中
+		graphics.drawImage(image,bound.x,bound.y); 
+		
+		graphics.setForegroundColor(thumbColor);
+		
+	}
+	
 	public void changeBackGroundColor(double value){
 		if(value>50){
-			rec.setForegroundColor(RED_COLOR);
+			this.color = RED_COLOR;//rec.setForegroundColor(RED_COLOR);
 		}else if(value >30){
-			rec.setForegroundColor(BLUE_COLOR);
+			this.color = WHITE_COLOR;//rec.setForegroundColor(BLUE_COLOR);
 		}else{
-			rec.setForegroundColor(GRAY_COLOR);
+			this.color = GRAY_COLOR;//rec.setForegroundColor(GRAY_COLOR);
 		}
 		repaint();
 	}
@@ -114,8 +156,21 @@ public class TopologyFigure extends Figure{
 			boolean support3D = GraphicsUtil.testPatternSupported(graphics);
 			if(support3D && effect3D){
 				try {
-					graphics.setBackgroundColor(BLUE_COLOR);
-					graphics.setForegroundColor(RED_COLOR);
+					graphics.setBackgroundColor(color);
+					//graphics.setForegroundColor(RED_COLOR);
+					
+//					Rectangle bound = getBounds().getCopy();
+//
+//					//当前项目中获取image的实体类 方法
+//					final Bundle bundle = Platform.getBundle("com.siteview.css.topo");
+//					final URL url = bundle.getEntry("icons/bmp_PC_Blue.bmp");
+//					Image image = ImageDescriptor.createFromURL(url).createImage();
+//					System.out.println(image.getImageData().width + " "
+//							+ image.getImageData().height);
+//					graphics.setBackgroundPattern(new Pattern(Display.getCurrent(), image));
+//					//把图片填充到编辑区域中
+//					graphics.drawImage(image,bound.x,bound.y); 
+					
 					
 					super.fillShape(graphics);
 //					pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), bounds.x, bounds.y,

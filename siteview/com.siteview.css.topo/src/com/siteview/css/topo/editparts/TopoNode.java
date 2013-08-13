@@ -2,8 +2,7 @@ package com.siteview.css.topo.editparts;
 
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 
-import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
-
+import com.siteview.snmp.pojo.IDBody;
 
 import ILOG.Diagrammer.GraphicContainer;
 import ILOG.Diagrammer.GraphicObject;

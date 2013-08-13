@@ -4,17 +4,12 @@ import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.persistence.XMLUtil;
-import org.csstudio.opibuilder.properties.BooleanProperty;
-import org.csstudio.opibuilder.properties.ColorProperty;
 import org.csstudio.opibuilder.properties.DoubleProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
-import org.csstudio.opibuilder.visualparts.BorderStyle;
-import org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
 
-public class RouterModel extends AbstractPVWidgetModel{
-	public static final String ID = "com.siteview.css.topo.router";
+public class DumbModel extends AbstractPVWidgetModel {
+
+	public static final String ID = "com.siteview.css.topo.dumb";
 
 	public static final String PROP_MIN = "min";
 	public static final String PROP_MAX = "max";
@@ -24,7 +19,7 @@ public class RouterModel extends AbstractPVWidgetModel{
 	private double max = 100;
 	public static final int MINIMUM_SIZE = 10;
 
-	public RouterModel() {
+	public DumbModel() {
 		setSize(WIDTH, HIGHT);
 	}
 

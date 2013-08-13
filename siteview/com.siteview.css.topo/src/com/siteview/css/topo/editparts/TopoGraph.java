@@ -57,7 +57,6 @@ public class TopoGraph extends GraphicContainer {
 			// System.out.println("添加了数据" + obj1 + "-" + obj2);
 			Link lnkLink = new Link(this, UUID.randomUUID().toString());// UUID.randomUUID().toString()生成唯一的id
 			lnkLink.connect(obj1, obj2);
-
 			// lnkLink.setStartAnchor(obj1.);
 			// lnkLink.setEndAnchor(anchor);
 			nodes.add(lnkLink);// 添加所有边

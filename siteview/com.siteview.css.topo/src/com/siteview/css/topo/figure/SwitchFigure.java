@@ -28,10 +28,15 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Pattern;
 import org.osgi.framework.Bundle;
 
-import com.siteview.css.topo.figure.DumbFigure.MyRectangle;
 import com.siteview.snmp.pojo.Edge;
 
-public class RouterFigure extends Figure{
+/**
+ * pc
+ * @author Administrator
+ *
+ */
+public class SwitchFigure extends Figure{
+
 	private final static Font DEFAULT_LABEL_FONT = CustomMediaFactory.getInstance().getFont(
 			new FontData("Arial", 12, SWT.BOLD));	
 
@@ -58,11 +63,11 @@ public class RouterFigure extends Figure{
 	private final static Color RED_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_RED);
 	Dimension labelSize;
 	private Color color = BLUE_COLOR;
-	public RouterFigure(List<Edge> edges){
+	public SwitchFigure(List<Edge> edges){
 		this();
 		//初始化数据
 	}
-	public RouterFigure(){
+	public SwitchFigure(){
 		super();
 		
 //		valueLabel = new Label();		
@@ -107,6 +112,7 @@ public class RouterFigure extends Figure{
 //				+ getClientArea().height - valueLength, getClientArea().width,
 //				valueLength);
 	}
+	
 	@Override
 	protected void paintFigure(Graphics graphics) {
 		super.paintFigure(graphics);
@@ -115,7 +121,7 @@ public class RouterFigure extends Figure{
 
 		//当前项目中获取image的实体类 方法
 		final Bundle bundle = Platform.getBundle("com.siteview.css.topo");
-		final URL url = bundle.getEntry("icons/bmp_Router_Blue.bmp");
+		final URL url = bundle.getEntry("icons/bmp_Switch_Blue.bmp");
 		Image image = ImageDescriptor.createFromURL(url).createImage();
 //		System.out.println(image.getImageData().width + " "
 //				+ image.getImageData().height);
@@ -286,6 +292,22 @@ public class RouterFigure extends Figure{
 				valueLabel.setBounds(new Rectangle(area.x + (area.width -labelSize.width)/2,area.y+area.height-labelSize.height,
 						labelSize.width, labelSize.height));
 			}
+			
+	//		if(bulb != null && scale != null && bulb.isVisible()) {				
+	//			bulb.setBounds(bulbBounds);				
+	//		}
+	//		
+	//		if(scale != null && thumb != null && thumb.isVisible()){
+	//			Point thumbCenter = new Point(bulbBounds.x + bulbBounds.width*7.0/8.0, 
+	//					bulbBounds.y + bulbBounds.height/2);
+	//			double valuePosition = 360 - scale.getValuePosition(getCoercedValue(), false);				
+	//			thumbCenter = PointsUtil.rotate(thumbCenter,	valuePosition, center);
+	//			int thumbDiameter = bulbBounds.width/6;
+	//			
+	//			thumb.setBounds(new Rectangle(thumbCenter.x - thumbDiameter/2,
+	//					thumbCenter.y - thumbDiameter/2,
+	//					thumbDiameter, thumbDiameter));
+	//		}						
 		}
 
 
@@ -308,4 +330,5 @@ public class RouterFigure extends Figure{
 	public void setXYPoint(Double x,Double y){
 		setXYPoint(new Point(x, y));
 	}
+	
 }

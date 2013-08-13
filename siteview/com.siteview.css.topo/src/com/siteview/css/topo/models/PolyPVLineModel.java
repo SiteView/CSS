@@ -12,12 +12,15 @@ public class PolyPVLineModel extends PolyLineModel implements IPVWidgetModel {
 	private double min = 0;
 	private double max = 100;
 	public static final int MINIMUM_SIZE = 10;
-	public PolyPVLineModel(){
+
+	public PolyPVLineModel() {
 		super();
 	}
-	public PolyPVLineModel(int x,int y,int size){
-		
+
+	public PolyPVLineModel(int x, int y, int size) {
+
 	}
+
 	@Override
 	protected void configureProperties() {
 		// TODO Auto-generated method stub

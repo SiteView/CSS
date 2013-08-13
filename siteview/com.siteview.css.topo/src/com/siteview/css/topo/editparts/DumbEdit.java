@@ -9,27 +9,28 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.IFigure;
 
-import com.siteview.css.topo.figure.RouterFigure;
-import com.siteview.css.topo.models.RouterModel;
+import com.siteview.css.topo.figure.DumbFigure;
+import com.siteview.css.topo.models.DumbModel;
 
-public final class RouterEdit extends AbstractPVWidgetEditPart {
-	RouterFigure routerFigure;
+public class DumbEdit extends AbstractPVWidgetEditPart {
+
+	DumbFigure dumbFigure;
 
 	@Override
 	protected IFigure doCreateFigure() {
-		routerFigure = new RouterFigure();
-		routerFigure.setMin(getTopoModel().getMin());
-		routerFigure.setMax(getTopoModel().getMax());
-		return routerFigure;
+		dumbFigure = new DumbFigure();
+		dumbFigure.setMin(getTopoModel().getMin());
+		dumbFigure.setMax(getTopoModel().getMax());
+		return dumbFigure;
 	}
 
 	@Override
 	public AbstractWidgetModel getWidgetModel() {
-		return (RouterModel) getModel();
+		return (DumbModel) getModel();
 	}
 
-	public RouterModel getTopoModel() {
-		return (RouterModel) getModel();
+	public DumbModel getTopoModel() {
+		return (DumbModel) getModel();
 	}
 
 	@Override
@@ -44,9 +45,9 @@ public final class RouterEdit extends AbstractPVWidgetEditPart {
 				}
 				String newValueClassname = newValue.getClass().getName();
 				// ((TopologyFigure)figure).setValue(ValueUtil.getDouble((IValue)newValue));
-				routerFigure
+				dumbFigure
 						.setLabelValue(ValueUtil.getString((IValue) newValue));
-				routerFigure.changeBackGroundColor(ValueUtil
+				dumbFigure.changeBackGroundColor(ValueUtil
 						.getDouble((IValue) newValue));
 				return false;
 			}
@@ -58,12 +59,12 @@ public final class RouterEdit extends AbstractPVWidgetEditPart {
 
 			public boolean handleChange(Object oldValue, Object newValue,
 					IFigure figure) {
-				((RouterFigure) figure).setMax(ValueUtil
+				((DumbFigure) figure).setMax(ValueUtil
 						.getDouble((IValue) newValue));
 				return false;
 			}
 		};
-		setPropertyChangeHandler(RouterModel.PROP_MAX, maxHandle);
+		setPropertyChangeHandler(DumbModel.PROP_MAX, maxHandle);
 
 	}
 

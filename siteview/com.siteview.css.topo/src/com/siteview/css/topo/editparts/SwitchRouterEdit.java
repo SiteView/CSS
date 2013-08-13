@@ -9,27 +9,27 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.IFigure;
 
-import com.siteview.css.topo.figure.RouterFigure;
-import com.siteview.css.topo.models.RouterModel;
+import com.siteview.css.topo.figure.SwitchRouterFigure;
+import com.siteview.css.topo.models.SwitchRouterModel;
 
-public final class RouterEdit extends AbstractPVWidgetEditPart {
-	RouterFigure routerFigure;
+public class SwitchRouterEdit extends AbstractPVWidgetEditPart {
+	SwitchRouterFigure switchFigure;
 
 	@Override
 	protected IFigure doCreateFigure() {
-		routerFigure = new RouterFigure();
-		routerFigure.setMin(getTopoModel().getMin());
-		routerFigure.setMax(getTopoModel().getMax());
-		return routerFigure;
+		switchFigure = new SwitchRouterFigure();
+		switchFigure.setMin(getTopoModel().getMin());
+		switchFigure.setMax(getTopoModel().getMax());
+		return switchFigure;
 	}
 
 	@Override
 	public AbstractWidgetModel getWidgetModel() {
-		return (RouterModel) getModel();
+		return (SwitchRouterModel) getModel();
 	}
 
-	public RouterModel getTopoModel() {
-		return (RouterModel) getModel();
+	public SwitchRouterModel getTopoModel() {
+		return (SwitchRouterModel) getModel();
 	}
 
 	@Override
@@ -44,9 +44,9 @@ public final class RouterEdit extends AbstractPVWidgetEditPart {
 				}
 				String newValueClassname = newValue.getClass().getName();
 				// ((TopologyFigure)figure).setValue(ValueUtil.getDouble((IValue)newValue));
-				routerFigure
+				switchFigure
 						.setLabelValue(ValueUtil.getString((IValue) newValue));
-				routerFigure.changeBackGroundColor(ValueUtil
+				switchFigure.changeBackGroundColor(ValueUtil
 						.getDouble((IValue) newValue));
 				return false;
 			}
@@ -58,12 +58,12 @@ public final class RouterEdit extends AbstractPVWidgetEditPart {
 
 			public boolean handleChange(Object oldValue, Object newValue,
 					IFigure figure) {
-				((RouterFigure) figure).setMax(ValueUtil
+				((SwitchRouterFigure) figure).setMax(ValueUtil
 						.getDouble((IValue) newValue));
 				return false;
 			}
 		};
-		setPropertyChangeHandler(RouterModel.PROP_MAX, maxHandle);
+		setPropertyChangeHandler(SwitchRouterModel.PROP_MAX, maxHandle);
 
 	}
 
@@ -71,5 +71,4 @@ public final class RouterEdit extends AbstractPVWidgetEditPart {
 	public Border calculateBorder() {
 		return super.calculateBorder();
 	}
-
 }

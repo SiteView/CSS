@@ -28,10 +28,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Pattern;
 import org.osgi.framework.Bundle;
 
-import com.siteview.css.topo.figure.DumbFigure.MyRectangle;
 import com.siteview.snmp.pojo.Edge;
 
-public class RouterFigure extends Figure{
+
+public class DumbFigure extends Figure{
+
 	private final static Font DEFAULT_LABEL_FONT = CustomMediaFactory.getInstance().getFont(
 			new FontData("Arial", 12, SWT.BOLD));	
 
@@ -58,11 +59,11 @@ public class RouterFigure extends Figure{
 	private final static Color RED_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_RED);
 	Dimension labelSize;
 	private Color color = BLUE_COLOR;
-	public RouterFigure(List<Edge> edges){
+	public DumbFigure(List<Edge> edges){
 		this();
 		//初始化数据
 	}
-	public RouterFigure(){
+	public DumbFigure(){
 		super();
 		
 //		valueLabel = new Label();		
@@ -115,7 +116,7 @@ public class RouterFigure extends Figure{
 
 		//当前项目中获取image的实体类 方法
 		final Bundle bundle = Platform.getBundle("com.siteview.css.topo");
-		final URL url = bundle.getEntry("icons/bmp_Router_Blue.bmp");
+		final URL url = bundle.getEntry("icons/bmp_Hub.bmp");
 		Image image = ImageDescriptor.createFromURL(url).createImage();
 //		System.out.println(image.getImageData().width + " "
 //				+ image.getImageData().height);
@@ -308,4 +309,5 @@ public class RouterFigure extends Figure{
 	public void setXYPoint(Double x,Double y){
 		setXYPoint(new Point(x, y));
 	}
+	
 }
