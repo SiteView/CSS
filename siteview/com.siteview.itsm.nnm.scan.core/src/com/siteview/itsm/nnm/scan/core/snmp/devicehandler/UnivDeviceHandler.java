@@ -11,6 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.siteview.itsm.nnm.scan.core.snmp.common.SnmpPara;
 import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Bgp;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.DeviceCpuInfo;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.DeviceMemInfo;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Directitem;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.IfRec;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.RouteItem;
@@ -746,4 +748,18 @@ public class UnivDeviceHandler implements IDeviceHandler {
 		String oid = "1.3.6.1.2.1.17.4.3.1.2.0.19.32.125.202.170";
 		System.out.println(oid.substring(22).split("\\.").length);
 	}
+
+	/**
+	 * 获取设备cpu使用信息
+	 */
+	@Override
+	public DeviceCpuInfo getDeviceCpuInfo(MibScan snmp, SnmpPara spr) {
+		return null;
+	}
+
+	@Override
+	public DeviceMemInfo getdeviceMemInfo(MibScan snmp, SnmpPara spr) {
+		return null;
+	}
+
 }

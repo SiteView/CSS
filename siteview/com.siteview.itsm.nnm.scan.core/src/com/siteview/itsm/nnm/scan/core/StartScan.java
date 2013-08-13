@@ -13,6 +13,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
 import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.flowmonitor.MonitorControler;
 import com.siteview.itsm.nnm.scan.core.snmp.scan.NetScan;
 import com.siteview.itsm.nnm.scan.core.snmp.util.IoUtils;
 /**
@@ -31,6 +32,23 @@ public class StartScan {
 	private Composite parent;
 	private static StartScan instance ;
 	private CountDownLatch scanCound;
+	/**
+	 * 是否第一次使用本程序
+	 * @return
+	 */
+	public  boolean theFirstOpen(){
+		return (getScanParam() == null);
+	}
+	public ScanParam getScanParam() {
+		// 如果用户从界面配置了扫描参数，以配置的参数信息扫描
+		if (GlobalData.isConfiged) {
+			scanParam = GlobalData.scanParam;
+		} else {
+			// 否则从上次保存的配置信息扫描
+			scanParam = IoUtils.readScanParam();
+		}
+		return scanParam;
+	}
 	
 	private StartScan(Composite parent){
 		this.parent = parent;
@@ -43,13 +61,7 @@ public class StartScan {
 	}
 	ScanParam scanParam;
 	public void scanTopo(){
-		//如果用户从界面配置了扫描参数，以配置的参数信息扫描
-		if(GlobalData.isConfiged){
-			scanParam = GlobalData.scanParam;
-		}else{
-			//否则从上次保存的配置信息扫描
-			scanParam = IoUtils.readScanParam();
-		}
+		this.scanParam = getScanParam();
 		if(scanParam == null || (scanParam.getScan_scales().isEmpty() && scanParam.getScan_seeds().isEmpty())){
 			throw new RuntimeException("必须配置扫描种子或者扫描IP范围！");
 		}
@@ -88,6 +100,9 @@ public class StartScan {
 				GlobalData.deviceList = scan.getDevid_list();
 				monitor.worked(100);
 				scaned = true;
+				//流量扫描
+				MonitorControler mc = new MonitorControler();
+				mc.start();
 				GlobalData.isConfiged = false;//将己配置变量设置为flase,如果这个变量为true每次点击扫描都会重新启动扫描
 			}catch (Exception e) {
 				GlobalData.isInit = false;

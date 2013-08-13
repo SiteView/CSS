@@ -250,7 +250,7 @@ public class NetScan implements Runnable {
 			Set<String> keys = devid_list.keySet();
 			for (String key : keys) {
 				System.out.print("\t key is " + key);
-				Pair<String, List<IfRec>> iinf = ifprop_list.get(key);// .find(i->first);
+				Pair<String, List<IfRec>> iinf = ifprop_list.get(key);
 				IDBody i = devid_list.get(key);
 				if (iinf != null)
 				{
@@ -894,7 +894,7 @@ public class NetScan implements Runnable {
 			}
 		}
 	}
-
+ 
 	/** 完成 */
 	public boolean icmpPing(Vector<String> iplist, boolean bGetla, String msg,
 			Vector<String> iplist_alive) {

@@ -48,7 +48,10 @@ public class Pair<K extends Comparable,V> implements Serializable,Comparable<Pai
 		return "[first value = " +getFirst() + "second value = " + getSecond()+"]";
 	}
 
-
+	@Override
+	public int hashCode() {
+		return this.getFirst().hashCode() + this.getSecond().hashCode();
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public int compareTo(Pair<K, V> o) {

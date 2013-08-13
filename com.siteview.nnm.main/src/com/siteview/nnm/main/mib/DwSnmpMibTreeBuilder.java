@@ -31,9 +31,6 @@ public class DwSnmpMibTreeBuilder implements DwMibParserInterface,Runnable
 	DwSnmpMibTreeHash treeHash;
 	DwSnmpMibTreeHash variableHash;
 	DwSnmpMibTreeHash orphanHash;
-	public DwSnmpMibTreeBuilder(){
-		
-	}
 	public DwSnmpMibTreeBuilder(MenuNode treeRootNode) {
 		this.treeRootNode = treeRootNode;
 
@@ -139,19 +136,21 @@ public class DwSnmpMibTreeBuilder implements DwMibParserInterface,Runnable
 			loadFile(fileName);
 		}
 		updateOrphans();
-		output.println("*****COMPLETED******");
 	}
 
 	public static void main(String[] args) {
+		MenuTreeRecord record = new MenuTreeRecord();
+		record.type="mib";
+		record.name="root";
+		MenuNode mn = new MenuNode(record);
 		
-		DwSnmpMibTreeBuilder builder = new DwSnmpMibTreeBuilder();
+		DwSnmpMibTreeBuilder builder = new DwSnmpMibTreeBuilder(mn);
 		builder.output = new DwSnmpMibOutputHandler();
-		builder.loadFile("D:\\RFC1271-MIB.my");
+		builder.loadFile("D:\\TRANSPORT-ADDRESS-MIB");
 	}
 	private void loadFile(String fileName) {
-		output.print("Adding file " + fileName);
 		if(parseFile(fileName)<0) outputError(".. Error");
-		else output.print("..Done\n");
+		else System.out.println("..Done\n");
 	}
 	
 	public boolean loadNewFile(String fName) {
@@ -175,22 +174,22 @@ public class DwSnmpMibTreeBuilder implements DwMibParserInterface,Runnable
 		Enumeration orphanEnu;
 		boolean contFlag=true;
 
-		while(contFlag==true) {
+		while(contFlag) {
 			contFlag=false;
 			orphanEnu=orphanNodes.elements();
 			while(orphanEnu.hasMoreElements()) {
 				MenuNode orphanNode = (MenuNode)orphanEnu.nextElement();
 
-				if (addNode(orphanNode)==true) {
+				if (addNode(orphanNode)) {
 					contFlag=true;
 					orphanNodes.remove(orphanNode);
 					continue;
 				}
 			}
-			output.print(".");
+			System.out.println(".");
 		}
-		output.print("Done");
-		output.print("\nBuilding OID Name resolution table...");
+		System.out.println("Done");
+		System.out.println("\nBuilding OID Name resolution table...");
 		oidSupport.buildOidToNameResolutionTable(rootNode);
 
 		//Add remaining orphans to treeroot.orphans
@@ -220,7 +219,7 @@ public class DwSnmpMibTreeBuilder implements DwMibParserInterface,Runnable
 		int parseStatus=0;
 		if(childRec==null) return false;
 		MenuNode newNode=new MenuNode(childRec);
-		if(addNode(newNode)==false) {
+		if(!addNode(newNode)) {
 				orphanNodes.add(newNode);
 				orphanHash.put(childRec.name,newNode);
 			return false;
@@ -282,8 +281,7 @@ public class DwSnmpMibTreeBuilder implements DwMibParserInterface,Runnable
 			while(enuChildren.hasMoreElements()) {
 				childNode=(MenuNode) enuChildren.nextElement();
 				childRec=(MenuTreeRecord )childNode.getUserObject();
-				if(childRec.name.equals(rec.name)== true) {
-					//outputText("ChildCheck, Rec. Present.. Parent : " + rec.parent + "  Name : " + rec.name);
+				if(childRec.name.equals(rec.name)) {
 					return childNode;
 				}
 			}
@@ -297,14 +295,14 @@ public class DwSnmpMibTreeBuilder implements DwMibParserInterface,Runnable
 
 	void outputText(String s) {
 		try {
-		output.println(s);
+			System.out.println(s);
 		} catch(Exception e) {
 			System.out.println(s);
 		}
 	}
 	void outputError(String s) {
 		try {
-		output.printError(s);
+			System.out.println(s);
 		} catch(Exception e) {
 			System.out.println(s);
 		}
@@ -320,7 +318,7 @@ public class DwSnmpMibTreeBuilder implements DwMibParserInterface,Runnable
 		outputError(s);
 	}
 
-}// End of class.
+}
 
 
 

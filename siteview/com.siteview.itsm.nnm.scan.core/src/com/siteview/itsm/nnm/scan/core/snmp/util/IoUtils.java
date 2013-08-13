@@ -602,22 +602,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -666,22 +651,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -732,22 +702,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -798,22 +753,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -864,22 +804,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -938,22 +863,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -986,22 +896,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -1037,22 +932,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -1080,22 +960,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -1154,22 +1019,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -1209,22 +1059,7 @@ public class IoUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return true;
 	}
@@ -1396,24 +1231,27 @@ public class IoUtils {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}finally{
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fr = null;
-			}
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				br = null;
-			}
+			closeFileReader(fr, br);
 		}
 		return sp;
+	}
+	private static void closeFileReader(FileReader fr, BufferedReader br) {
+		if (fr != null) {
+			try {
+				fr.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			fr = null;
+		}
+		if (br != null) {
+			try {
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			br = null;
+		}
 	}
 	public static void main(String[] args) {
 //		List<String> l = new ArrayList<String>();

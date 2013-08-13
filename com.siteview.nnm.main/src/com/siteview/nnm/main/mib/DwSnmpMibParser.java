@@ -30,11 +30,8 @@ public class DwSnmpMibParser
 	
 	int parseMibFile()	
 	{
-		MenuTreeRecord mibRec;
 		
-		BufferedReader in=null;
 		StreamTokenizer st;
-		String tok1=" " ,tok2= " ";
 		
 		try {
 			inFile= new FileReader (new File(fileName));
@@ -42,32 +39,22 @@ public class DwSnmpMibParser
 			st = new StreamTokenizer(r);				
 		}
 		catch (Exception e) {
-			outputError("File open error : Cannot open file.\n" + e.toString());
+			System.out.println("File open error : Cannot open file.\n" + e.toString());
 			return -1;
 		}
 		
-		String line=" ";
-	
+		System.out.println("\t**************************\t" + fileName);
 		st.resetSyntax();		
 		st.eolIsSignificant(true);
 		st.wordChars(33,126);
 		
-		//st.quoteChar('"');
-	
-		//st.quoteChar('"');
-		//st.ordinaryChar(',');
-		//st.ordinaryChar(';');
-
 		String t1="a";
 		int parseStatus=0;
 		int parseStatusTemp=0;
 		
 		try {
-			int flag=0;
 			while (getNextToken(st).trim().length() > 0 || st.ttype == TT_EOL) {
 				t1=getTokenVal(st);
-				//if(t1.indexOf("AtmTrafficDescrParamIndex") != -1) flag++;
-				//if(flag>0)  System.out.println(t1 + "   " + parseStatus );
 				switch (parseStatus) {
 				case 0: { 
 						currentRec=new MenuTreeRecord();
@@ -77,18 +64,20 @@ public class DwSnmpMibParser
 							parseStatus =100;
 						}
 						else						
-						if(t1.equals("MODULE-IDENTITY")==true) {
+						if(t1.equals("MODULE-IDENTITY")) {
 							currentRec.name = prevToken;
 							parseStatus =1;
 						}
 						else						
-						if(t1.equals("OBJECT-TYPE")==true) {
+						if(t1.equals("OBJECT-TYPE")) {
 							String temp=new String (prevToken.trim());
-							temp=temp.substring(0,1);
-							if (temp.toLowerCase().equals(temp)) {
-								parseStatus=1;
-								currentRec.name=prevToken;
-							}						
+							if (!temp.isEmpty()) {
+								temp = temp.substring(0, 1);
+								if (temp.toLowerCase().equals(temp)) {
+									parseStatus = 1;
+									currentRec.name = prevToken;
+								}
+							}
 							//System.out.print("*"+prevToken);
 						}
 						else if(t1.indexOf("OBJECT-GROUP")!=-1) { // Skip till ;
@@ -99,11 +88,11 @@ public class DwSnmpMibParser
 								currentRec.name=prevToken;		
 							}
 						}												
-						else if(t1.equals("OBJECT")==true) {
+						else if(t1.equals("OBJECT")) {
 							currentRec.name=prevToken;							
 							parseStatus=2;
 						}						
-						else if(t1.equals("::=")==true)
+						else if(t1.equals("::="))
 						{
 							
 							currentRec.name=prevToken;
@@ -114,25 +103,25 @@ public class DwSnmpMibParser
 					
 						
 				case 1:	{        // GET " ::= " Token
-						if(t1.equals("::=") == true)
+						if(t1.equals("::=") )
 							parseStatus=3;
-						else if(t1.equals("SYNTAX") == true)
+						else if(t1.equals("SYNTAX") )
 							parseStatus=5;
 						else if(t1.indexOf("ACCESS")!= -1 )
 							parseStatus=6;
-						else if(t1.equals("STATUS") == true)
+						else if(t1.equals("STATUS") )
 							parseStatus=7;
-						else if(t1.equals("DESCRIPTION") == true)
+						else if(t1.equals("DESCRIPTION") )
 							parseStatus=8;	
-						else if(t1.equals("INDEX") == true)
+						else if(t1.equals("INDEX") )
 							parseStatus=11;	
-						else if(t1.equals("OBJECTS") == true)
+						else if(t1.equals("OBJECTS") )
 							parseStatus=14;						
 						continue;
 					}						
 						
 				case 2:	{		// GET "IDENTIFIER "  else reset
-						if(t1.equals("IDENTIFIER")==true) {
+						if(t1.equals("IDENTIFIER")) {
 							parseStatus = 1; // GET ::= next
 						}
 						else {
@@ -142,7 +131,7 @@ public class DwSnmpMibParser
 					}
 						
 				case 3: {		// get Group Name
-						if(t1.trim().startsWith("{")==true || t1.trim().length()==0) continue;
+						if(t1.trim().startsWith("{") || t1.trim().length()==0) continue;
 						currentRec.parent=t1;
 						parseStatus =4;  // next=GET Number.
 						continue;				
@@ -150,7 +139,7 @@ public class DwSnmpMibParser
 						
 				case 4:	{		// Get sub-Group number
 						try {							
-							if(t1.trim().endsWith(")")==true) { // for chained server entries
+							if(t1.trim().endsWith(")")) { // for chained server entries
 									String numStr="";
 									MenuTreeRecord newRec=new MenuTreeRecord();							
 									numStr=t1.substring(t1.indexOf((int)'(')+1,t1.indexOf((int)')'));
@@ -159,30 +148,28 @@ public class DwSnmpMibParser
 									newRec.number =Integer.parseInt(numStr.trim());
 								}
 								catch(Exception ne2) {
-									outputError("Error in line " + st.lineno()); 
+									System.out.println("Error in line " + st.lineno()); 
 									continue;
 								}
-								newRec.name=t1.substring(0,t1.indexOf("("));								
-								newRec.parent =currentRec.parent;
+								newRec.name = t1.substring(0, t1.indexOf("("));
+								newRec.parent = currentRec.parent;
 								currentRec.parent = newRec.name;
-								//System.out.println("Chained Rec. : " + newRec.name + " Parent : "  +  newRec.parent + "." + newRec.number );
 								addToken(newRec);
-								continue;
+							continue;
 							}							
-							//System.out.println("Name : "+currentRec.name +"T1 : " + t1);						
 							currentRec.number = Integer.parseInt(t1.trim());
-							//System.out.println("Rec. Added : " + currentRec.name + "  " + currentRec.parent + "." + currentRec.number );						
-							addToken(currentRec);
+							//排除mib节点。使用mib-2节点
+							if(!currentRec.parent.equals("mib") && !currentRec.name.equals("mib"))
+								addToken(currentRec);
 							parseStatus=0;
 							continue;			
 						}
 						catch(NumberFormatException ne) { 
-							outputError("Error in getting number.."+t1+"\n" + ne.toString());						
+							System.out.println("Error in getting number.."+t1+"\n" + ne.toString());						
 						}
 					}					
-						//System.out.println("Record Added...." + currentRec.name );
 					
-				case 5: {		// Get Syntax data till EOL
+				case 5: {		
 						if(t1.indexOf((int)'{') != -1) {
 							parseStatus =12;
 							currentRec.syntax =currentRec.syntax.concat(" " +t1);
@@ -192,36 +179,25 @@ public class DwSnmpMibParser
 						if (st.ttype==TT_EOL || st.ttype==st.TT_EOF) {
 							currentRec.syntax =currentRec.syntax.concat(t1);						
 							if(parseStatusTemp==1 ) {
-								//System.out.println("Syntax : "+ currentRec.name + " , " + currentRec.syntax );
 								if(currentRec.syntax.indexOf('{') != -1){
 									parseStatus=12;
 									continue;
 								}
 								// See if it is a table. if so, set recordtype to 1
-								if(currentRec.syntax.trim().startsWith("SEQUENCE") == true) {
+								if(currentRec.syntax.trim().startsWith("SEQUENCE") ) {
 									currentRec.recordType=1; 
 									currentRec.tableEntry=1;
 								}
-								//addToken(currentRec);
 								parseStatus =1;
 								parseStatusTemp =0;
 							}							
 							continue;
 						}						
-						//System.out.println("Variable Found : " + currentRec.name+ "  Type : " + currentRec.syntax);						
 						currentRec.syntax = currentRec.syntax.concat(" " + t1);
 						if(currentRec.syntax.trim().length()>0) parseStatusTemp=1;
 						continue;
 							
 							
-						/*	
-						if (st.ttype==TT_EOL) {
-							parseStatus=1;
-							continue;
-						}
-						currentRec.syntax = currentRec.syntax.concat(" " + t1);
-						continue;
-*/
 					}
 				case 6: {		// Get Access Mode Data till EOL
 						if (st.ttype==TT_EOL) {
@@ -261,36 +237,32 @@ public class DwSnmpMibParser
 						if (st.ttype==TT_EOL || st.ttype==st.TT_EOF) {
 							currentRec.syntax =currentRec.syntax.concat(t1);
 							if(parseStatusTemp==1 ) {
-								//System.out.println("InVar : "+ currentRec.name + " , " + currentRec.syntax );
 								if(currentRec.syntax.indexOf('{') != -1){
 									parseStatus=10;
 									continue;
 								}
 								// See if it is a table. if so, set recordtype to 1
-								if(currentRec.syntax.trim().startsWith("SEQUENCE") == true) {
+								if(currentRec.syntax.trim().startsWith("SEQUENCE") ) {
 									currentRec.recordType=1; 
 								}
 								
-								//System.out.println("Var added : " + currentRec.name+ "  SYN : " + currentRec.syntax );
 								addToken(currentRec);
 								parseStatus=0;
 								parseStatusTemp =0;
 							}							
 							continue;
 						}
-						//System.out.println("Variable Found : " + currentRec.name+ "  Type : " + currentRec.syntax);						
 						currentRec.syntax = currentRec.syntax.concat(" " + t1);
 						if(currentRec.syntax.trim().length()>0) parseStatusTemp=1;
 						continue;
 					}
 				case 10: {			// Variable Data in { } 
-							// System.out.println(t1);							 
 				 		 currentRec.syntax=currentRec.syntax.concat(t1);				
 						 if(t1.indexOf((int)'}') != -1) {
 							 parseStatus =0;
 							 parseStatusTemp =0;
 							// See if it is a table. if so, set recordtype to 1
-							 if(currentRec.syntax.trim().startsWith("SEQUENCE")==true) {
+							 if(currentRec.syntax.trim().startsWith("SEQUENCE")) {
 								 currentRec.recordType=1; 
 							 }							
 							 addToken(currentRec);
@@ -302,7 +274,7 @@ public class DwSnmpMibParser
 						 
 				case 11: {			// INDEX (For tables)
 							 
-						if(t1.trim().startsWith("{")==true) continue;
+						if(t1.trim().startsWith("{")) continue;
 						if(t1.indexOf((int)'}') != -1) {
 							parseStatus = 1;  
 							continue;
@@ -319,7 +291,7 @@ public class DwSnmpMibParser
 							parseStatusTemp =0;
 							
 							// See if it is a table. if so, set recordtype to 1
-							if(currentRec.syntax.trim().startsWith("SEQUENCE")==true) {
+							if(currentRec.syntax.trim().startsWith("SEQUENCE")) {
 								 currentRec.recordType=1; 
 								 currentRec.tableEntry=1;
 							}
@@ -347,6 +319,7 @@ public class DwSnmpMibParser
 			}			
 		}	
 		catch (Exception e)	{
+			e.printStackTrace();
 			System.out.println("Error in parsing.. \n" + e.toString());
 		}		
 		return 0;
@@ -359,11 +332,11 @@ public class DwSnmpMibParser
 		String tok="";	
 		prevToken=getTokenVal(st);
 		
-		while(tok.equals("") == true )
+		while(tok.equals(""))
 		{		
 			try	{				
-				if(tokenVal.equals("xx")!=true) return(tokenVal);
-				if(tokenVal2.equals("")!=true) {
+				if(!tokenVal.equals("xx")) return(tokenVal);
+				if(!tokenVal2.equals("")) {
 					setTokenVal(tokenVal2);
 					tokenVal2="";
 					return tokenVal;
@@ -372,16 +345,15 @@ public class DwSnmpMibParser
 					if(st.ttype==TT_EOL) return getTokenVal(st);
 					if(st.ttype==StreamTokenizer.TT_WORD  )  {
 						tok=st.sval;
-						//System.out.println(tok);
 						// if { is combined with something, seperate them
-						if(tok.startsWith("{")==true) {
+						if(tok.startsWith("{")) {
 							if(tok.trim().length() !=1) {
 								setTokenVal("{");
 								tokenVal2=new String(tok.substring(1));
 								return ("{");						
 							}
 						}
-						if(tok.endsWith("}")==true) {
+						if(tok.endsWith("}")) {
 							if(tok.trim().length() !=1) {
 								setTokenVal(tok.replace('}',' '));
 								tokenVal2="}";
@@ -390,8 +362,7 @@ public class DwSnmpMibParser
 						}
 						
 						// Get "Quoted Text" as whole tokens :)
-						if(tok.startsWith("\"")==true) {
-							//System.out.println("Comment.");
+						if(tok.startsWith("\"")) {
 							String strQuote =new String(tok);
 							st.nextToken();
 							tok=getTokenVal(st);
@@ -402,19 +373,14 @@ public class DwSnmpMibParser
 								tok=getTokenVal(st);
 							}
 							strQuote=strQuote.concat(getTokenVal(st));
-							//System.out.println (strQuote);
 							if(strQuote.trim().length() > 0) tokenVal =strQuote;
 						}
 							
-						if(tok.equals("--")==true) {
-							//System.out.print("-- ");
+						if(tok.equals("--")) {
 							while(st.ttype != st.TT_EOL )
 								st.nextToken();							
-							//System.out.println("..." + getTokenVal(st));							
 							break;
-							//continue;
 						}				
-						//System.out.println("++ "+ tok+" ++");
 						
 						if(st.ttype == TT_EOL) return(" "); //st.ttype ;
 						else
@@ -423,7 +389,6 @@ public class DwSnmpMibParser
 					else if(st.ttype == StreamTokenizer.TT_NUMBER ) {
 						tok=String.valueOf(st.nval ); 
 						if(tok.trim().length()>0) {
-							//System.out.println("No : "+ tok);
 							return tok;
 						}
 						else
@@ -436,7 +401,6 @@ public class DwSnmpMibParser
 			catch (Exception e) {
 				if(e.getMessage().startsWith("Write end dead") != true)
 					System.out.println("Error in reading file..." + e.toString());			
-				//System.out.println("Errorin getting next token...\n" + e.toString());
 				return "";
 			}		
 		}	
@@ -474,12 +438,6 @@ public class DwSnmpMibParser
 		this.output=output;
 	}
 	
-	void outputText(String s) {
-		output.println(s);
-	}
-	void outputError(String s) {
-		output.printError(s);
-	}
 	
 	void addToken(MenuTreeRecord rec) {
 		tokens.newMibParseToken(rec);

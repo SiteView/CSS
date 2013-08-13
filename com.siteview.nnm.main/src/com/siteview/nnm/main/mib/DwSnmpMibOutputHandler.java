@@ -8,8 +8,6 @@ import java.util.*;
 public class DwSnmpMibOutputHandler
 {
 
-	JTextArea outputText;
-	JTextArea outputError;
 	boolean doLog=false;
 	boolean autoScroll=true;
 	static BufferedWriter outfile;
@@ -20,19 +18,6 @@ public class DwSnmpMibOutputHandler
 	public void setAutoScroll(boolean as) {
 		autoScroll=as;
 	}
-	public void setOutput(JTextArea o) {
-		outputText=o;
-
-	}
-
-	public void setOutputError (JTextArea e) {
-		outputError=e;
-	}
-
-
-        void showErrorMessage(String s) {
-                JOptionPane.showMessageDialog(outputText,s,"Mib Browser",JOptionPane.OK_OPTION);
-        }
 
 
 	public void setLogging(boolean log) {
@@ -113,37 +98,4 @@ public class DwSnmpMibOutputHandler
 		return lTime;
 	}
 
-	public void println(String s) {
-		if(outputText !=null )	{
-			outputText.append("\n"+s);
-			if(autoScroll==true) outputText.setCaretPosition(outputText.getDocument().getLength() - 1);
-		}
-		//else System.out.println(s);
-		try {//if(doLog==true)
-			{
-				 outfile.write(s+"\n");
-			 }
-		}catch(Exception e) {System.out.println(e.toString());}
-	}
-
-	public void print(String s) {
-		if(outputText !=null) {
-			outputText.append (s);
-			if(autoScroll==true) outputText.setCaretPosition(outputText.getDocument().getLength() - 1);
-		}
-		else System.out.println(s);
-		try {//if(doLog==true)
-			outfile.write(s);
-		}catch(Exception e) {System.out.println(e.toString());}
-
-	}
-
-	public void printError(String e) {
-		if(outputError!=null) outputError.append("\n"+e);
-		else System.err.println(e);
-		try {//if(doLog==true)
-			outfile.write("\n"+e+"\n");
-		}catch(Exception ex) {System.out.println(e.toString());}
-
-	}
 }

@@ -70,4 +70,19 @@ public class FlowInfo {
 	public void setTime(long time) {
 		this.time = time;
 	}
+	public FlowInfo(long time, String srcLift, String desRight, long inFlow,
+			long outFlow, int ifIndex, String ifMac) {
+		super();
+		this.time = time;
+		this.srcLift = srcLift;
+		this.desRight = desRight;
+		this.inFlow = inFlow;
+		this.outFlow = outFlow;
+		this.ifIndex = ifIndex;
+		this.ifMac = ifMac;
+	}
+	public FlowInfo() {
+		super();
+	}
+	
 }

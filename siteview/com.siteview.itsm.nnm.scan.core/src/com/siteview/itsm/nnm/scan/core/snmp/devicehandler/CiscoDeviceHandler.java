@@ -10,6 +10,8 @@ import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
 import com.siteview.itsm.nnm.scan.core.snmp.common.SnmpPara;
 import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Bgp;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.DeviceCpuInfo;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.DeviceMemInfo;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Directitem;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.IfRec;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.RouteItem;
@@ -387,6 +389,27 @@ public class CiscoDeviceHandler extends UnivDeviceHandler implements IDeviceHand
 			routeStandby_list.put(spr.getIp(), vrrpItem);
 		}
 		return routeStandby_list;
+	}
+	@Override
+	public DeviceCpuInfo getDeviceCpuInfo(MibScan snmp, SnmpPara spr) {
+		DeviceCpuInfo info = new DeviceCpuInfo();
+		String cpuUsed5M = snmp.getMibObject(spr, ".1.3.6.1.4.1.9.2.1.58.0");//获取过去5分钟的CPU load (cpu繁忙的百分比)
+		String cpuUsed1M = snmp.getMibObject(spr, ".1.3.6.1.4.1.9.2.1.57.0");//获取过去1分钟的CPU load (cpu繁忙的百分比)
+		String cpuUsed5S = snmp.getMibObject(spr, ".1.3.6.1.4.1.9.2.1.56.0");//获取过去5秒的CPU load (cpu繁忙的百分比)
+		
+		info.setUsedCpu1M(Integer.parseInt(cpuUsed1M));
+		info.setUsedCpu5M(Integer.parseInt(cpuUsed5M));
+		info.setUsedCpu5S(Integer.parseInt(cpuUsed5S));
+		info.setIp(spr.getIp());
+		
+		return info;
+	}
+	@Override
+	public DeviceMemInfo getdeviceMemInfo(MibScan snmp, SnmpPara spr) {
+		DeviceMemInfo result = new DeviceMemInfo();
+		String freeMem = snmp.getMibObject(spr, "1.3.6.1.4.1.9.2.1.8.0");
+		result.setMemFree(Integer.parseInt(freeMem));
+		return result;
 	}
 	public static void main(String[] args) {
 		MibScan scan = new MibScan();

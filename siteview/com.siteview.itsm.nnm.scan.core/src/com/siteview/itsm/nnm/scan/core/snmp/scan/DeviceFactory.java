@@ -12,7 +12,7 @@ public class DeviceFactory {
 	private Map<String, IDeviceHandler> callbackMap = new HashMap<String, IDeviceHandler>();
 	private static DeviceFactory instance;
 	private DeviceFactory(){
-		callbackMap.put("?1.3.6.1.4.1.9", new CiscoDeviceHandler());
+		callbackMap.put("1.3.6.1.4.1.9", new CiscoDeviceHandler());
 		callbackMap.put("0.0.0.0.0.0.0", new UnivDeviceHandler());
 	}
 	public static synchronized DeviceFactory getInstance(){
