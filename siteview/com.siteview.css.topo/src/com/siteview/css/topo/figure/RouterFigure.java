@@ -30,17 +30,21 @@ public class RouterFigure extends Figure {
 	private Color thumbColor = WHITE_COLOR;
 	private boolean effect3D = true;
 
-	private final static Color BLUE_COLOR = CustomMediaFactory.getInstance()
-			.getColor(CustomMediaFactory.COLOR_BLUE);
 	private final static Color WHITE_COLOR = CustomMediaFactory.getInstance()
 			.getColor(CustomMediaFactory.COLOR_WHITE);
-	private final static Color GRAY_COLOR = CustomMediaFactory.getInstance()
-			.getColor(CustomMediaFactory.COLOR_GRAY);
 	private final static Color GREEN_COLOR = CustomMediaFactory.getInstance()
 			.getColor(CustomMediaFactory.COLOR_GREEN);
 
 	private final static Color RED_COLOR = CustomMediaFactory.getInstance()
 			.getColor(CustomMediaFactory.COLOR_RED);
+	
+	
+	private final static Color s_light_creen = new Color(null,98,182,54);
+	private final static Color light_creen = new Color(null,29,220,1);
+	private final static Color COLOR_GREEN =CustomMediaFactory.getInstance()
+			.getColor(CustomMediaFactory.COLOR_GREEN);
+	
+	
 	private XYLayout layout;
 	Dimension labelSize;
 	Port port = null;
@@ -65,7 +69,7 @@ public class RouterFigure extends Figure {
 
 		DataFromVisio dfv = new DataFromVisio();
 
-		String filename = "D://panel//1.3.6.1.4.1.9.1.516.vdx";
+		String filename = "D://panel//1.3.6.1.4.1.3320.1.116.0.vdx";
 		dfv.getCoordinatesForXML(filename);
 		ports = dfv.ports;
 		lamps = dfv.lamps;
@@ -131,44 +135,6 @@ public class RouterFigure extends Figure {
 
 	}
 
-	/*
-	 * protected void paintClientArea(Graphics graphics) {
-	 * super.paintClientArea(graphics);
-	 * 
-	 * graphics.setBackgroundColor(GREEN_COLOR);
-	 * graphics.setForegroundColor(RED_COLOR); // add by yuzhenbiao 加载图片 final
-	 * Bundle bundle = Platform .getBundle("com.siteview.css.topo"); final URL
-	 * url = bundle .getEntry("icons/1.3.6.1.4.1.2011.2.62.2.2.png"); Image
-	 * image = ImageDescriptor.createFromURL(url) .createImage();
-	 * System.out.println(image.getImageData().width + " " +
-	 * image.getImageData().height); graphics.setBackgroundPattern(new
-	 * Pattern(null, image));
-	 * 
-	 * //graphics.fillRectangle(bounds);
-	 * graphics.setForegroundColor(thumbColor);
-	 * 
-	 * Image image = new Image(Display.getCurrent(), bounds.width,
-	 * bounds.height); GC gc = SingleSourceHelper.getImageGC(image);
-	 * 
-	 * // Point p1 = new Point( bounds.x/0.8, (int)
-	 * ((55.0/95.0)*bounds.height)); // // Point p2 = new Point(p1.x + (int)
-	 * ((23.0* 1.5/95.0)*bounds.height), // p1.y + (int)
-	 * ((23.0/95.0)*bounds.height)); // Rectangle smallEndBounds =
-	 * bar.getSmallEndBounds(); // int[] echelonShadow = new int[]{ // p1.x,
-	 * p1.y, p2.x, p2.y, // smallEndBounds.x + smallEndBounds.width,
-	 * smallEndBounds.y + smallEndBounds.height/2, // smallEndBounds.x+
-	 * smallEndBounds.width/2, smallEndBounds.y }; gc.setBackground(GRAY_COLOR);
-	 * 
-	 * gc.fillRectangle(image.getBounds()); Transform tr = new
-	 * Transform(Display.getCurrent()); tr.translate(-bounds.x,
-	 * -bounds.y/1.05f); //gc.setTransform(tr);
-	 * SingleSourceHelper.setGCTransform(gc, tr);
-	 * //gc.setBackground(BLACK_COLOR); //gc.fillPolygon(echelonShadow);
-	 * 
-	 * 
-	 * }
-	 */
-
 	@Override
 	public void paintFigure(Graphics graphics) {
 		super.paintFigure(graphics);
@@ -177,7 +143,7 @@ public class RouterFigure extends Figure {
 
 		//当前项目中获取image的实体类 方法
 		final Bundle bundle = Platform.getBundle("com.siteview.css.topo");
-		final URL url = bundle.getEntry("icons/1.3.6.1.4.1.9.1.516.png");
+		final URL url = bundle.getEntry("icons/1.3.6.1.4.1.3320.1.116.0.png");
 		Image image = ImageDescriptor.createFromURL(url).createImage();
 		System.out.println(image.getImageData().width + " "
 				+ image.getImageData().height);
@@ -232,24 +198,45 @@ public class RouterFigure extends Figure {
 	public void changeBackGroundColor(double value) {
 		System.out.println("*****************change color*************");
 		
-		if (value > 50) {
-			for (int i = 1; i <= ports.size(); i++) {
-				portColors.put(String.valueOf(i), BLUE_COLOR);
-				lampColors.put(String.valueOf(i), BLUE_COLOR);
+		if (value > 80) {
+			for (int i = 0; i <= ports.size(); i++) {
+				portColors.put(String.valueOf(i), s_light_creen);
+			}
+			for (int i = 0; i <= lamps.size(); i++) {
+				lampColors.put(String.valueOf(i), s_light_creen);
 			}
 			
-		} else if (value > 30) {
-			for (int i = 1; i <= ports.size(); i++) {
-				portColors.put(String.valueOf(i), GRAY_COLOR);
-				lampColors.put(String.valueOf(i), GRAY_COLOR);
+		} else if (value > 60) {
+			for (int i = 0; i <= ports.size(); i++) {
+				portColors.put(String.valueOf(i), light_creen);
+			}
+			for (int i = 0; i <= lamps.size(); i++) {
+				lampColors.put(String.valueOf(i), light_creen);
 			}
 			
-		} else {
-			for (int i = 1; i <= ports.size(); i++) {
-				portColors.put(String.valueOf(i), RED_COLOR);
-				lampColors.put(String.valueOf(i), RED_COLOR);
+		} else if (value > 40){
+			for (int i = 0; i <= ports.size(); i++) {
+				portColors.put(String.valueOf(i), s_light_creen);
+			}
+			for (int i = 0; i <= lamps.size(); i++) {
+				lampColors.put(String.valueOf(i), s_light_creen);
+			}
+		}else if (value > 20){
+			for (int i = 0; i <= ports.size(); i++) {
+				portColors.put(String.valueOf(i), light_creen);
+			}
+			for (int i = 0; i <= lamps.size(); i++) {
+				lampColors.put(String.valueOf(i), light_creen);
+			}
+		}else{
+			for (int i = 0; i <= ports.size(); i++) {
+				portColors.put(String.valueOf(i), COLOR_GREEN);
+			}
+			for (int i = 0; i <= lamps.size(); i++) {
+				lampColors.put(String.valueOf(i), COLOR_GREEN);
 			}
 		}
+		
 		repaint();
 	}
 
