@@ -105,7 +105,7 @@
     <objectContribution
           adaptable="false"
           id="com.siteview.css.topo.topo"
-          objectClass="com.siteview.css.topo.editparts.TopologyEdit">
+          objectClass="com.siteview.css.topo.editparts.TOPOEdit">
        <action
              class="com.siteview.css.topo.actions.ShowDeviceInfoAction"
              enablesFor="1"
@@ -119,6 +119,18 @@
              id="com.siteview.css.topo.topopanel"
              label="显示设备面板图"
              menubarPath="topo">
+       </action>
+    </objectContribution>
+    <objectContribution
+          adaptable="false"
+          id="com.siteview.css.topo.objectContribution1"
+          objectClass="com.siteview.css.topo.editparts.TopologyEdit">
+       <action
+             class="com.siteview.css.topo.actions.ShowDeviceInfoAction"
+             enablesFor="1"
+             id="org.csstudio.opibuilder.widgets.showDeviceInfoAction1"
+             label="查看设备信息"
+             menubarPath="topo1">
        </action>
     </objectContribution>
  </extension>

@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.siteview.itsm.nnm.scan.core.snmp.common.SnmpPara;
 import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Bgp;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.DeviceCpuInfo;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.DeviceMemInfo;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Directitem;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.IfRec;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.RouteItem;
@@ -103,5 +105,9 @@ public interface  IDeviceHandler {
 
 	public abstract Map<String, List<String>> getStpData(MibScan snmp,
 			SnmpPara spr);
+	
+	public abstract DeviceCpuInfo getDeviceCpuInfo(MibScan snmp,SnmpPara spr);
+	
+	public abstract DeviceMemInfo getdeviceMemInfo(MibScan snmp,SnmpPara spr);
 
 }

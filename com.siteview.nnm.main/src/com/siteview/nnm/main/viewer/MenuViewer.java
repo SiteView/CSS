@@ -14,11 +14,9 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.service.datalocation.Location;
@@ -45,7 +43,6 @@ import com.siteview.itsm.nnm.common.editor.ipResourceMgr.SubNetMgrEditor;
 import com.siteview.itsm.nnm.common.editor.ipResourceMgr.SubNetMgrInput;
 import com.siteview.itsm.nnm.scan.core.StartScan;
 import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
-import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.SubnetInfo;
 import com.siteview.itsm.nnm.scan.core.snmp.scan.MibScan;
 import com.siteview.nnm.main.edit.MibEditorInput;
@@ -54,7 +51,6 @@ import com.siteview.nnm.main.mib.DwSnmpMibOutputHandler;
 import com.siteview.nnm.main.mib.MenuTreeRecord;
 import com.siteview.nnm.main.mib.DwSnmpMibTreeBuilder;
 import com.siteview.nnm.main.pojo.MenuNode;
-import com.siteview.nnm.main.utils.BaseUtils;
 import com.siteview.nnm.main.utils.DrawTopo;
 
 public class MenuViewer extends ViewPart {
@@ -624,7 +620,6 @@ public class MenuViewer extends ViewPart {
 				if (editorPart == null) {
 					window.getActivePage().openEditor(input, MibEditorPart.ID);
 				}
-				MibEditorPart part = (MibEditorPart) editorPart;
 				if (record.number != 2000 && record.number != 20001) {
 					String oid = treeSupport.oidSupport.getNodeOid(node);
 					MibEditorPart.oidText.setText(oid);

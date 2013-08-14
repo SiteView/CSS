@@ -153,7 +153,6 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 				scanCound.countDown();
 			}
 		}
-		
 	}
 	private InputStream getInitialContents() {
 		DisplayModel displayModel = new DisplayModel();

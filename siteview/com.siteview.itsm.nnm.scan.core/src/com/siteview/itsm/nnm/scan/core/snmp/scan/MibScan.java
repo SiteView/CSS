@@ -102,6 +102,7 @@ public class MibScan {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				snmp = null;
 			}
 		}
 		return result;

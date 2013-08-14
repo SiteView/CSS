@@ -796,7 +796,7 @@ public class ReadService {
 			 }
 		}
 	}
-
+	
 	public IDBody getOneSysInfo_NJ(SnmpPara spr) {
 		MibScan snmp = new MibScan();
 		IDBody devid = new IDBody();
@@ -987,7 +987,16 @@ public class ReadService {
 		return devid;
 	}
 
-	// ��ȡ�豸����
+	/**
+	 * 判断设备类型
+	 * if 判断 sqlite数据库 是否存在传入的设备oid 的信息 
+	 * true:返回设备信息 map_res
+	 * flase:根据oid进行判断
+	 * @param sysOid 
+	 * @param sysSvcs
+	 * @param ip
+	 * @param map_res 设备信息
+	 */
 	public void getDevTypeByOid(String sysOid, String sysSvcs, String ip,
 			Map<String, String> map_res) {
 		String devtype_res = "5";// default to host
@@ -997,16 +1006,13 @@ public class ReadService {
 
 		// DEVICE_TYPE_MAP {sysoid,<devType,devTypeName,devFac,devModel>}
 		if (OIDTypeUtils.getInstance().containsKey(sysOid)) {
-			devtype_res = OIDTypeUtils.getInstance().getDevicePro(sysOid)
-					.getDevType();
-			factory_res = OIDTypeUtils.getInstance().getDevicePro(sysOid)
-					.getDevFac();
-			model_res = OIDTypeUtils.getInstance().getDevicePro(sysOid)
-					.getDevModel();
-			typeName_res = OIDTypeUtils.getInstance().getDevicePro(sysOid)
-					.getDevTypeName();
+			DevicePro pro = OIDTypeUtils.getInstance().getDevicePro(sysOid);
+			devtype_res = pro.getDevType();
+			factory_res = pro.getDevFac();
+			model_res = pro.getDevModel();
+			typeName_res = pro.getDevTypeName();
 		} else {
-			System.out.println(sysOid);
+//			System.out.println(sysOid);
 			if (sysOid.substring(0, 16).equals("1.3.6.1.4.1.311."))// enterprises�ڵ�:1.3.6.1.4.1
 			{
 				devtype_res = "5";// host
@@ -1041,10 +1047,10 @@ public class ReadService {
 		map_res.put("factory", factory_res);// ["factory"] = factory_res;
 		map_res.put("model", model_res);// ["model"] = model_res;
 		map_res.put("typename", typeName_res);// ["typename"] = typeName_res;
-		System.out.print("ip = " + ip + " sysoid = " + sysOid + "\t");
-		System.out.println("devtype = " + devtype_res + "factory = "
-				+ factory_res + " model = " + model_res + " typename"
-				+ typeName_res);
+//		System.out.print("ip = " + ip + " sysoid = " + sysOid + "\t");
+//		System.out.println("devtype = " + devtype_res + "factory = "
+//				+ factory_res + " model = " + model_res + " typename"
+//				+ typeName_res);
 	}
 	
 }

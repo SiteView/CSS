@@ -97,7 +97,7 @@ public class MonitorControler {
 	 */
 	private void calculateFlow(){
 		Map<String,List<FlowInfo>> previous = null;
-		//判断栈是否为空
+		//判断流量栈是否为空
 		if(!flowCountStack.isEmpty()){
 			//取出上次保存的流量信息
 			previous = flowCountStack.pop();
@@ -183,7 +183,6 @@ public class MonitorControler {
 			if(body.getDevType().equals(CommonDef.ROUTE_SWITCH)
 					|| body.getDevType().equals(CommonDef.ROUTER)
 					|| body.getDevType().equals(CommonDef.SWITCH)){
-				
 				ThreadTaskPool.getInstance().excute(new Runnable() {
 					@Override
 					public void run() {
