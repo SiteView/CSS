@@ -20,7 +20,7 @@ public class MyWizardPage1 extends WizardPage {
 
     @Override
     public void createControl(Composite parent) {
-        // ÔÚÉú³ÉUIÖ®Ç°£¬ÏÈÉèÎªÎ´Íê³É
+        // åœ¨ç”ŸæˆUIä¹‹å‰ï¼Œå…ˆè®¾ä¸ºæœªå®Œæˆ
         // this.setPageComplete(false);
 
         Composite composite = new Composite(parent, SWT.NONE);
@@ -30,19 +30,19 @@ public class MyWizardPage1 extends WizardPage {
         Label label = new Label(composite, SWT.NONE);
         label.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
                 false));
-        label.setText("ÓÃ»§Ãû:");
+        label.setText("ç”¨æˆ·å:");
 
         Text text = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
         text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         text.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                // °ÑÊý¾Ý´æÔÚ×Ô¼ºÊÖÀï£¬¶ÔÍâÌá¹©get API
+                // æŠŠæ•°æ®å­˜åœ¨è‡ªå·±æ‰‹é‡Œï¼Œå¯¹å¤–æä¾›get API
                 username = ((Text) e.getSource()).getText();
-                // °ÑÊý¾ÝÍ³Ò»½»¸øwizardÀïÃæµÄÍ¨ÓÃ´æ´¢Æ÷DialogSettingsÀ´´æÖµ´¢
-                MyWizardPage1.this.getWizard().getDialogSettings().put("ÓÃ»§Ãû",
+                // æŠŠæ•°æ®ç»Ÿä¸€äº¤ç»™wizardé‡Œé¢çš„é€šç”¨å­˜å‚¨å™¨DialogSettingsæ¥å­˜å€¼å‚¨
+                MyWizardPage1.this.getWizard().getDialogSettings().put("ç”¨æˆ·å",
                         ((Text) e.getSource()).getText());
-                // ÒòÎªÄ£ÐÍ¸Ä±äÁË£¬ËùÒÔÒª¼°Ê±¸ü¸Ä½çÃæ
+                // å› ä¸ºæ¨¡åž‹æ”¹å˜äº†ï¼Œæ‰€ä»¥è¦åŠæ—¶æ›´æ”¹ç•Œé¢
                 MyWizardPage1.this.getContainer().updateButtons();
             }
         });
@@ -50,7 +50,7 @@ public class MyWizardPage1 extends WizardPage {
         label = new Label(composite, SWT.NONE);
         label.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
                 false));
-        label.setText("ÃÜ  Âë:");
+        label.setText("å¯†  ç :");
 
         text = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
         text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -58,22 +58,22 @@ public class MyWizardPage1 extends WizardPage {
             @Override
             public void modifyText(ModifyEvent e) {
                 password = ((Text) e.getSource()).getText();
-                System.out.println("ÃÜÂë="+password);
-                MyWizardPage1.this.getWizard().getDialogSettings().put("ÃÜ  Âë",
+                System.out.println("å¯†ç ="+password);
+                MyWizardPage1.this.getWizard().getDialogSettings().put("å¯†  ç ",
                         ((Text) e.getSource()).getText());
-                // ÒòÎªÄ£ÐÍ¸Ä±äÁË£¬ËùÒÔÒª¼°Ê±¸ü¸Ä½çÃæ
+                // å› ä¸ºæ¨¡åž‹æ”¹å˜äº†ï¼Œæ‰€ä»¥è¦åŠæ—¶æ›´æ”¹ç•Œé¢
                 MyWizardPage1.this.getContainer().updateButtons();
             }
         });
 
-        this.setTitle("µ¼ÈëTOS¹¤³Ì");
-        this.setMessage("ÇëÊäÈëÓÃ»§ÃûºÍÃÜÂë£¬½øÐÐ¹¤³Ìµ¼Èë²Ù×÷");
+        this.setTitle("å¯¼å…¥TOSå·¥ç¨‹");
+        this.setMessage("è¯·è¾“å…¥ç”¨æˆ·åå’Œå¯†ç ï¼Œè¿›è¡Œå·¥ç¨‹å¯¼å…¥æ“ä½œ");
 
         this.setControl(composite);
     }
 
     @Override
-    // ÖØÐ´Õâ¸ö·½·¨£¬²»ÔÙÊ¹ÓÃÒÔÇ°µÄflag
+    // é‡å†™è¿™ä¸ªæ–¹æ³•ï¼Œä¸å†ä½¿ç”¨ä»¥å‰çš„flag
     public boolean isPageComplete() {
         return username.length() > 0 && password.length() > 0;
     }

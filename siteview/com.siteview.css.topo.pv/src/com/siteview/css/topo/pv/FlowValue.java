@@ -22,7 +22,7 @@ public class FlowValue extends DynamicValue {
 		super(name);
 		this.ip = ip;
 		this.ifindex = ifindex;
-		//ÉèÖÃË¢ĞÂÊ±¼äÎª5Ãë
+		//è®¾ç½®åˆ·æ–°æ—¶é—´ä¸º5ç§’
 		update_period = 5000;
 	}
 

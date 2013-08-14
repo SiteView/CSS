@@ -12,7 +12,7 @@ import org.eclipse.jface.wizard.Wizard;
 public class MyWizard extends Wizard {
 
     public MyWizard() {
-        this.setDialogSettings(new DialogSettings("µ¼Èë¹¤³Ì"));
+        this.setDialogSettings(new DialogSettings("å¯¼å…¥å·¥ç¨‹"));
     }
 
     @Override
@@ -22,22 +22,22 @@ public class MyWizard extends Wizard {
     }
 
     /**
-     * »ñÈ¡Ïòµ¼ÀïÃæµÄÊı¾İ
+     * è·å–å‘å¯¼é‡Œé¢çš„æ•°æ®
      */
     public boolean performFinish() {
         IDialogSettings dialogSettings2 = this.getDialogSettings();
-        final String username = dialogSettings2.get("ÓÃ»§Ãû");
-        String password = dialogSettings2.get("ÃÜ  Âë");
-        String city = dialogSettings2.get("³Ç  ÊĞ");
-        String address = dialogSettings2.get("µØ  Ö·");
-        System.out.println("ÓÃ»§Ãû"+username+"ÃÜÂë"+password);
+        final String username = dialogSettings2.get("ç”¨æˆ·å");
+        String password = dialogSettings2.get("å¯†  ç ");
+        String city = dialogSettings2.get("åŸ  å¸‚");
+        String address = dialogSettings2.get("åœ°  å€");
+        System.out.println("ç”¨æˆ·å"+username+"å¯†ç "+password);
         
         IRunnableWithProgress op = new IRunnableWithProgress() {
             public void run(IProgressMonitor monitor)
                     throws InvocationTargetException {
                 try {
                     MessageDialog.openConfirm(MyWizard.this.getShell(),
-                            "ÇëÈ·ÈÏÒÔÏÂĞÅÏ¢", "username=" + username);
+                            "è¯·ç¡®è®¤ä»¥ä¸‹ä¿¡æ¯", "username=" + username);
                 } catch (Exception e) {
                     throw new InvocationTargetException(e);
                 } finally {

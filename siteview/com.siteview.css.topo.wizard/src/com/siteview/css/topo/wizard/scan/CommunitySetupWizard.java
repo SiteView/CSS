@@ -14,7 +14,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * ¹²Í¬ÌåÉèÖÃÏòµ¼
+ * å…±åŒä½“è®¾ç½®å‘å¯¼
  * 
  * @author zhangxinnan
  * 
@@ -61,7 +61,7 @@ public class CommunitySetupWizard extends WizardPage {
 
 	protected CommunitySetupWizard() {
 		super("Some wizard Page");
-		setTitle("É¨Ãè²ÎÊı -->" + "É¨Ãè·¶Î§ -->" + "ÅÅ³ı·¶Î§ -->" + "¹²Í¬ÌåÉèÖÃ -->" + "É¨ÃèÖÖ×Ó");
+		setTitle("æ‰«æå‚æ•° -->" + "æ‰«æèŒƒå›´ -->" + "æ’é™¤èŒƒå›´ -->" + "å…±åŒä½“è®¾ç½® -->" + "æ‰«æç§å­");
 		setMessage("WizardPage Message");
 	}
 
@@ -79,14 +79,14 @@ public class CommunitySetupWizard extends WizardPage {
 			column.setText("Column " + i);
 		}
 
-		// ÉèÖÃÑÕÉ«
-		// Èº×é
+		// è®¾ç½®é¢œè‰²
+		// ç¾¤ç»„
 		Group group = new Group(parent, SWT.NONE);
-		group.setText("¹²Í¬ÌåÉèÖÃ");
+		group.setText("å…±åŒä½“è®¾ç½®");
 		RowLayout layout = new RowLayout(4);
 		group.setLayout(layout);
 
-		// ÊÕË÷Éî¶È
+		// æ”¶ç´¢æ·±åº¦
 		Label get = new Label(group, SWT.NONE);
 		get.setText("GET");
 
@@ -100,56 +100,56 @@ public class CommunitySetupWizard extends WizardPage {
 		setCommu = new Text(group, SWT.NONE);
 		setCommu.setText(communitySet);
 
-		// tabelÉèÖÃ
+		// tabelè®¾ç½®
 		table = new Table(group, SWT.BORDER | SWT.NONE | SWT.FULL_SELECTION
 				| SWT.HIDE_SELECTION | SWT.VIRTUAL);
-		table.setHeaderVisible(true);// ±êÌâ
-		table.setLinesVisible(true);// ±í¸ñÏß¿É¼û
-		// ±à¼­Æ÷ÉèÖÃ
+		table.setHeaderVisible(true);// æ ‡é¢˜
+		table.setLinesVisible(true);// è¡¨æ ¼çº¿å¯è§
+		// ç¼–è¾‘å™¨è®¾ç½®
 		editor = new TableEditor(table);
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
-		// ´´½¨ÁĞ
+		// åˆ›å»ºåˆ—
 		TableColumn col1 = new TableColumn(table, SWT.LEFT);
-		col1.setText("ÆğÊ¼IPµØÖ·");
+		col1.setText("èµ·å§‹IPåœ°å€");
 		col1.setWidth(260);
 		TableColumn col2 = new TableColumn(table, SWT.LEFT);
-		col2.setText("ÖÕÖ¹IPµØÖ·");
+		col2.setText("ç»ˆæ­¢IPåœ°å€");
 		col2.setWidth(260);
 		TableColumn col3 = new TableColumn(table, SWT.LEFT);
 		col3.setText("GET");
 		col3.setWidth(80);
 
-		// Ìí¼Ó±í¸ñÊı¾İ
+		// æ·»åŠ è¡¨æ ¼æ•°æ®
 		final TableColumn[] columns = table.getColumns();
 		for (int i = 0; i < columns.length; i++) {
 			TableItem item = new TableItem(table, SWT.NONE);
 			for (int j = 0; j < columns.length; j++) {
-				// item.setText(j,""+i);//ÉèÖÃÄ¬ÈÏÖµ
+				// item.setText(j,""+i);//è®¾ç½®é»˜è®¤å€¼
 			}
 		}
 
-		// ĞŞ¸Ätable
+		// ä¿®æ”¹table
 		{
 			table.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					try {
-						// Çå¿Õ±à¼­Æ÷
+						// æ¸…ç©ºç¼–è¾‘å™¨
 						Control c = editor.getEditor();
 						if (c != null) {
 							c.dispose();
 						}
-						// µÃµ½Ñ¡ÖĞµÄĞĞ
+						// å¾—åˆ°é€‰ä¸­çš„è¡Œ
 						Point point = new Point(e.x, e.y);
 						final TableItem tableitem = table.getItem(point);
-						// // µÃµ½Ñ¡ÖĞµÄÁĞ
+						// // å¾—åˆ°é€‰ä¸­çš„åˆ—
 						int column = -1;
 						for (int i = 0; i < table.getColumnCount(); i++) {
 							Rectangle rec = tableitem.getBounds(i);
 							if (rec.contains(point)) {
 								column = i;
-							} else {// Èç¹ûµã»÷µÄÊÇ²»´æÔÚµÄĞĞ¡£ÄÇÃ´ĞÂÔöÒ»ĞĞ
+							} else {// å¦‚æœç‚¹å‡»çš„æ˜¯ä¸å­˜åœ¨çš„è¡Œã€‚é‚£ä¹ˆæ–°å¢ä¸€è¡Œ
 								TableItem item = new TableItem(table, SWT.NONE);
 								TableItem[] items = table.getItems();
 							}
@@ -157,9 +157,9 @@ public class CommunitySetupWizard extends WizardPage {
 						final int col1 = column;
 						System.out.println(col1);
 
-						// ÆäËûµÄĞŞ¸Ä¶¼ÊÇÓÃÎÄ±¾¿ò
+						// å…¶ä»–çš„ä¿®æ”¹éƒ½æ˜¯ç”¨æ–‡æœ¬æ¡†
 						final Text txt = new Text(table, SWT.NONE);
-						txt.setText(tableitem.getText(col1));// È¡µÃµ±Ç°µ¥Ôª¸ñÀïµÄÖµ
+						txt.setText(tableitem.getText(col1));// å–å¾—å½“å‰å•å…ƒæ ¼é‡Œçš„å€¼
 						txt.forceFocus();
 						editor.setEditor(txt, tableitem, col1);
 						txt.addModifyListener(new ModifyListener() {
@@ -171,7 +171,7 @@ public class CommunitySetupWizard extends WizardPage {
 
 							}
 						});
-						// ÔÚtable¸üĞÂÊ±text editorÏûÊ§ ÊµÏÖË¢ĞÂĞ§¹û
+						// åœ¨tableæ›´æ–°æ—¶text editoræ¶ˆå¤± å®ç°åˆ·æ–°æ•ˆæœ
 						tableitem
 								.addDisposeListener(new org.eclipse.swt.events.DisposeListener() {
 									public void widgetDisposed(
@@ -187,19 +187,19 @@ public class CommunitySetupWizard extends WizardPage {
 			});
 		}
 
-		// ÓÒ¼üÉ¾³ı²Ëµ¥
+		// å³é”®åˆ é™¤èœå•
 		{
 			Menu menu1 = new Menu(group);
 			table.setMenu(menu1);
 			MenuItem menuitem1 = new MenuItem(menu1, SWT.PUSH);
-			menuitem1.setText("É¾³ı");
+			menuitem1.setText("åˆ é™¤");
 
 			menuitem1.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event event) {
 					MessageBox mbox = new MessageBox(new Shell(),
 							SWT.DIALOG_TRIM | SWT.ICON_INFORMATION);
-					mbox.setText("É¾³ı³É¹¦");
-					mbox.setMessage("É¾³ıÁË" + table.getSelectionCount() + "Ìõ¼ÇÂ¼");
+					mbox.setText("åˆ é™¤æˆåŠŸ");
+					mbox.setMessage("åˆ é™¤äº†" + table.getSelectionCount() + "æ¡è®°å½•");
 					table.remove(table.getSelectionIndices());
 					mbox.open();
 				}

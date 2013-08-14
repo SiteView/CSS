@@ -18,7 +18,7 @@ public class App extends ApplicationWindow {
     @Override
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
-        shell.setText("Ó¦ÓÃ³ÌĞò");
+        shell.setText("åº”ç”¨ç¨‹åº");
         shell.setSize(400, 300);
     }
 
@@ -44,7 +44,7 @@ public class App extends ApplicationWindow {
                 Wizard myWizard = new MyWizard();
                 WizardDialog wdialog = new MyWizardDialog(App.this.getShell(),
                         myWizard);
-                myWizard.setWindowTitle("µ¼Èë¹¤³Ì2");
+                myWizard.setWindowTitle("å¯¼å…¥å·¥ç¨‹2");
                 wdialog.open();
             }
         });
@@ -60,7 +60,7 @@ public class App extends ApplicationWindow {
         this.setBlockOnOpen(true);
         this.open();
 
-        // ×¢Òâ£¬ÕâÀïµ÷ÓÃdisposeºÜÖØÒª£¬ÒòÎªopenÖĞÃ»ÓĞ½øĞĞdispose²Ù×÷¡£getCurrentÊÇOKµÄ¡£
+        // æ³¨æ„ï¼Œè¿™é‡Œè°ƒç”¨disposeå¾ˆé‡è¦ï¼Œå› ä¸ºopenä¸­æ²¡æœ‰è¿›è¡Œdisposeæ“ä½œã€‚getCurrentæ˜¯OKçš„ã€‚
         Display.getCurrent().dispose();
     }
 

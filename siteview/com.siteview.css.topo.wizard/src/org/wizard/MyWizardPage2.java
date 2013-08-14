@@ -20,7 +20,7 @@ public class MyWizardPage2 extends WizardPage {
 
     @Override
     public void createControl(Composite parent) {
-        // ÔÚÉú³ÉUIÖ®Ç°£¬ÏÈÉèÎªÎ´Íê³É
+        // åœ¨ç”ŸæˆUIä¹‹å‰ï¼Œå…ˆè®¾ä¸ºæœªå®Œæˆ
         // this.setPageComplete(false);
 
         Composite composite = new Composite(parent, SWT.NONE);
@@ -30,7 +30,7 @@ public class MyWizardPage2 extends WizardPage {
         Label label = new Label(composite, SWT.NONE);
         label.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
                 false));
-        label.setText("³Ç  ÊĞ:");
+        label.setText("åŸ  å¸‚:");
 
         Text text = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
         text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -38,9 +38,9 @@ public class MyWizardPage2 extends WizardPage {
             @Override
             public void modifyText(ModifyEvent e) {
                 city = ((Text) e.getSource()).getText();
-                MyWizardPage2.this.getWizard().getDialogSettings().put("³Ç  ÊĞ",
+                MyWizardPage2.this.getWizard().getDialogSettings().put("åŸ  å¸‚",
                         ((Text) e.getSource()).getText());
-                // ÒòÎªÄ£ĞÍ¸Ä±äÁË£¬ËùÒÔÒª¼°Ê±¸ü¸Ä½çÃæ
+                // å› ä¸ºæ¨¡å‹æ”¹å˜äº†ï¼Œæ‰€ä»¥è¦åŠæ—¶æ›´æ”¹ç•Œé¢
                 MyWizardPage2.this.getContainer().updateButtons();
             }
         });
@@ -48,7 +48,7 @@ public class MyWizardPage2 extends WizardPage {
         label = new Label(composite, SWT.NONE);
         label.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
                 false));
-        label.setText("µØ  Ö·:");
+        label.setText("åœ°  å€:");
 
         text = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
         text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -56,15 +56,15 @@ public class MyWizardPage2 extends WizardPage {
             @Override
             public void modifyText(ModifyEvent e) {
                 address = ((Text) e.getSource()).getText();
-                MyWizardPage2.this.getWizard().getDialogSettings().put("µØ  Ö·",
+                MyWizardPage2.this.getWizard().getDialogSettings().put("åœ°  å€",
                         ((Text) e.getSource()).getText());
-                // ÒòÎªÄ£ĞÍ¸Ä±äÁË£¬ËùÒÔÒª¼°Ê±¸ü¸Ä½çÃæ
+                // å› ä¸ºæ¨¡å‹æ”¹å˜äº†ï¼Œæ‰€ä»¥è¦åŠæ—¶æ›´æ”¹ç•Œé¢
                 MyWizardPage2.this.getContainer().updateButtons();
             }
         });
 
-        this.setTitle("µ¼ÈëTOS¹¤³Ì");
-        this.setMessage("ÇëÊäÈëÓÃ»§ÃûºÍÃÜÂë£¬½øĞĞ¹¤³Ìµ¼Èë²Ù×÷");
+        this.setTitle("å¯¼å…¥TOSå·¥ç¨‹");
+        this.setMessage("è¯·è¾“å…¥ç”¨æˆ·åå’Œå¯†ç ï¼Œè¿›è¡Œå·¥ç¨‹å¯¼å…¥æ“ä½œ");
 
         this.setControl(composite);
     }

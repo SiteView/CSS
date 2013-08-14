@@ -53,19 +53,19 @@ import com.siteview.itsm.nnm.scan.core.snmp.flowmonitor.MonitorControler;
 import com.siteview.itsm.nnm.scan.core.snmp.scan.NetScan;
 import com.siteview.itsm.nnm.scan.core.snmp.util.IoUtils;
 /**
- * ¿ªÊ¼ÍØÆËÉ¨ÃèµÄaction
+ * å¼€å§‹æ‹“æ‰‘æ‰«æçš„action
  * @author haiming.wang
  *
  */
 @SuppressWarnings({ "unused", "restriction" })
 public class StartScanAction implements IWorkbenchWindowActionDelegate {
-	//É¨Ãè²ÎÊı
+	//æ‰«æå‚æ•°
 	private ScanParam scanParam;
 	
 	private IWorkbench workbench ;
 	private boolean scaned = false;
 	private CountDownLatch scanCound;
-	//ÍØÆËÉ¨Ãè¹¤¾ß
+	//æ‹“æ‰‘æ‰«æå·¥å…·
 	private NetScan scan;
 	public static final String TOPO_OPI_FILENAME = "topo.opi";
 	public static final String TOPO_PROJECTNAME = "topologyPro";
@@ -82,23 +82,23 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 				createProject();
 			} catch (CoreException e) {
 				e.printStackTrace();
-				showError("´´½¨project Ê§°Ü", e.getMessage());
+				showError("åˆ›å»ºproject å¤±è´¥", e.getMessage());
 				return;
 			}
 		}
 		workbench = PlatformUI.getWorkbench();
-		//Èç¹ûÓÃ»§´Ó½çÃæÅäÖÃÁËÉ¨Ãè²ÎÊı£¬ÒÔÅäÖÃµÄ²ÎÊıĞÅÏ¢É¨Ãè
+		//å¦‚æœç”¨æˆ·ä»ç•Œé¢é…ç½®äº†æ‰«æå‚æ•°ï¼Œä»¥é…ç½®çš„å‚æ•°ä¿¡æ¯æ‰«æ
 		if(GlobalData.isConfiged){
 			scanParam = GlobalData.scanParam;
 		}else{
-			//·ñÔò´ÓÉÏ´Î±£´æµÄÅäÖÃĞÅÏ¢É¨Ãè
+			//å¦åˆ™ä»ä¸Šæ¬¡ä¿å­˜çš„é…ç½®ä¿¡æ¯æ‰«æ
 			scanParam = IoUtils.readScanParam();
 		}
 		if(scanParam == null || (scanParam.getScan_scales().isEmpty() && scanParam.getScan_seeds().isEmpty())){
-			showError("É¨Ãè²ÎÊı³õÊ¼»¯Ê§°Ü", "±ØĞëÅäÖÃÉ¨ÃèÖÖ×Ó»òÕßÉ¨ÃèIP·¶Î§£¡");
+			showError("æ‰«æå‚æ•°åˆå§‹åŒ–å¤±è´¥", "å¿…é¡»é…ç½®æ‰«æç§å­æˆ–è€…æ‰«æIPèŒƒå›´ï¼");
 			return;
 		}
-		//É¨Ãè½ø¶ÈÌõ
+		//æ‰«æè¿›åº¦æ¡
 		ProgressMonitorDialog pmd = new ProgressMonitorDialog(workbench.getActiveWorkbenchWindow().getShell());
 		scanCound = new CountDownLatch(1);
 		try {
@@ -121,7 +121,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			showError("Õ¹Ê¾ÍØÆËÍ¼Ê§°Ü", e.getMessage());
+			showError("å±•ç¤ºæ‹“æ‰‘å›¾å¤±è´¥", e.getMessage());
 		}
 		
 	}
@@ -129,16 +129,16 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 	class WithProgress implements IRunnableWithProgress{
 		@Override
 		public void run(IProgressMonitor monitor){
-			monitor.beginTask("ÕıÔÚÉ¨ÃèÍøÂç½á¹¹..." + "", IProgressMonitor.UNKNOWN);  
+			monitor.beginTask("æ­£åœ¨æ‰«æç½‘ç»œç»“æ„..." + "", IProgressMonitor.UNKNOWN);  
 			/**
-			 * Ö´ĞĞµÄÈÎÎñ
+			 * æ‰§è¡Œçš„ä»»åŠ¡
 			 */
 			Map<String, Map<String, String>> special_oid_list = new ConcurrentHashMap<String, Map<String, String>>();
 			scan = new NetScan(null, special_oid_list, scanParam);
 			try{
 				scan.scan();
 				monitor.worked(50);
-				//»º´æ±ßÊı¾İ
+				//ç¼“å­˜è¾¹æ•°æ®
 				GlobalData.isInit = true;
 				GlobalData.edgeList = scan.getTopo_edge_list();
 				GlobalData.deviceList = scan.getDevid_list();
@@ -147,7 +147,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 			}catch (Exception e) {
 				GlobalData.isInit = false;
 				scaned = false;
-				showError("É¨ÃèÊ§°Ü", e.getMessage());
+				showError("æ‰«æå¤±è´¥", e.getMessage());
 			}finally{
 				monitor.done();
 				scanCound.countDown();
@@ -162,7 +162,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 		return result;
 	}
 	/**
-	 * »æÖÆÍØÆËÍ¼
+	 * ç»˜åˆ¶æ‹“æ‰‘å›¾
 	 * @param scan
 	 * @throws Exception 
 	 */
@@ -184,7 +184,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 		createProject();
 	}
 	private IProjectDescription description ;
-	//´´½¨ÏîÄ¿
+	//åˆ›å»ºé¡¹ç›®
 	public void createProject()
 			throws CoreException {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot()
@@ -201,23 +201,23 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 		project.create(null);
 		project.open(null);
 	}
-	//»ñÈ¡ÎÄ¼ş¶ÔÏó
+	//è·å–æ–‡ä»¶å¯¹è±¡
 	public IFile getFile(){
 		IProject p = getProjectHandle();
 		return p.getFile(TOPO_OPI_FILENAME);
 	}
-	//»ñÈ¡uri
+	//è·å–uri
 	public URI getProjectLocationURI() {
 		return getSelectedConfiguration().getContributor().getURI(
 			      TOPO_PROJECTNAME);
 	}
-	//»ñÈ¡ÎÄ¼şÏµÍ³ÅäÖÃ
+	//è·å–æ–‡ä»¶ç³»ç»Ÿé…ç½®
 	private FileSystemConfiguration getSelectedConfiguration() {
 			return FileSystemSupportRegistry.getInstance()
 					.getDefaultConfiguration();
 	}
 	/**
-	 * ÅĞ¶Ïtopo.opiÎÄ¼şÊÇ·ñ´æÔÚ
+	 * åˆ¤æ–­topo.opiæ–‡ä»¶æ˜¯å¦å­˜åœ¨
 	 * @param file
 	 * @return
 	 */
@@ -225,14 +225,14 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 		return (getFile()!=null);
 	}
 	/**
-	 * É¾³ıtopology opiÎÄ¼ş
+	 * åˆ é™¤topology opiæ–‡ä»¶
 	 * @throws CoreException
 	 */
 	public void deleteFile() throws CoreException{
 		getFile().delete(true, null);
 	}
 	/**
-	 * »ñÈ¡ÏîÄ¿¶ÔÏó
+	 * è·å–é¡¹ç›®å¯¹è±¡
 	 * @return
 	 */
 	public IProject getProjectHandle(){
@@ -240,7 +240,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 			      TOPO_PROJECTNAME);
 	}
 	/**
-	 * ÅĞ¶ÏÏîÄ¿ÊÇ·ñ´æÔÚ
+	 * åˆ¤æ–­é¡¹ç›®æ˜¯å¦å­˜åœ¨
 	 * @param projectName
 	 * @return
 	 */
@@ -248,7 +248,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 		return (getProjectByName(projectName) != null);
 	}
 	/**
-	 * ¸ù¾İÏîÄ¿Ãû³Æ »ñÈ¡ÏîÄ¿¶ÔÏó
+	 * æ ¹æ®é¡¹ç›®åç§° è·å–é¡¹ç›®å¯¹è±¡
 	 * @param projectName
 	 * @return
 	 */
@@ -263,7 +263,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 		return null;
 	}
 	/**
-	 * ´´½¨ÎÄ¼ş¶ÔÏó
+	 * åˆ›å»ºæ–‡ä»¶å¯¹è±¡
 	 * @param projectName
 	 * @return
 	 */
@@ -280,7 +280,7 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 	private final void createFile(final IFile fileHandle,
 			final InputStream contents) throws CoreException {
 		InputStream inputStream = contents;
-		//´ò¿ªÏîÄ¿
+		//æ‰“å¼€é¡¹ç›®
 		if(!getProjectHandle().isOpen()){
 			getProjectHandle().open(null);
 		}

@@ -17,7 +17,7 @@ import com.siteview.itsm.nnm.scan.core.snmp.util.Utils;
 
 
 /**
- * É¨ÃèÏòµ¼
+ * æ‰«æå‘å¯¼
  * @author zhangxinnan
  * 
  */
@@ -30,26 +30,26 @@ public class SomeWizard extends Wizard {
 	private ScanSeedsWizard seedsPage = new ScanSeedsWizard();
 	Table tab1 = null;
 	public SomeWizard() {
-		//Ê×ÏÈ¶ÁÈ¡ÉÏ´Î±£´æµÄÉ¨Ãè²ÎÊı
+		//é¦–å…ˆè¯»å–ä¸Šæ¬¡ä¿å­˜çš„æ‰«æå‚æ•°
 		ScanParam sp = IoUtils.readScanParam();
 		if(sp != null){
-			//³õÊ¼»¯»ù±¾É¨Ãè²ÎÊı
+			//åˆå§‹åŒ–åŸºæœ¬æ‰«æå‚æ•°
 			paramPage.setDepth(sp.getDepth());
 			paramPage.setRetry(sp.getRetrytimes());
 			paramPage.setThreadCount(sp.getThreadCount());
 			paramPage.setTimeOut(sp.getTimeout());
-			//³õÊ¼»¯É¨Ãè·¶Î§
+			//åˆå§‹åŒ–æ‰«æèŒƒå›´
 			scopePage.setScaleList(sp.getScan_scales());
-			//³õÊ¼»¯É¨Ãè¹ıÂË·¶Î§ÁĞ±í
+			//åˆå§‹åŒ–æ‰«æè¿‡æ»¤èŒƒå›´åˆ—è¡¨
 			filterPage.setFilterList(sp.getFilter_scales());
-			//³õÊ¼»¯É¨ÃèÖÖ×Ó
+			//åˆå§‹åŒ–æ‰«æç§å­
 			seedsPage.setSeedList(sp.getScan_seeds());
-			//³õÊ¼»¯¶ÁĞ´¹²Í¬Ìå
+			//åˆå§‹åŒ–è¯»å†™å…±åŒä½“
 			communityPage.setCommunityGet(sp.getCommunity_get_dft());
 			communityPage.setCommunitySet(sp.getCommunity_set_dft());
 		}
-		setWindowTitle("É¨Ãè");
-		this.setDialogSettings(new DialogSettings("µ¼Èë¹¤³Ì"));
+		setWindowTitle("æ‰«æ");
+		this.setDialogSettings(new DialogSettings("å¯¼å…¥å·¥ç¨‹"));
 		addPage(paramPage);
 		addPage(scopePage);
 		addPage(filterPage);
@@ -59,7 +59,7 @@ public class SomeWizard extends Wizard {
 	}
 
 	/**
-	 * É¨ÃèÍê³É
+	 * æ‰«æå®Œæˆ
 	 */
 	public boolean performFinish() {
 		int searchDepth = 0;
@@ -67,7 +67,7 @@ public class SomeWizard extends Wizard {
 		int retryCount = 0;
 		int timeOut = 0;
 		Control[] groups = paramPage.getGroup().getChildren();
-		//»ñÈ¡»ù±¾É¨ÃèĞÅÏ¢
+		//è·å–åŸºæœ¬æ‰«æä¿¡æ¯
 		for(int i=0;i<groups.length;i++){
 			Control c = groups[i];
 			if(c instanceof Spinner){
@@ -87,16 +87,16 @@ public class SomeWizard extends Wizard {
 			}
 			
 		}
-		//ÏÈÇå¿ÕÊı¾İ
+		//å…ˆæ¸…ç©ºæ•°æ®
 		GlobalData.scanParam = new ScanParam();
-		// ¹¹ÔìÉ¨Ãè²ÎÊı
+		// æ„é€ æ‰«æå‚æ•°
 		GlobalData.scanParam.setDepth(searchDepth);
 		GlobalData.scanParam.setThreadCount(parallelThreads);
 		GlobalData.scanParam.setRetrytimes(retryCount);
 		GlobalData.scanParam.setTimeout(timeOut);
 		TableItem[] items = scopePage.getTable().getItems();
 		/**
-		 * ³õÊ¼»¯É¨ÃèIP·¶Î§
+		 * åˆå§‹åŒ–æ‰«æIPèŒƒå›´
 		 */
 		for(int i=0;i<items.length;i++){
 			TableItem tmp = items[i];
@@ -108,7 +108,7 @@ public class SomeWizard extends Wizard {
 			}
 		}
 		/**
-		 * ³õÊ¼»¯É¨Ãè¹ıÂËIP
+		 * åˆå§‹åŒ–æ‰«æè¿‡æ»¤IP
 		 */
 		TableItem[] filterItems = filterPage.getTable().getItems();
 		for(int i=0;i<filterItems.length;i++){
@@ -127,7 +127,7 @@ public class SomeWizard extends Wizard {
 		}
 		
 		/**
-		 * ³õÊ¼»¯É¨ÃèÖÖ×Ó
+		 * åˆå§‹åŒ–æ‰«æç§å­
 		 */
 		TableItem[] seedsItems = seedsPage.getSeedsTable().getItems();
 		for(int i=0;i<seedsItems.length;i++){
@@ -137,20 +137,20 @@ public class SomeWizard extends Wizard {
 			}
 		}
 		if(GlobalData.scanParam.getScan_scales().isEmpty() && GlobalData.scanParam.getScan_seeds().isEmpty()){
-			//Èç¹ûÉ¨ÃèÖÖ×ÓºÍÉ¨Ãè·¶Î§¶¼Îª¿Õ²»ÄÜµã»÷finish°´Å¥
-			seedsPage.setErrorMessage("É¨ÃèÖÖ×ÓºÍÉ¨Ãè·¶Î§±ØĞëÅäÖÃÒ»Ïî£¡");
+			//å¦‚æœæ‰«æç§å­å’Œæ‰«æèŒƒå›´éƒ½ä¸ºç©ºä¸èƒ½ç‚¹å‡»finishæŒ‰é’®
+			seedsPage.setErrorMessage("æ‰«æç§å­å’Œæ‰«æèŒƒå›´å¿…é¡»é…ç½®ä¸€é¡¹ï¼");
 			return false;
 		}
 		GlobalData.isConfiged = true;
-		//»º´æÉ¨Ãè²ÎÊı
+		//ç¼“å­˜æ‰«æå‚æ•°
 		IoUtils.saveScanParam(GlobalData.scanParam);
-		// ½«»ñÈ¡µÄÊı¾İ½øĞĞÏÂÒ»²½²Ù×÷
-		System.out.println("ÊÕË÷Éî¶È" + searchDepth + "²¢ĞĞÏß³ÌÊı" + parallelThreads
-				+ "ÖØÊÔ´ÎÊı" + retryCount + "³¬Ê±Ê±¼ä" + timeOut);
+		// å°†è·å–çš„æ•°æ®è¿›è¡Œä¸‹ä¸€æ­¥æ“ä½œ
+		System.out.println("æ”¶ç´¢æ·±åº¦" + searchDepth + "å¹¶è¡Œçº¿ç¨‹æ•°" + parallelThreads
+				+ "é‡è¯•æ¬¡æ•°" + retryCount + "è¶…æ—¶æ—¶é—´" + timeOut);
 		return true;
 	}
 	public boolean canFinish() {
-		   //½öµ±µ±Ç°Ò³ÃæÎª¸ĞĞ»Ò³ÃæÊ±²Å½«¡°Íê³É¡±°´Å¥ÖÃÎª¿ÉÓÃ×´Ì¬
+		   //ä»…å½“å½“å‰é¡µé¢ä¸ºæ„Ÿè°¢é¡µé¢æ—¶æ‰å°†â€œå®Œæˆâ€æŒ‰é’®ç½®ä¸ºå¯ç”¨çŠ¶æ€
 		   if (this.getContainer().getCurrentPage() == seedsPage )
 		    return true;
 		   else

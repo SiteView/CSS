@@ -73,11 +73,11 @@ public class IpMacBaseDataEditor extends EditorPart {
 	private void createTable(Composite parent) {
 		table = tv.getTable();
 		TableColumn ipColumn = new TableColumn(table, SWT.LEFT);
-		ipColumn.setText("IPµØÖ·");
+		ipColumn.setText("IPåœ°å€");
 		ipColumn.setWidth(120);
 
 		TableColumn nameColumn = new TableColumn(table, SWT.LEFT);
-		nameColumn.setText("MACµØÖ·");
+		nameColumn.setText("MACåœ°å€");
 		nameColumn.setWidth(120);
 
 		

@@ -12,7 +12,7 @@ import com.siteview.itsm.nnm.scan.core.snmp.util.Utils;
 
 
 /**
- * µã»÷É¨ÃèÊ±´ò¿ªdialog
+ * ç‚¹å‡»æ‰«ææ—¶æ‰“å¼€dialog
  * @author zhangxinnan
  * 
  */
@@ -21,7 +21,7 @@ public class ScanDialog extends WizardDialog{
 		super(parentShell,wizard);
 	}
 	/**
-	 * µã»÷ÏÂÒ»Ò³Ê±¶ÔÊäÈëµÄÊı¾İ½øĞĞĞ£Ñé
+	 * ç‚¹å‡»ä¸‹ä¸€é¡µæ—¶å¯¹è¾“å…¥çš„æ•°æ®è¿›è¡Œæ ¡éªŒ
 	 */
 	@Override
 	protected void buttonPressed(int buttonId) {
@@ -29,7 +29,7 @@ public class ScanDialog extends WizardDialog{
 		if (buttonId == IDialogConstants.NEXT_ID) {
 			IWizardPage currentPage = getWizard().getContainer()
 					.getCurrentPage();
-			//Ğ£ÑéIPµØÖ··¶Î§µÄÊı¾İ¸ñÊ½
+			//æ ¡éªŒIPåœ°å€èŒƒå›´çš„æ•°æ®æ ¼å¼
 			if (currentPage instanceof ScanScopeWizard) {
 				ScanScopeWizard scopePage = (ScanScopeWizard) currentPage;
 				TableItem[] items = scopePage.getTable().getItems();
@@ -40,16 +40,16 @@ public class ScanDialog extends WizardDialog{
 					if((Utils.isEmptyOrBlank(items[i].getText(0)) && !Utils.isEmptyOrBlank(items[i].getText(1)))
 							||(!Utils.isEmptyOrBlank(items[i].getText(1)) && Utils.isEmptyOrBlank(items[i].getText(0)))){
 						((ScanScopeWizard) currentPage)
-							.setErrorMessage("ÆğÊ¼IPºÍ½áÊøIP²»ÄÜÖ»ÌîÒ»¸ö");
+							.setErrorMessage("èµ·å§‹IPå’Œç»“æŸIPä¸èƒ½åªå¡«ä¸€ä¸ª");
 						return;
 					}
 					if (!Utils.isIp(items[i].getText(0)) || !Utils.isIp(items[i].getText(1))) {
 						((ScanScopeWizard) currentPage)
-								.setErrorMessage("IPµØÖ·¸ñÊ½²»ÕıÈ·(±ØĞëÎªµã·ÖÊ®½øÖÆ¸ñÊ½)£¡");
+								.setErrorMessage("IPåœ°å€æ ¼å¼ä¸æ­£ç¡®(å¿…é¡»ä¸ºç‚¹åˆ†åè¿›åˆ¶æ ¼å¼)ï¼");
 						return;
 					}
 				}
-				//Ğ£ÑéIP¹ıÂË·¶Î§µÄÊı¾İ¸ñÊ½
+				//æ ¡éªŒIPè¿‡æ»¤èŒƒå›´çš„æ•°æ®æ ¼å¼
 			}else if(currentPage instanceof OutScopeWizard){
 				OutScopeWizard outPage = (OutScopeWizard) currentPage;
 				TableItem[] items = outPage.getTable().getItems();
@@ -60,16 +60,16 @@ public class ScanDialog extends WizardDialog{
 					if((Utils.isEmptyOrBlank(items[i].getText(0)) && !Utils.isEmptyOrBlank(items[i].getText(1)))
 							||(!Utils.isEmptyOrBlank(items[i].getText(1)) && Utils.isEmptyOrBlank(items[i].getText(0)))){
 						((ScanScopeWizard) currentPage)
-							.setErrorMessage("ÆğÊ¼IPºÍ½áÊøIP²»ÄÜÖ»ÌîÒ»¸ö");
+							.setErrorMessage("èµ·å§‹IPå’Œç»“æŸIPä¸èƒ½åªå¡«ä¸€ä¸ª");
 						return;
 					}
 					if (!Utils.isIp(items[i].getText(0)) || !Utils.isIp(items[i].getText(1))) {
 						((ScanScopeWizard) currentPage)
-								.setErrorMessage("IPµØÖ·¸ñÊ½²»ÕıÈ·(±ØĞëÎªµã·ÖÊ®½øÖÆ¸ñÊ½)£¡");
+								.setErrorMessage("IPåœ°å€æ ¼å¼ä¸æ­£ç¡®(å¿…é¡»ä¸ºç‚¹åˆ†åè¿›åˆ¶æ ¼å¼)ï¼");
 						return;
 					}
 				}
-				//Ğ£ÑéÖÖ×ÓIP¸ñÊ½
+				//æ ¡éªŒç§å­IPæ ¼å¼
 			}else if(currentPage instanceof ScanSeedsWizard){
 				ScanSeedsWizard seedPage = (ScanSeedsWizard) currentPage;
 				TableItem[] items = seedPage.getSeedsTable().getItems();
@@ -79,7 +79,7 @@ public class ScanDialog extends WizardDialog{
 					}
 					if (!Utils.isIp(items[i].getText())) {
 						((ScanScopeWizard) currentPage)
-								.setErrorMessage("IPµØÖ·¸ñÊ½²»ÕıÈ·(±ØĞëÎªµã·ÖÊ®½øÖÆ¸ñÊ½)£¡");
+								.setErrorMessage("IPåœ°å€æ ¼å¼ä¸æ­£ç¡®(å¿…é¡»ä¸ºç‚¹åˆ†åè¿›åˆ¶æ ¼å¼)ï¼");
 						return;
 					}
 				}

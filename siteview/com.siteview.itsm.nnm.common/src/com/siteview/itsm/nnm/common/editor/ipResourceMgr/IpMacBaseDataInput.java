@@ -23,7 +23,7 @@ public class IpMacBaseDataInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "IP-MAC基准数据";
+		return "IP-MAC鍩哄噯鏁版嵁";
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class IpMacBaseDataInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "IP资源管理/IP-MAC基准数据";
+		return "IP璧勬簮绠＄悊/IP-MAC鍩哄噯鏁版嵁";
 	}
 
 }

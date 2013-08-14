@@ -10,8 +10,8 @@ public class MyWizardDialog extends WizardDialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        // 这个windowTitle会被myWizard.setWindowTitle("导入工程2")覆盖
-        newShell.setText("导入工程1");
+        // 杩欎釜windowTitle浼氳myWizard.setWindowTitle("瀵煎叆宸ョ▼2")瑕嗙洊
+        newShell.setText("瀵煎叆宸ョ▼1");
         newShell.setSize(400, 300);
         newShell.setMinimumSize(300, 270);
     }

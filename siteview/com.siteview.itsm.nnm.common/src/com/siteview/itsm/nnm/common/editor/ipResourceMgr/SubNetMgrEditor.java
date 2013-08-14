@@ -60,27 +60,27 @@ public class SubNetMgrEditor extends EditorPart {
 	private void createTable(){
 		table = tv.getTable();
 		TableColumn ipColumn = new TableColumn(table, SWT.LEFT);
-		ipColumn.setText("IP地址");
+		ipColumn.setText("IP鍦板潃");
 		ipColumn.setWidth(120);
 		
 		TableColumn nameColumn = new TableColumn(table, SWT.LEFT);
-		nameColumn.setText("设备名称");
+		nameColumn.setText("璁惧鍚嶇О");
 		nameColumn.setWidth(120);
 		
 		TableColumn typeColumn = new TableColumn(table, SWT.LEFT);
-		typeColumn.setText("设备类型");
+		typeColumn.setText("璁惧绫诲瀷");
 		typeColumn.setWidth(120);
 		
 		TableColumn macColumn = new TableColumn(table, SWT.LEFT);
-		macColumn.setText("设备MAC地址");
+		macColumn.setText("璁惧MAC鍦板潃");
 		macColumn.setWidth(120);
 		
 		TableColumn modelColumn = new TableColumn(table, SWT.LEFT);
-		modelColumn.setText("设备型号");
+		modelColumn.setText("璁惧鍨嬪彿");
 		modelColumn.setWidth(120);
 
 		TableColumn factoryColumn = new TableColumn(table, SWT.LEFT);
-		factoryColumn.setText("设备厂商");
+		factoryColumn.setText("璁惧鍘傚晢");
 		factoryColumn.setWidth(120);
 		
 		table.setHeaderVisible(true);

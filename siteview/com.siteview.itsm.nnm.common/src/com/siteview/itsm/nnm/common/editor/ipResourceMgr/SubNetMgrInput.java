@@ -58,7 +58,7 @@ public class SubNetMgrInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "子网(" + subnetIp + ")IP列表";
+		return "瀛愮綉(" + subnetIp + ")IP鍒楄〃";
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class SubNetMgrInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "IP资源管理/子网(" + subnetIp + ")IP列表";
+		return "IP璧勬簮绠＄悊/瀛愮綉(" + subnetIp + ")IP鍒楄〃";
 	}
 
 }

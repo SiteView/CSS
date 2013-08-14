@@ -14,7 +14,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
 /**
- * É¨ÃèÖÖ×ÓÏòµ¼
+ * æ‰«æç§å­å‘å¯¼
  * 
  * @author zhangxinnan
  * 
@@ -33,34 +33,34 @@ public class ScanSeedsWizard extends WizardPage {
 	}
 	protected ScanSeedsWizard() {
 		super("Some wizard Page");
-		setTitle("É¨Ãè²ÎÊı -->" + "É¨Ãè·¶Î§ -->" + "ÅÅ³ı·¶Î§ -->" + "¹²Í¬ÌåÉèÖÃ -->" + "É¨ÃèÖÖ×Ó");
-		setMessage("É¨ÃèµÄÖÖ×ÓµØÖ·Ò»°ãÓÃºËĞÄÉè±¸µÄµØÖ·¡£");
+		setTitle("æ‰«æå‚æ•° -->" + "æ‰«æèŒƒå›´ -->" + "æ’é™¤èŒƒå›´ -->" + "å…±åŒä½“è®¾ç½® -->" + "æ‰«æç§å­");
+		setMessage("æ‰«æçš„ç§å­åœ°å€ä¸€èˆ¬ç”¨æ ¸å¿ƒè®¾å¤‡çš„åœ°å€ã€‚");
 	}
 
 	public void createControl(Composite parent) {
-		// Èº×é
+		// ç¾¤ç»„
 		Group group = new Group(parent, SWT.NONE);
-		group.setText("É¨ÃèÖÖ×Ó");
+		group.setText("æ‰«æç§å­");
 		group.setLayout(new FillLayout());
 		GridData layoutData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
 		layoutData.verticalIndent = 15;
 		group.setLayoutData(layoutData);
-		// tabelÉèÖÃ
+		// tabelè®¾ç½®
 		table = new Table(group, SWT.BORDER | SWT.NONE | SWT.FULL_SELECTION
 				| SWT.HIDE_SELECTION | SWT.VIRTUAL);
-		table.setHeaderVisible(true);// ±êÌâ
-		table.setLinesVisible(true);// ±í¸ñÏß¿É¼û
+		table.setHeaderVisible(true);// æ ‡é¢˜
+		table.setLinesVisible(true);// è¡¨æ ¼çº¿å¯è§
 		table.setSize(200, 200);
-		// ±à¼­Æ÷ÉèÖÃ
+		// ç¼–è¾‘å™¨è®¾ç½®
 		editor = new TableEditor(table);
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
-		// ´´½¨ÁĞ
+		// åˆ›å»ºåˆ—
 		TableColumn col1 = new TableColumn(table, SWT.LEFT);
-		col1.setText("É¨ÃèÖÖ×Ó");
+		col1.setText("æ‰«æç§å­");
 		col1.setWidth(600);
 
-		// Ìí¼Ó±í¸ñÊı¾İ
+		// æ·»åŠ è¡¨æ ¼æ•°æ®
 		if(!seedList.isEmpty()){
 			table.clearAll();
 			for(String s : seedList){
@@ -75,22 +75,22 @@ public class ScanSeedsWizard extends WizardPage {
 				table.showItem(item);
 			}
 		}
-		// ĞŞ¸Ätable
+		// ä¿®æ”¹table
 		{
 			table.addMouseListener(new MouseAdapter() {
 				@SuppressWarnings("unused")
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					try {
-						// Çå¿Õ±à¼­Æ÷
+						// æ¸…ç©ºç¼–è¾‘å™¨
 						Control c = editor.getEditor();
 						if (c != null) {
 							c.dispose();
 						}
-						// µÃµ½Ñ¡ÖĞµÄĞĞ
+						// å¾—åˆ°é€‰ä¸­çš„è¡Œ
 						Point point = new Point(e.x, e.y);
 						final TableItem tableitem = table.getItem(point);
-						// // µÃµ½Ñ¡ÖĞµÄÁĞ
+						// // å¾—åˆ°é€‰ä¸­çš„åˆ—
 						int column = -1;
 						TableItem tItems = table.getItem(table.getSelectionIndex());
 						
@@ -100,15 +100,15 @@ public class ScanSeedsWizard extends WizardPage {
 								column = i;
 								TableItem item = new TableItem(table, SWT.NONE);
 								TableItem[] items = table.getItems();
-							} else {// Èç¹ûµã»÷µÄÊÇ²»´æÔÚµÄĞĞ¡£ÄÇÃ´Ò²ĞÂÔöÒ»ĞĞ
+							} else {// å¦‚æœç‚¹å‡»çš„æ˜¯ä¸å­˜åœ¨çš„è¡Œã€‚é‚£ä¹ˆä¹Ÿæ–°å¢ä¸€è¡Œ
 								TableItem item = new TableItem(table, SWT.NONE);
 								TableItem[] items = table.getItems();
 							}
 						}
 						final int col1 = column;
-						// ÆäËûµÄĞŞ¸Ä¶¼ÊÇÓÃÎÄ±¾¿ò
+						// å…¶ä»–çš„ä¿®æ”¹éƒ½æ˜¯ç”¨æ–‡æœ¬æ¡†
 						final Text txt = new Text(table, SWT.NONE);
-						txt.setText(tItems.getText());// È¡µÃµ±Ç°µ¥Ôª¸ñÀïµÄÖµ
+						txt.setText(tItems.getText());// å–å¾—å½“å‰å•å…ƒæ ¼é‡Œçš„å€¼
 						txt.forceFocus();
 						editor.setEditor(txt, tItems, col1);
 						txt.addModifyListener(new ModifyListener() {
@@ -118,7 +118,7 @@ public class ScanSeedsWizard extends WizardPage {
 
 							}
 						});
-						// ÔÚtable¸üĞÂÊ±text editorÏûÊ§ ÊµÏÖË¢ĞÂĞ§¹û
+						// åœ¨tableæ›´æ–°æ—¶text editoræ¶ˆå¤± å®ç°åˆ·æ–°æ•ˆæœ
 						tableitem
 								.addDisposeListener(new org.eclipse.swt.events.DisposeListener() {
 									public void widgetDisposed(
@@ -134,18 +134,18 @@ public class ScanSeedsWizard extends WizardPage {
 			});
 		}
 
-		// ÓÒ¼üÉ¾³ı²Ëµ¥
+		// å³é”®åˆ é™¤èœå•
 		{
 			Menu menu1 = new Menu(group);
 			table.setMenu(menu1);
 			MenuItem menuitem1 = new MenuItem(menu1, SWT.PUSH);
-			menuitem1.setText("É¾³ı");
+			menuitem1.setText("åˆ é™¤");
 			menuitem1.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event event) {
 					MessageBox mbox = new MessageBox(new Shell(),
 							SWT.DIALOG_TRIM | SWT.ICON_INFORMATION);
-					mbox.setText("É¾³ı³É¹¦");
-					mbox.setMessage("É¾³ıÁË" + table.getSelectionCount() + "Ìõ¼ÇÂ¼");
+					mbox.setText("åˆ é™¤æˆåŠŸ");
+					mbox.setMessage("åˆ é™¤äº†" + table.getSelectionCount() + "æ¡è®°å½•");
 					table.remove(table.getSelectionIndices());
 					mbox.open();
 				}

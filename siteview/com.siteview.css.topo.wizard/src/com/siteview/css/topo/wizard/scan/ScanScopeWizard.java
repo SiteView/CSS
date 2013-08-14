@@ -20,7 +20,7 @@ import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
 
 
 /**
- * É¨Ãè²ÎÊı½çÃæ
+ * æ‰«æå‚æ•°ç•Œé¢
  * 
  * @author zhangxinnan
  * 
@@ -32,7 +32,7 @@ public class ScanScopeWizard extends WizardPage {
 	private TableItem item;
 	Group group = null;
 	/**
-	 * É¨Ãè·¶Î§µÄÁĞ±í
+	 * æ‰«æèŒƒå›´çš„åˆ—è¡¨
 	 */
 	private List<Pair<String, String>> scaleList = new ArrayList<Pair<String, String>>();
 	
@@ -49,8 +49,8 @@ public class ScanScopeWizard extends WizardPage {
 	}
 	protected ScanScopeWizard() {
 		super("ScanScopeWizard");
-		setTitle("É¨Ãè²ÎÊı -->" + "É¨Ãè·¶Î§ -->" + "ÅÅ³ı·¶Î§ -->" + "¹²Í¬ÌåÉèÖÃ -->" + "É¨ÃèÖÖ×Ó");
-		setMessage("ÓÃÆğÊ¼ipµØÖ·Ö¸¶¨É¨Ãè·¶Î§£¬²»ÉèÖÃ±íÊ¾È«·¶Î§É¨Ãè");
+		setTitle("æ‰«æå‚æ•° -->" + "æ‰«æèŒƒå›´ -->" + "æ’é™¤èŒƒå›´ -->" + "å…±åŒä½“è®¾ç½® -->" + "æ‰«æç§å­");
+		setMessage("ç”¨èµ·å§‹ipåœ°å€æŒ‡å®šæ‰«æèŒƒå›´ï¼Œä¸è®¾ç½®è¡¨ç¤ºå…¨èŒƒå›´æ‰«æ");
 	}
 
 	public  TableItem getTableItem(){
@@ -58,35 +58,35 @@ public class ScanScopeWizard extends WizardPage {
 	}
 	final String[] strArray = new String[5];
 	/**
-	 * ´´½¨½çÃæÊÓÍ¼
+	 * åˆ›å»ºç•Œé¢è§†å›¾
 	 */
 	public void createControl(Composite parent) {
-		// Èº×é
+		// ç¾¤ç»„
 		group = new Group(parent, SWT.NONE);
-		group.setText("É¨Ãè·¶Î§");
+		group.setText("æ‰«æèŒƒå›´");
 		group.setLayout(new FillLayout());
 		GridData layoutData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
 		layoutData.verticalIndent = 15;
 		group.setLayoutData(layoutData);
-		// tabelÉèÖÃ
+		// tabelè®¾ç½®
 		table = new Table(group, SWT.BORDER | SWT.NONE | SWT.FULL_SELECTION
 				| SWT.VIRTUAL);
 		
-		table.setHeaderVisible(true);// ±êÌâ
-		table.setLinesVisible(true);// ±í¸ñÏß¿É¼û
-		// ±à¼­Æ÷ÉèÖÃ
+		table.setHeaderVisible(true);// æ ‡é¢˜
+		table.setLinesVisible(true);// è¡¨æ ¼çº¿å¯è§
+		// ç¼–è¾‘å™¨è®¾ç½®
 		editor = new TableEditor(table);
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
 		
-		// ´´½¨ÁĞ
+		// åˆ›å»ºåˆ—
 		TableColumn col1 = new TableColumn(table, SWT.LEFT);
-		col1.setText("ÆğÊ¼IPµØÖ·");
+		col1.setText("èµ·å§‹IPåœ°å€");
 		col1.setWidth(300);
 		TableColumn col2 = new TableColumn(table, SWT.LEFT);
-		col2.setText("ÖÕÖ¹IPµØÖ·");
+		col2.setText("ç»ˆæ­¢IPåœ°å€");
 		col2.setWidth(300);
-		// Ìí¼Ó±í¸ñÊı¾İ
+		// æ·»åŠ è¡¨æ ¼æ•°æ®
 		if(!scaleList.isEmpty()){
 			table.clearAll();
 			for(Pair<String,String> p : scaleList){
@@ -101,7 +101,7 @@ public class ScanScopeWizard extends WizardPage {
 				table.showItem(item);
 			}
 		}
-		// ĞŞ¸Ätable
+		// ä¿®æ”¹table
 		{
 			table.addMouseListener(new MouseAdapter() {
 				@SuppressWarnings("unused")
@@ -109,41 +109,41 @@ public class ScanScopeWizard extends WizardPage {
 				public void mouseDoubleClick(MouseEvent e) {
 					try {
 						table.getSelection();
-						// Çå¿Õ±à¼­Æ÷
+						// æ¸…ç©ºç¼–è¾‘å™¨
 						Control c = editor.getEditor();
 						if (c != null) {
 							c.dispose();
 						}
-						// µÃµ½Ñ¡ÖĞµÄĞĞ
+						// å¾—åˆ°é€‰ä¸­çš„è¡Œ
 						Point point = new Point(e.x, e.y);
 						table.getSelectionIndex();
 						
 						final TableItem tableitem = table.getItem(point);
 						TableItem ti = table.getItem(table.getTopIndex());
-						// // µÃµ½Ñ¡ÖĞµÄÁĞ
+						// // å¾—åˆ°é€‰ä¸­çš„åˆ—
 						int column = -1;
 						for (int i = 0; i < table.getColumnCount(); i++) {
 							Rectangle rec = tableitem.getBounds(i);
 							if (rec.contains(point)) {
 								column = i;
-							} else {// Èç¹ûµã»÷µÄÊÇ²»´æÔÚµÄĞĞ¡£ÄÇÃ´ĞÂÔöÒ»ĞĞ
+							} else {// å¦‚æœç‚¹å‡»çš„æ˜¯ä¸å­˜åœ¨çš„è¡Œã€‚é‚£ä¹ˆæ–°å¢ä¸€è¡Œ
 								new TableItem(table, SWT.NONE);
 							}
 						}
 
-						// System.out.println("±í¸ñÊı" + table.getItems().length);
+						// System.out.println("è¡¨æ ¼æ•°" + table.getItems().length);
 						final int col1 = column;
 
-						// ÆäËûµÄĞŞ¸Ä¶¼ÊÇÓÃÎÄ±¾¿ò
+						// å…¶ä»–çš„ä¿®æ”¹éƒ½æ˜¯ç”¨æ–‡æœ¬æ¡†
 						final Text txt = new Text(table, SWT.NONE);
-						txt.setText(tableitem.getText(col1));// È¡µÃµ±Ç°µ¥Ôª¸ñÀïµÄÖµ
+						txt.setText(tableitem.getText(col1));// å–å¾—å½“å‰å•å…ƒæ ¼é‡Œçš„å€¼
 						editor.setEditor(txt, tableitem, col1);
 						
 						txt.addModifyListener(new ModifyListener() {
 							@Override
 							public void modifyText(ModifyEvent e) {
-								// Èç¹ûcol1==0ÎªµÚÒ»ÁĞ
-								tableitem.setText(col1, txt.getText());// ÄÄÒ»ÁĞÊäÈëµÄÎÄ×Ö
+								// å¦‚æœcol1==0ä¸ºç¬¬ä¸€åˆ—
+								tableitem.setText(col1, txt.getText());// å“ªä¸€åˆ—è¾“å…¥çš„æ–‡å­—
 								// System.out.println(tableitem.getText(0)+"----"+tableitem.getText(1));
 								for (int i = 0; i < strArray.length; i++) {
 									strArray[i] = "0:"+tableitem.getText(0) + "@" + tableitem.getText(1);
@@ -151,20 +151,20 @@ public class ScanScopeWizard extends WizardPage {
 								ScanScopeWizard.this.getWizard()
 								.getDialogSettings()
 								.put("Array", strArray);
-								// ¿ÉÒÔ´æÊı×é
+								// å¯ä»¥å­˜æ•°ç»„
 								ScanScopeWizard.this.getWizard()
 										.getDialogSettings()
-										.put("ÆğÊ¼ID", tableitem.getText(0));
+										.put("èµ·å§‹ID", tableitem.getText(0));
 								ScanScopeWizard.this.getWizard()
 										.getDialogSettings()
-										.put("ÖÕÖ¹ID", tableitem.getText(1));
+										.put("ç»ˆæ­¢ID", tableitem.getText(1));
 							}
 
 						});
 						txt.selectAll();
 						txt.forceFocus();
 
-						// ÔÚtable¸üĞÂÊ±text editorÏûÊ§ ÊµÏÖË¢ĞÂĞ§¹û
+						// åœ¨tableæ›´æ–°æ—¶text editoræ¶ˆå¤± å®ç°åˆ·æ–°æ•ˆæœ
 						tableitem
 								.addDisposeListener(new org.eclipse.swt.events.DisposeListener() {
 									public void widgetDisposed(
@@ -172,11 +172,11 @@ public class ScanScopeWizard extends WizardPage {
 										txt.dispose();
 									}
 								});
-						// »ñÈ¡±í¸ñÀïÃæµÄÖµ
+						// è·å–è¡¨æ ¼é‡Œé¢çš„å€¼
 						// TableItem[] tables = table.getItems();
 						// for (int i = 0; i < tables.length; i++) {
 						// System.out.println(tables[i].getText(0)+"-------------"+tables[i].getText(1));
-						// // °ÑÊı¾İÍ³Ò»½»¸øwizardÀïÃæµÄÍ¨ÓÃ´æ´¢Æ÷DialogSettingsÀ´´æÖµ´¢
+						// // æŠŠæ•°æ®ç»Ÿä¸€äº¤ç»™wizardé‡Œé¢çš„é€šç”¨å­˜å‚¨å™¨DialogSettingsæ¥å­˜å€¼å‚¨
 						// ScanScopeWizard.this.getWizard().getDialogSettings().put("",
 						// "");
 						// }
@@ -187,19 +187,19 @@ public class ScanScopeWizard extends WizardPage {
 			});
 		}
 
-		// ÓÒ¼üÉ¾³ı²Ëµ¥
+		// å³é”®åˆ é™¤èœå•
 		{
 			Menu menu1 = new Menu(group);
 			table.setMenu(menu1);
 			MenuItem menuitem1 = new MenuItem(menu1, SWT.PUSH);
-			menuitem1.setText("É¾³ı");
+			menuitem1.setText("åˆ é™¤");
 
 			menuitem1.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event event) {
 					MessageBox mbox = new MessageBox(new Shell(),
 							SWT.DIALOG_TRIM | SWT.ICON_INFORMATION);
-					mbox.setText("É¾³ı³É¹¦");
-					mbox.setMessage("É¾³ıÁË" + table.getSelectionCount() + "Ìõ¼ÇÂ¼");
+					mbox.setText("åˆ é™¤æˆåŠŸ");
+					mbox.setMessage("åˆ é™¤äº†" + table.getSelectionCount() + "æ¡è®°å½•");
 					table.remove(table.getSelectionIndices());
 					mbox.open();
 				}
