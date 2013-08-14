@@ -39,13 +39,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	@Override
 	public void postWindowOpen() {
 		super.postWindowOpen();
-		//ÉèÖÃ´ò¿ªÊ±×î´ó»¯´°¿Ú
+		//ï¿½ï¿½ï¿½Ã´ï¿½Ê±ï¿½ï¿½ó»¯´ï¿½ï¿½ï¿½
 		getWindowConfigurer().getWindow().getShell().setMaximized(true);
 		StartScan scan = StartScan.getInstance(getWindowConfigurer().getWindow().getShell());
 		if(scan.theFirstOpen()){
 			MessageBox initDialog = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_INFORMATION);
-			initDialog.setMessage("µÚÒ»´ÎÊ¹ÓÃ±¾Èí¼şÇëÏÈÅäÖÃÉ¨ÃèÏà¹Ø²ÎÊı");
-			initDialog.setText("³õÊ¼½çÃæ");
+			initDialog.setMessage("ç¬¬ä¸€æ¬¡å¯åŠ¨æ‰«æï¼Œè¯·å…ˆé…ç½®æ‰«æå‚æ•°ï¼");
+			initDialog.setText("åˆå§‹åŒ–æé†’");
 			initDialog.open();
 			ScanDialog dialog = new ScanDialog(Display.getCurrent().getActiveShell(),new SomeWizard());
 			dialog.open();
