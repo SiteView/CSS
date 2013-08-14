@@ -1,7 +1,6 @@
 package com.siteview.nnm.main.mib;
 
 
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 

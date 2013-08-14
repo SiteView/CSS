@@ -29,7 +29,7 @@ import org.eclipse.ui.internal.ide.filesystem.FileSystemConfiguration;
 import org.eclipse.ui.internal.ide.filesystem.FileSystemSupportRegistry;
 import org.eclipse.ui.part.FileEditorInput;
 /**
- * Æô¶¯É¨ÃèµÄ¹¤¾ßÀà
+ * å¯åŠ¨æ‰«æçš„å·¥å…·ç±»
  * @author haiming.wang
  *
  */
@@ -52,7 +52,7 @@ public class DrawTopo {
 		return instance;
 	}
 	/**
-	 * ´¦ÀíÍØÆËÍ¼ÏÔÊ¾
+	 * å¤„ç†æ‹“æ‰‘å›¾æ˜¾ç¤º
 	 */
 	public void showTopo(){
 		if(!projectExists(TOPO_PROJECTNAME)){
@@ -60,7 +60,7 @@ public class DrawTopo {
 				createProject();
 			} catch (CoreException e) {
 				e.printStackTrace();
-				BaseUtils.showError(parent,"´´½¨project Ê§°Ü", e.getMessage());
+				BaseUtils.showError(parent,"åˆ›å»ºproject å¤±è´¥", e.getMessage());
 				return;
 			}
 		}
@@ -91,7 +91,7 @@ public class DrawTopo {
 		}
 	}
 	/**
-	 * »ñÈ¡ÏîÄ¿¶ÔÏó
+	 * è·å–é¡¹ç›®å¯¹è±¡
 	 * @return
 	 */
 	private IProject getProjectHandle(){
@@ -109,7 +109,7 @@ public class DrawTopo {
 	private final void createFile(final IFile fileHandle,
 			final InputStream contents) throws CoreException {
 		InputStream inputStream = contents;
-		//´ò¿ªÏîÄ¿
+		//æ‰“å¼€é¡¹ç›®
 		if(!getProjectHandle().isOpen()){
 			getProjectHandle().open(null);
 		}
@@ -133,7 +133,7 @@ public class DrawTopo {
 					}
 				}
 			}
-			//Èç¹ûÎÄ¼ş¼º´æÔÚÏÈÉ¾³ı¸ÃÎÄ¼ş
+			//å¦‚æœæ–‡ä»¶å·±å­˜åœ¨å…ˆåˆ é™¤è¯¥æ–‡ä»¶
 			if(fileHandle.exists()){
 				fileHandle.delete(true, null);
 			}
@@ -148,7 +148,7 @@ public class DrawTopo {
 		}
 	}
 	/**
-	 * ´´½¨ÎÄ¼ş¶ÔÏó
+	 * åˆ›å»ºæ–‡ä»¶å¯¹è±¡
 	 * @param projectName
 	 * @return
 	 */
@@ -163,7 +163,7 @@ public class DrawTopo {
 		return result;
 	}
 	/**
-	 * ÅĞ¶ÏÏîÄ¿ÊÇ·ñ´æÔÚ
+	 * åˆ¤æ–­é¡¹ç›®æ˜¯å¦å­˜åœ¨
 	 * @param projectName
 	 * @return
 	 */
@@ -171,7 +171,7 @@ public class DrawTopo {
 		return (getProjectByName(projectName) != null);
 	}
 	/**
-	 * ¸ù¾İÏîÄ¿Ãû³Æ »ñÈ¡ÏîÄ¿¶ÔÏó
+	 * æ ¹æ®é¡¹ç›®åç§° è·å–é¡¹ç›®å¯¹è±¡
 	 * @param projectName
 	 * @return
 	 */
@@ -186,13 +186,13 @@ public class DrawTopo {
 		return null;
 	}
 
-	// »ñÈ¡ÎÄ¼şÏµÍ³ÅäÖÃ
+	// è·å–æ–‡ä»¶ç³»ç»Ÿé…ç½®
 	private FileSystemConfiguration getSelectedConfiguration() {
 		return FileSystemSupportRegistry.getInstance()
 				.getDefaultConfiguration();
 	}
 
-	// »ñÈ¡uri
+	// è·å–uri
 	private URI getProjectLocationURI() {
 		return getSelectedConfiguration().getContributor().getURI(
 				TOPO_PROJECTNAME);
@@ -200,7 +200,7 @@ public class DrawTopo {
 
 	private IProjectDescription description;
 
-	// ´´½¨ÏîÄ¿
+	// åˆ›å»ºé¡¹ç›®
 	private void createProject() throws CoreException {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot()
 				.getProject(TOPO_PROJECTNAME);

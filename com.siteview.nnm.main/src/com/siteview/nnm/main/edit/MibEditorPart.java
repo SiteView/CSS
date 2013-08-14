@@ -1,7 +1,6 @@
 package com.siteview.nnm.main.edit;
 
 
-import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -89,7 +88,7 @@ public class MibEditorPart extends EditorPart {
 		oidText = new Text(group, SWT.BORDER);
 		
 		ipLable = new Label(group, SWT.NONE);
-		ipLable.setText("ipµØÖ·");
+		ipLable.setText("ipåœ°å€");
 		
 		ipText = new Text(group, SWT.BORDER);
 		
@@ -103,12 +102,12 @@ public class MibEditorPart extends EditorPart {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				if(oidText.getText().endsWith("*")){
-					BaseUtils.showError(comp,"»ñÈ¡snmpÊı¾İ³ö´í£¡", "oid ¸ñÊ½²»ÕıÈ·!");
+					BaseUtils.showError(comp,"è·å–snmpæ•°æ®å‡ºé”™ï¼", "oid æ ¼å¼ä¸æ­£ç¡®!");
 					return;
 				}
 				String ip = ipText.getText();
 				if(!Utils.isIp(ip)){
-					BaseUtils.showError(comp,"»ñÈ¡snmpÊı¾İ³ö´í£¡", "IP µØÖ· Îª¿Õ»òÕß ¸ñÊ½²»ÕıÈ·!");
+					BaseUtils.showError(comp,"è·å–snmpæ•°æ®å‡ºé”™ï¼", "IP åœ°å€ ä¸ºç©ºæˆ–è€… æ ¼å¼ä¸æ­£ç¡®!");
 					return;
 				}
 				ScanParam sp = GlobalData.scanParam;

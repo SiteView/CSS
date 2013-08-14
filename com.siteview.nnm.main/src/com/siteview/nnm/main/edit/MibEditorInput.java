@@ -23,7 +23,7 @@ public class MibEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Mibä¯ÀÀ";
+		return "Mibæµè§ˆ";
 	}
 
 	@Override

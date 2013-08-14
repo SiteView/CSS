@@ -1,23 +1,23 @@
 package com.siteview.nnm.main.pojo;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
 
 import com.siteview.nnm.main.mib.MenuTreeRecord;
 
 /**
- * 菜单树的节点对象
+ * 鑿滃崟鏍戠殑鑺傜偣瀵硅薄
  * 
  * @author haiming.wang
  * 
  */
 public class MenuNode extends DefaultMutableTreeNode implements Comparable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public MenuNode() {
 	}
 

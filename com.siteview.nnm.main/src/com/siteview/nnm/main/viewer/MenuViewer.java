@@ -83,11 +83,11 @@ public class MenuViewer extends ViewPart {
 		tv.setLabelProvider(new TreeLabelProvide());
 		root = new MenuNode();
 		// initNode();
-		// ¹¹ÔìÍØÆËÕ¹Ê¾²Ëµ¥
+		// æ„é€ æ‹“æ‰‘å±•ç¤ºèœå•
 		{
 
 			MenuTreeRecord record = new MenuTreeRecord();
-			record.name = "ÍØÆËÍ¼¹ÜÀí";
+			record.name = "æ‹“æ‰‘å›¾ç®¡ç†";
 			record.number = 1000;
 			record.type = "topoMgr";
 			record.parent = "root";
@@ -97,7 +97,7 @@ public class MenuViewer extends ViewPart {
 			root.add(topoMenu);
 
 			MenuTreeRecord recordscan = new MenuTreeRecord();
-			recordscan.name = "É¨ÃèÅäÖÃ";
+			recordscan.name = "æ‰«æé…ç½®";
 			recordscan.number = 10001;
 			recordscan.type = "topoMgr";
 			recordscan.parent = "root";
@@ -105,16 +105,16 @@ public class MenuViewer extends ViewPart {
 			topoMenu.add(topoScanMenu);
 
 			MenuTreeRecord recordsetting = new MenuTreeRecord();
-			recordsetting.name = "ÍØÆËÉ¨Ãè";
+			recordsetting.name = "æ‹“æ‰‘æ‰«æ";
 			recordsetting.number = 10002;
 			recordsetting.type = "topoMgr";
 			recordsetting.parent = "root";
 			MenuNode topoSettingMenu = new MenuNode(recordsetting);
 			topoMenu.add(topoSettingMenu);
 		}
-		{// Éè±¸¹ÜÀí²Ëµ¥
+		{// è®¾å¤‡ç®¡ç†èœå•
 			MenuTreeRecord deviceRecord = new MenuTreeRecord();
-			deviceRecord.name = "Éè±¸¹ÜÀí";
+			deviceRecord.name = "è®¾å¤‡ç®¡ç†";
 			deviceRecord.number = 3000;
 			deviceRecord.type = "deviceMgr";
 			deviceRecord.parent = "root";
@@ -123,89 +123,89 @@ public class MenuViewer extends ViewPart {
 			root.add(deviceMgr);
 
 			MenuTreeRecord deviceType = new MenuTreeRecord();
-			deviceType.name = "Éè±¸ÀàĞÍ";
+			deviceType.name = "è®¾å¤‡ç±»å‹";
 			deviceType.imgUri = "devType.ico";
 			deviceType.number = 30001;
 			deviceType.type = "deviceMgr";
-			deviceType.parent = "Éè±¸¹ÜÀí";
+			deviceType.parent = "è®¾å¤‡ç®¡ç†";
 			MenuNode deviceTypeNode = new MenuNode(deviceType);
 			deviceMgr.add(deviceTypeNode);
 			{
 				MenuTreeRecord deviceType1 = new MenuTreeRecord();
-				deviceType1.name = "¶ş²ã½»»»»ú";
+				deviceType1.name = "äºŒå±‚äº¤æ¢æœº";
 				deviceType1.imgUri = "Switch_Blue.ico";
 				deviceType1.number = 300011;
 				deviceType1.type = "deviceMgr";
-				deviceType1.parent = "Éè±¸ÀàĞÍ";
+				deviceType1.parent = "è®¾å¤‡ç±»å‹";
 				MenuNode deviceType1Node = new MenuNode(deviceType1);
 				deviceTypeNode.add(deviceType1Node);
 
 				MenuTreeRecord deviceType2 = new MenuTreeRecord();
-				deviceType2.name = "Èı²ã½»»»»ú";
+				deviceType2.name = "ä¸‰å±‚äº¤æ¢æœº";
 				deviceType2.imgUri = "Switch_Blue.ico";
 				deviceType2.number = 300012;
 				deviceType2.type = "deviceMgr";
-				deviceType2.parent = "Éè±¸ÀàĞÍ";
+				deviceType2.parent = "è®¾å¤‡ç±»å‹";
 				MenuNode deviceType2Node = new MenuNode(deviceType2);
 				deviceTypeNode.add(deviceType2Node);
 
 				MenuTreeRecord deviceType3 = new MenuTreeRecord();
-				deviceType3.name = "Â·ÓÉÆ÷";
+				deviceType3.name = "è·¯ç”±å™¨";
 				deviceType3.imgUri = "Router_Blue.ico";
 				deviceType3.number = 300013;
 				deviceType3.type = "deviceMgr";
-				deviceType3.parent = "Éè±¸ÀàĞÍ";
+				deviceType3.parent = "è®¾å¤‡ç±»å‹";
 				MenuNode deviceType3Node = new MenuNode(deviceType3);
 				deviceTypeNode.add(deviceType3Node);
 
 				MenuTreeRecord deviceType4 = new MenuTreeRecord();
-				deviceType4.name = "·À»ğÇ½";
+				deviceType4.name = "é˜²ç«å¢™";
 				deviceType4.imgUri = "devType.ico";
 				deviceType4.number = 300014;
 				deviceType4.type = "deviceMgr";
-				deviceType4.parent = "Éè±¸ÀàĞÍ";
+				deviceType4.parent = "è®¾å¤‡ç±»å‹";
 				MenuNode deviceType4Node = new MenuNode(deviceType4);
 				deviceTypeNode.add(deviceType4Node);
 
 				MenuTreeRecord deviceType5 = new MenuTreeRecord();
-				deviceType5.name = "·şÎñÆ÷";
+				deviceType5.name = "æœåŠ¡å™¨";
 				deviceType5.imgUri = "server.ico";
 				deviceType5.number = 300015;
 				deviceType5.type = "deviceMgr";
-				deviceType5.parent = "Éè±¸ÀàĞÍ";
+				deviceType5.parent = "è®¾å¤‡ç±»å‹";
 				MenuNode deviceType5Node = new MenuNode(deviceType5);
 				deviceTypeNode.add(deviceType5Node);
 
 				MenuTreeRecord deviceType6 = new MenuTreeRecord();
-				deviceType6.name = "PCÖÕ¶Ë";
+				deviceType6.name = "PCç»ˆç«¯";
 				deviceType6.imgUri = "PC_Blue.ico";
 				deviceType6.number = 300016;
 				deviceType6.type = "deviceMgr";
-				deviceType6.parent = "Éè±¸ÀàĞÍ";
+				deviceType6.parent = "è®¾å¤‡ç±»å‹";
 				MenuNode deviceType6Node = new MenuNode(deviceType6);
 				deviceTypeNode.add(deviceType6Node);
 
 				MenuTreeRecord deviceType7 = new MenuTreeRecord();
-				deviceType7.name = "ÆäËü";
-				deviceType7.imgUri = "Éè±¸ÀàĞÍ.ico";
+				deviceType7.name = "å…¶å®ƒ";
+				deviceType7.imgUri = "è®¾å¤‡ç±»å‹.ico";
 				deviceType7.number = 300017;
 				deviceType7.type = "deviceMgr";
-				deviceType7.parent = "Éè±¸ÀàĞÍ";
+				deviceType7.parent = "è®¾å¤‡ç±»å‹";
 				MenuNode deviceType7Node = new MenuNode(deviceType7);
 				deviceTypeNode.add(deviceType7Node);
 			}
 
 		}
-		// ¹¹Ôìmib½á¹¹²Ëµ¥
+		// æ„é€ mibç»“æ„èœå•
 		{
 			MenuTreeRecord recordMibBrowser = new MenuTreeRecord();
-			recordMibBrowser.name = "MIBä¯ÀÀ";
+			recordMibBrowser.name = "MIBæµè§ˆ";
 			recordMibBrowser.type = "mib";
 			recordMibBrowser.number = 2000;
 			recordMibBrowser.parent = "root";
 			recordMibBrowser.imgUri = "mib.ico";
 			MenuNode mibBrowserMenu = new MenuNode(recordMibBrowser);
-			// ½«mibä¯ÀÀ½Úµã¼Óµ½²Ëµ¥
+			// å°†mibæµè§ˆèŠ‚ç‚¹åŠ åˆ°èœå•
 			root.add(mibBrowserMenu);
 
 			treeSupport = new DwSnmpMibTreeBuilder(mibBrowserMenu);
@@ -216,7 +216,7 @@ public class MenuViewer extends ViewPart {
 				projectdir = ".";
 			}
 			if (treeSupport.addDirectory(projectdir + "mibs/") == false) {
-				// ÈÕÖ¾
+				// æ—¥å¿—
 			}
 			try {
 				treeSupport.buildTree();
@@ -227,9 +227,9 @@ public class MenuViewer extends ViewPart {
 
 		}
 		{
-			// ip×ÊÔ´¹ÜÀí
+			// ipèµ„æºç®¡ç†
 			MenuTreeRecord ipMgr = new MenuTreeRecord();
-			ipMgr.name = "IP×ÊÔ´¹ÜÀí";
+			ipMgr.name = "IPèµ„æºç®¡ç†";
 			ipMgr.type = "ipMgr";
 			ipMgr.number = 4000;
 			ipMgr.imgUri = "IPResouceMgr.ico";
@@ -237,7 +237,7 @@ public class MenuViewer extends ViewPart {
 			root.add(ipMgrNode);
 
 			MenuTreeRecord subnetRecord = new MenuTreeRecord();
-			subnetRecord.name = "×ÓÍø";
+			subnetRecord.name = "å­ç½‘";
 			subnetRecord.type = "ipMgr";
 			subnetRecord.number = 40001;
 			subnetRecord.imgUri = "subNet16.ico";
@@ -245,7 +245,7 @@ public class MenuViewer extends ViewPart {
 			ipMgrNode.add(subnetNode);
 
 			MenuTreeRecord ipmac1 = new MenuTreeRecord();
-			ipmac1.name = "IP-MAC»ù×¼Êı¾İ";
+			ipmac1.name = "IP-MACåŸºå‡†æ•°æ®";
 			ipmac1.type = "ipMgr";
 			ipmac1.number = 40002;
 			ipmac1.imgUri = "IP-MACbaseData.ico";
@@ -253,7 +253,7 @@ public class MenuViewer extends ViewPart {
 			ipMgrNode.add(ipmac1Node);
 
 			MenuTreeRecord ipmac2 = new MenuTreeRecord();
-			ipmac2.name = "IP-MACÒì¶¯²éÑ¯";
+			ipmac2.name = "IP-MACå¼‚åŠ¨æŸ¥è¯¢";
 			ipmac2.type = "ipMgr";
 			ipmac2.number = 40003;
 			ipmac2.imgUri = "IP-MACYdCX.ico";
@@ -262,9 +262,9 @@ public class MenuViewer extends ViewPart {
 
 		}
 		{
-			// ¸æ¾¯¹ÜÀí
+			// å‘Šè­¦ç®¡ç†
 			MenuTreeRecord dragRecord = new MenuTreeRecord();
-			dragRecord.name = "¸æ¾¯¹ÜÀí";
+			dragRecord.name = "å‘Šè­¦ç®¡ç†";
 			dragRecord.type = "dragMgr";
 			dragRecord.number = 5000;
 			dragRecord.imgUri = "alarmMgr.ico";
@@ -272,7 +272,7 @@ public class MenuViewer extends ViewPart {
 			root.add(dragRecordNode);
 
 			MenuTreeRecord dragtypeRecord = new MenuTreeRecord();
-			dragtypeRecord.name = "¸æ¾¯·½Ê½";
+			dragtypeRecord.name = "å‘Šè­¦æ–¹å¼";
 			dragtypeRecord.type = "logMgr";
 			dragtypeRecord.number = 50001;
 			dragtypeRecord.imgUri = "alarmPattern.ico";
@@ -280,7 +280,7 @@ public class MenuViewer extends ViewPart {
 			dragRecordNode.add(dragtypeNode);
 
 			MenuTreeRecord dragset = new MenuTreeRecord();
-			dragset.name = "¸æ¾¯ÉèÖÃ";
+			dragset.name = "å‘Šè­¦è®¾ç½®";
 			dragset.type = "dragMgr";
 			dragset.number = 50002;
 			dragset.imgUri = "alarmSetting.ico";
@@ -288,16 +288,16 @@ public class MenuViewer extends ViewPart {
 			dragRecordNode.add(dragsetNode);
 
 			MenuTreeRecord dragReportRecord = new MenuTreeRecord();
-			dragReportRecord.name = "¸æ¾¯¼ÇÂ¼";
+			dragReportRecord.name = "å‘Šè­¦è®°å½•";
 			dragReportRecord.type = "dragMgr";
 			dragReportRecord.number = 50003;
 			dragReportRecord.imgUri = "alarmRecord.ico";
 			MenuNode dragReportNode = new MenuNode(dragReportRecord);
 			dragRecordNode.add(dragReportNode);
 			{
-				// ¸æ¾¯¼ÇÂ¼
+				// å‘Šè­¦è®°å½•
 				MenuTreeRecord dragcurrent = new MenuTreeRecord();
-				dragcurrent.name = "µ±Ç°¸æ¾¯";
+				dragcurrent.name = "å½“å‰å‘Šè­¦";
 				dragcurrent.type = "dragMgr";
 				dragcurrent.number = 500031;
 				dragcurrent.imgUri = "curAlarm.ico";
@@ -305,7 +305,7 @@ public class MenuViewer extends ViewPart {
 				dragReportNode.add(dragcurrentNode);
 				{
 					MenuTreeRecord ipmacbound = new MenuTreeRecord();
-					ipmacbound.name = "ipmac°ó¶¨";
+					ipmacbound.name = "ipmacç»‘å®š";
 					ipmacbound.type = "dragMgr";
 					ipmacbound.number = 5000311;
 					ipmacbound.imgUri = "alarmMgr.ico";
@@ -314,7 +314,7 @@ public class MenuViewer extends ViewPart {
 				}
 
 				MenuTreeRecord draghis = new MenuTreeRecord();
-				draghis.name = "ÀúÊ·¸æ¾¯";
+				draghis.name = "å†å²å‘Šè­¦";
 				draghis.type = "dragMgr";
 				draghis.number = 500032;
 				draghis.imgUri = "hisAlarm.ico";
@@ -324,29 +324,29 @@ public class MenuViewer extends ViewPart {
 
 		}
 		{
-			// ¼à²â±¨±í
+			// ç›‘æµ‹æŠ¥è¡¨
 			buildMonitorReportMenu();
 		}
 		{
-			// ÈÕÖ¾²Ëµ¥
+			// æ—¥å¿—èœå•
 			buildLogMenu();
 		}
 		{
-			// ÏµÍ³ÉèÖÃ
+			// ç³»ç»Ÿè®¾ç½®
 			buildSysMenu();
 		}
 		tv.setInput(root);
-		// ×Ô¶¨ÒåµÄ·½·¨£¬ÊµÏÖË«»÷´ò¿ªÏàÓ¦µÄ±à¼­Æ÷µÄ¹¦ÄÜ
+		// è‡ªå®šä¹‰çš„æ–¹æ³•ï¼Œå®ç°åŒå‡»æ‰“å¼€ç›¸åº”çš„ç¼–è¾‘å™¨çš„åŠŸèƒ½
 		hookDoubleClickAction();
 	}
 
 	/**
-	 * ÏµÍ³ÉèÖÃ²Ëµ¥ number 8000
+	 * ç³»ç»Ÿè®¾ç½®èœå• number 8000
 	 */
 	private void buildSysMenu() {
-		// ÏµÍ³ÉèÖÃ
+		// ç³»ç»Ÿè®¾ç½®
 		MenuTreeRecord sysRecord = new MenuTreeRecord();
-		sysRecord.name = "ÏµÍ³ÉèÖÃ";
+		sysRecord.name = "ç³»ç»Ÿè®¾ç½®";
 		sysRecord.type = "sysset";
 		sysRecord.number = 8000;
 		sysRecord.imgUri = "sysSetting.ico";
@@ -354,7 +354,7 @@ public class MenuViewer extends ViewPart {
 		root.add(sysRecordNode);
 
 		MenuTreeRecord sysRecord1 = new MenuTreeRecord();
-		sysRecord1.name = "ÓÃ»§¹ÜÀí";
+		sysRecord1.name = "ç”¨æˆ·ç®¡ç†";
 		sysRecord1.type = "sysset";
 		sysRecord1.number = 80001;
 		sysRecord1.imgUri = "userMgr.ico";
@@ -362,9 +362,9 @@ public class MenuViewer extends ViewPart {
 		sysRecordNode.add(sysRecordNode1);
 
 		{
-			// ÓÃ»§¹ÜÀí×Ó²Ëµ¥
+			// ç”¨æˆ·ç®¡ç†å­èœå•
 			MenuTreeRecord sysRecord11 = new MenuTreeRecord();
-			sysRecord11.name = "ÓÃ»§";
+			sysRecord11.name = "ç”¨æˆ·";
 			sysRecord11.type = "sysset";
 			sysRecord11.number = 800011;
 			sysRecord11.imgUri = "user.ico";
@@ -372,7 +372,7 @@ public class MenuViewer extends ViewPart {
 			sysRecordNode1.add(sysRecordNode11);
 
 			MenuTreeRecord sysRecord12 = new MenuTreeRecord();
-			sysRecord12.name = "ÓÃ»§×é";
+			sysRecord12.name = "ç”¨æˆ·ç»„";
 			sysRecord12.type = "sysset";
 			sysRecord12.number = 800012;
 			sysRecord12.imgUri = "userGroup.ico";
@@ -380,28 +380,28 @@ public class MenuViewer extends ViewPart {
 			sysRecordNode1.add(sysRecordNode12);
 
 			MenuTreeRecord sysRecord13 = new MenuTreeRecord();
-			sysRecord13.name = "Éè±¸×é";
+			sysRecord13.name = "è®¾å¤‡ç»„";
 			sysRecord13.type = "sysset";
 			sysRecord13.number = 800013;
 			sysRecord13.imgUri = "devGroup.ico";
 			MenuNode sysRecordNode13 = new MenuNode(sysRecord13);
 			sysRecordNode1.add(sysRecordNode13);
 			{
-				// Éè±¸¹ÜÀí×Ó²Ëµ¥
+				// è®¾å¤‡ç®¡ç†å­èœå•
 			}
 		}
 
 		MenuTreeRecord logRecord2 = new MenuTreeRecord();
-		logRecord2.name = "Êı¾İ¹ÜÀí";
+		logRecord2.name = "æ•°æ®ç®¡ç†";
 		logRecord2.type = "sysset";
 		logRecord2.number = 80002;
 		logRecord2.imgUri = "PC_Blue.ico";
 		MenuNode sysRecordNode2 = new MenuNode(logRecord2);
 		sysRecordNode.add(sysRecordNode2);
 		{
-			// Êı¾İ¹ÜÀí×Ó²Ëµ¥
+			// æ•°æ®ç®¡ç†å­èœå•
 			MenuTreeRecord logRecord21 = new MenuTreeRecord();
-			logRecord21.name = "²É¼¯¹ÜÀí";
+			logRecord21.name = "é‡‡é›†ç®¡ç†";
 			logRecord21.type = "sysset";
 			logRecord21.number = 800021;
 			logRecord21.imgUri = "PC_Blue.ico";
@@ -409,7 +409,7 @@ public class MenuViewer extends ViewPart {
 			sysRecordNode2.add(sysRecordNode21);
 
 			MenuTreeRecord logRecord22 = new MenuTreeRecord();
-			logRecord22.name = "Êı¾İ¹ÜÀí";
+			logRecord22.name = "æ•°æ®ç®¡ç†";
 			logRecord22.type = "sysset";
 			logRecord22.number = 800021;
 			logRecord22.imgUri = "PC_Blue.ico";
@@ -418,7 +418,7 @@ public class MenuViewer extends ViewPart {
 		}
 
 		MenuTreeRecord logRecord3 = new MenuTreeRecord();
-		logRecord3.name = "SysLogÅäÖÃ";
+		logRecord3.name = "SysLogé…ç½®";
 		logRecord3.type = "sysset";
 		logRecord3.number = 80003;
 		logRecord3.imgUri = "PC_Blue.ico";
@@ -426,7 +426,7 @@ public class MenuViewer extends ViewPart {
 		sysRecordNode.add(sysRecordNode3);
 
 		MenuTreeRecord logRecord4 = new MenuTreeRecord();
-		logRecord4.name = "±¨±íÉú³ÉÅäÖÃ";
+		logRecord4.name = "æŠ¥è¡¨ç”Ÿæˆé…ç½®";
 		logRecord4.type = "sysset";
 		logRecord4.number = 80004;
 		logRecord4.imgUri = "PC_Blue.ico";
@@ -435,12 +435,12 @@ public class MenuViewer extends ViewPart {
 	}
 
 	/**
-	 * ¹¹½¨ÈÕÖ¾²Ëµ¥ number 7000
+	 * æ„å»ºæ—¥å¿—èœå• number 7000
 	 */
 	private void buildLogMenu() {
-		// ÈÕÖ¾
+		// æ—¥å¿—
 		MenuTreeRecord logRecord = new MenuTreeRecord();
-		logRecord.name = "ÈÕÖ¾¹ÜÀí";
+		logRecord.name = "æ—¥å¿—ç®¡ç†";
 		logRecord.type = "logMgr";
 		logRecord.number = 7000;
 		logRecord.imgUri = "log.ico";
@@ -448,7 +448,7 @@ public class MenuViewer extends ViewPart {
 		root.add(logRecordNode);
 
 		MenuTreeRecord logRecord1 = new MenuTreeRecord();
-		logRecord1.name = "²Ù×÷ÈÕÖ¾";
+		logRecord1.name = "æ“ä½œæ—¥å¿—";
 		logRecord1.type = "logMgr";
 		logRecord1.number = 70001;
 		logRecord1.imgUri = "operLog.ico";
@@ -456,7 +456,7 @@ public class MenuViewer extends ViewPart {
 		logRecordNode.add(dragtypeNode1);
 
 		MenuTreeRecord logRecord2 = new MenuTreeRecord();
-		logRecord2.name = "É¨ÃèÈÕÖ¾";
+		logRecord2.name = "æ‰«ææ—¥å¿—";
 		logRecord2.type = "logMgr";
 		logRecord2.number = 70002;
 		logRecord2.imgUri = "scanLog.ico";
@@ -466,11 +466,11 @@ public class MenuViewer extends ViewPart {
 	}
 
 	/**
-	 * ¼à²â±¨±í²Ëµ¥ number = 6000
+	 * ç›‘æµ‹æŠ¥è¡¨èœå• number = 6000
 	 */
 	private void buildMonitorReportMenu() {
 		MenuTreeRecord monitorReportRecord = new MenuTreeRecord();
-		monitorReportRecord.name = "¼à²â±¨±í";
+		monitorReportRecord.name = "ç›‘æµ‹æŠ¥è¡¨";
 		monitorReportRecord.type = "monitorReportMgr";
 		monitorReportRecord.number = 6000;
 		monitorReportRecord.imgUri = "monitorReport.ico";
@@ -478,7 +478,7 @@ public class MenuViewer extends ViewPart {
 		root.add(monitorReportNode);
 
 		MenuTreeRecord monitorReportRecord1 = new MenuTreeRecord();
-		monitorReportRecord1.name = "Éè±¸×´Ì¬ÊµÊ±·ÖÎö";
+		monitorReportRecord1.name = "è®¾å¤‡çŠ¶æ€å®æ—¶åˆ†æ";
 		monitorReportRecord1.type = "monitorReportMgr";
 		monitorReportRecord1.number = 60001;
 		monitorReportRecord1.imgUri = "devFlagRealFX.ico";
@@ -486,9 +486,9 @@ public class MenuViewer extends ViewPart {
 		monitorReportNode.add(monitortypeNode1);
 
 		{
-			// Éè±¸×´Ì¬ÊµÊ±·ÖÎö×Ó²Ëµ¥
+			// è®¾å¤‡çŠ¶æ€å®æ—¶åˆ†æå­èœå•
 			MenuTreeRecord monitorReportRecord11 = new MenuTreeRecord();
-			monitorReportRecord11.name = "Éè±¸ÉÌÆ·×´Ì¬ÊµÊ±·ÖÎö";
+			monitorReportRecord11.name = "è®¾å¤‡å•†å“çŠ¶æ€å®æ—¶åˆ†æ";
 			monitorReportRecord11.type = "monitorReportMgr";
 			monitorReportRecord11.number = 600011;
 			monitorReportRecord11.imgUri = "devIfFlagRealFX.ico";
@@ -497,7 +497,7 @@ public class MenuViewer extends ViewPart {
 			monitortypeNode1.add(monitorReportRecord11Node);
 
 			MenuTreeRecord monitorReportRecord12 = new MenuTreeRecord();
-			monitorReportRecord12.name = "CPU&MEMÊµÊ±·ÖÎö";
+			monitorReportRecord12.name = "CPU&MEMå®æ—¶åˆ†æ";
 			monitorReportRecord12.type = "monitorReportMgr";
 			monitorReportRecord12.number = 600011;
 			monitorReportRecord12.imgUri = "CPU&MEMRealFX.ico";
@@ -507,7 +507,7 @@ public class MenuViewer extends ViewPart {
 		}
 
 		MenuTreeRecord monitorReportRecord2 = new MenuTreeRecord();
-		monitorReportRecord2.name = "ÀúÊ·¼à²â²éÑ¯";
+		monitorReportRecord2.name = "å†å²ç›‘æµ‹æŸ¥è¯¢";
 		monitorReportRecord2.type = "monitorReportMgr";
 		monitorReportRecord2.number = 60002;
 		monitorReportRecord2.imgUri = "HisMonitorCX.ico";
@@ -515,9 +515,9 @@ public class MenuViewer extends ViewPart {
 		monitorReportNode.add(monitorsetNode2);
 
 		{
-			// Éè±¸×´Ì¬ÊµÊ±·ÖÎö×Ó²Ëµ¥
+			// è®¾å¤‡çŠ¶æ€å®æ—¶åˆ†æå­èœå•
 			MenuTreeRecord monitorReportRecord21 = new MenuTreeRecord();
-			monitorReportRecord21.name = "¶Ë¿ÚÀúÊ·Êı¾İ²éÑ¯";
+			monitorReportRecord21.name = "ç«¯å£å†å²æ•°æ®æŸ¥è¯¢";
 			monitorReportRecord21.type = "monitorReportMgr";
 			monitorReportRecord21.number = 600021;
 			monitorReportRecord21.imgUri = "ifHisDataCX.ico";
@@ -526,7 +526,7 @@ public class MenuViewer extends ViewPart {
 			monitorsetNode2.add(monitorReportRecord12Node);
 
 			MenuTreeRecord monitorReportRecord22 = new MenuTreeRecord();
-			monitorReportRecord22.name = "CPU&MEMÀúÊ·Êı¾İ²éÑ¯";
+			monitorReportRecord22.name = "CPU&MEMå†å²æ•°æ®æŸ¥è¯¢";
 			monitorReportRecord22.type = "monitorReportMgr";
 			monitorReportRecord22.number = 600021;
 			monitorReportRecord22.imgUri = "CPU&MEMHisDataCX.ico";
@@ -535,7 +535,7 @@ public class MenuViewer extends ViewPart {
 			monitorsetNode2.add(monitorReportRecord22Node);
 		}
 		MenuTreeRecord monitorReportRecord3 = new MenuTreeRecord();
-		monitorReportRecord3.name = "ÍøÂçÉè±¸¼à²â²éÑ¯";
+		monitorReportRecord3.name = "ç½‘ç»œè®¾å¤‡ç›‘æµ‹æŸ¥è¯¢";
 		monitorReportRecord3.type = "monitorReportMgr";
 		monitorReportRecord3.number = 60003;
 		monitorReportRecord3.imgUri = "netDevMonitorCX.ico";
@@ -543,7 +543,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportNode.add(monitorReportNode3);
 
 		MenuTreeRecord monitorReportRecord4 = new MenuTreeRecord();
-		monitorReportRecord4.name = "Éè±¸ĞÔÄÜ·ÖÎö±¨±í";
+		monitorReportRecord4.name = "è®¾å¤‡æ€§èƒ½åˆ†ææŠ¥è¡¨";
 		monitorReportRecord4.type = "monitorReportMgr";
 		monitorReportRecord4.number = 60004;
 		monitorReportRecord4.imgUri = "devXNFXReport.ico";
@@ -551,7 +551,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportNode.add(monitorReportNode4);
 
 		MenuTreeRecord monitorReportRecord5 = new MenuTreeRecord();
-		monitorReportRecord5.name = "Éè±¸¶Ë¿ÚÊ¹ÓÃÂÊ";
+		monitorReportRecord5.name = "è®¾å¤‡ç«¯å£ä½¿ç”¨ç‡";
 		monitorReportRecord5.type = "monitorReportMgr";
 		monitorReportRecord5.number = 60005;
 		monitorReportRecord5.imgUri = "CPULoad_MEMUse.ico";
@@ -559,7 +559,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportNode.add(monitorReportNode5);
 
 		MenuTreeRecord monitorReportRecord6 = new MenuTreeRecord();
-		monitorReportRecord6.name = "ÍøÂçÕûÌåĞÔÄÜ·ÖÎö";
+		monitorReportRecord6.name = "ç½‘ç»œæ•´ä½“æ€§èƒ½åˆ†æ";
 		monitorReportRecord6.type = "monitorReportMgr";
 		monitorReportRecord6.number = 60006;
 		monitorReportRecord6.imgUri = "netWholeXNFX.ico";
@@ -567,7 +567,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportNode.add(monitorReportNode6);
 
 		MenuTreeRecord monitorReportRecord7 = new MenuTreeRecord();
-		monitorReportRecord7.name = "Éè±¸¹ÊÕÏÇ÷ÊÆ·ÖÎö";
+		monitorReportRecord7.name = "è®¾å¤‡æ•…éšœè¶‹åŠ¿åˆ†æ";
 		monitorReportRecord7.type = "monitorReportMgr";
 		monitorReportRecord7.number = 60007;
 		monitorReportRecord7.imgUri = "wnGZQSFX.ico";
@@ -575,7 +575,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportNode.add(monitorReportNode7);
 
 		MenuTreeRecord monitorReportRecord8 = new MenuTreeRecord();
-		monitorReportRecord8.name = "SysLog²éÑ¯";
+		monitorReportRecord8.name = "SysLogæŸ¥è¯¢";
 		monitorReportRecord8.type = "monitorReportMgr";
 		monitorReportRecord8.number = 60008;
 		monitorReportRecord8.imgUri = "PC_Blue.ico";
@@ -583,7 +583,7 @@ public class MenuViewer extends ViewPart {
 		monitorReportNode.add(monitorReportNode8);
 
 		MenuTreeRecord monitorReportRecord9 = new MenuTreeRecord();
-		monitorReportRecord9.name = "×Ô¶¯Éú³É±¨±í";
+		monitorReportRecord9.name = "è‡ªåŠ¨ç”ŸæˆæŠ¥è¡¨";
 		monitorReportRecord9.type = "monitorReportMgr";
 		monitorReportRecord9.number = 60009;
 		monitorReportRecord9.imgUri = "PC_Blue.ico";
@@ -594,20 +594,20 @@ public class MenuViewer extends ViewPart {
 
 	private void doListener(EventObject event) {
 		ISelection selection = tv.getSelection();
-		// µÃµ½Ñ¡ÖĞµÄÏî£¬×¢Òâ·½·¨ÊÇ½«µÃµ½µÄÑ¡Ïî×ª»»³É IStructuredSelection£¬ÔÙµ÷ÓÃ getFirstElement ·½·¨
+		// å¾—åˆ°é€‰ä¸­çš„é¡¹ï¼Œæ³¨æ„æ–¹æ³•æ˜¯å°†å¾—åˆ°çš„é€‰é¡¹è½¬æ¢æˆ IStructuredSelectionï¼Œå†è°ƒç”¨ getFirstElement æ–¹æ³•
 		Object object = ((IStructuredSelection) selection).getFirstElement();
 		MenuNode node = (MenuNode) object;
 		MenuTreeRecord record = (MenuTreeRecord) node.getUserObject();
 		ShowDeviceEditor.type = record.number;
-		// ÍØÆËÍ¼¹ÜÀí²Ëµ¥
+		// æ‹“æ‰‘å›¾ç®¡ç†èœå•
 		if (record.type.equals("topoMgr")) {
-			// ´ò¿ªÉ¨ÃèÅäÖÃÏòµ¼
+			// æ‰“å¼€æ‰«æé…ç½®å‘å¯¼
 			if (record.number == 10001) {
 				ScanDialog dialog = new ScanDialog(Display.getCurrent()
 						.getActiveShell(), new SomeWizard());
 				dialog.open();
 			}
-			// ÍØÆËÉ¨Ãè
+			// æ‹“æ‰‘æ‰«æ
 			if (record.number == 10002) {
 				if (GlobalData.isConfiged)
 					StartScan.getInstance(parent).scanTopo();
@@ -639,7 +639,7 @@ public class MenuViewer extends ViewPart {
 			} catch (PartInitException e) {
 				e.printStackTrace();
 			}
-		} else if (record.type.equals("ipMgr")) {// ip¹ÜÀí
+		} else if (record.type.equals("ipMgr")) {// ipç®¡ç†
 			if (record.number == 40001) {
 				Set<SubnetInfo> subSet = GlobalData.subnetDeviceMap.keySet();
 				List<String> subNum = new ArrayList<String>();
@@ -659,7 +659,7 @@ public class MenuViewer extends ViewPart {
 				}
 				tv.refresh();
 			}
-			if (record.number == 40002) {// ip»ù×¼Êı¾İÕ¹Ê¾
+			if (record.number == 40002) {// ipåŸºå‡†æ•°æ®å±•ç¤º
 				try {
 					PlatformUI
 							.getWorkbench()
@@ -722,7 +722,7 @@ public class MenuViewer extends ViewPart {
 	}
 
 	/**
-	 * treeviewÄÚÈİÌá¹©Õß
+	 * treeviewå†…å®¹æä¾›è€…
 	 * 
 	 * @author haiming.wang
 	 * 
@@ -768,7 +768,7 @@ public class MenuViewer extends ViewPart {
 	}
 
 	/**
-	 * treeviewlalelÌá¹©Õß
+	 * treeviewlalelæä¾›è€…
 	 * 
 	 * @author haiming.wang
 	 * 

@@ -2,7 +2,7 @@ package com.siteview.nnm.main.mib;
 
 import java.io.*;
 /**
- * mib文件转换成树节点
+ * mib鏂囦欢杞崲鎴愭爲鑺傜偣
  * @author haiming.wang
  *
  */
@@ -158,7 +158,7 @@ public class DwSnmpMibParser
 							continue;
 							}							
 							currentRec.number = Integer.parseInt(t1.trim());
-							//排除mib节点。使用mib-2节点
+							//鎺掗櫎mib鑺傜偣銆備娇鐢╩ib-2鑺傜偣
 							if(!currentRec.parent.equals("mib") && !currentRec.name.equals("mib"))
 								addToken(currentRec);
 							parseStatus=0;
