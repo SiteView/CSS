@@ -11,17 +11,9 @@ import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
-import org.csstudio.swt.widgets.figures.PolylineFigure;
 import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.draw2d.ChopboxAnchor;
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.MidpointLocator;
-import org.eclipse.draw2d.PolylineConnection;
-import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -36,14 +28,13 @@ import ILOG.Diagrammer.Link;
 import ILOG.Diagrammer.GraphLayout.ForceDirectedLayout;
 import ILOG.Diagrammer.GraphLayout.ForceDirectedLayoutReport;
 
-import com.siteview.css.topo.common.TopoData;
 import com.siteview.css.topo.models.DumbModel;
-import com.siteview.snmp.common.ScanParam;
-import com.siteview.snmp.constants.CommonDef;
-import com.siteview.snmp.pojo.DevicePro;
-import com.siteview.snmp.pojo.Edge;
-import com.siteview.snmp.pojo.IDBody;
-import com.siteview.snmp.util.ScanUtils;
+import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
+import com.siteview.itsm.nnm.scan.core.snmp.constants.CommonDef;
+import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.DevicePro;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
 
 public class TOPOEdit extends OPIEditor {
 	
@@ -58,11 +49,8 @@ public class TOPOEdit extends OPIEditor {
 
 	public static final String PROP_IMAGE_FILE = "image_file";
 	public static final String PROP_AUTOSIZE = "auto_size";
-	private static final String[] FILE_EXTENSIONS = new String[] { "jpg",
-			"jpeg", "gif", "bmp", "png" };
 	int nnodes;
 	public static final String ID = "com.siteview.css.topo.editparts.TOPOEdit";
-	private TopoGraph container;
 	public TOPOEdit() {
 		super();
 	}
@@ -78,6 +66,7 @@ public class TOPOEdit extends OPIEditor {
 	}
 
 	
+	@SuppressWarnings("unused")
 	protected void createGraphicalViewer(Composite parent) {
 		super.createGraphicalViewer(parent);
 		DisplayModel displayModel = getDisplayModel();
@@ -96,7 +85,7 @@ public class TOPOEdit extends OPIEditor {
 
 		TopoGraph container = new TopoGraph(displayModel);
 
-		for (Entry<String, IDBody> entry : TopoData.deviceList.entrySet()) {
+		for (Entry<String, IDBody> entry : GlobalData.deviceList.entrySet()) {
 			String ip = entry.getKey();// 获取设备的所有ip包括亚设备的信息
 			// System.out.println(ip+"```````````````````````"+entry.getValue());
 			// entry.getValue();
@@ -124,8 +113,8 @@ public class TOPOEdit extends OPIEditor {
 		
 		String leftIp;
 		String rightIp;
-		for (int i = 0; i < TopoData.edgeList.size(); i++) {
-			Edge edge = (Edge) TopoData.edgeList.get(i);
+		for (int i = 0; i < GlobalData.edgeList.size(); i++) {
+			Edge edge = (Edge) GlobalData.edgeList.get(i);
 			leftIp = edge.getIp_left();
 			rightIp = edge.getIp_right();
 			// System.out.println(leftIp + "<-->" + rightIp);
@@ -213,6 +202,7 @@ public class TOPOEdit extends OPIEditor {
 		return editorInput;
 	}
 
+	@SuppressWarnings("unused")
 	private InputStream getInputStream() {
 		InputStream result = null;
 

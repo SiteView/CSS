@@ -28,7 +28,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Pattern;
 import org.osgi.framework.Bundle;
 
-import com.siteview.snmp.pojo.Edge;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
+
 
 
 public class DumbFigure extends Figure{

@@ -28,8 +28,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Pattern;
 import org.osgi.framework.Bundle;
 
-import com.siteview.css.topo.figure.DumbFigure.MyRectangle;
-import com.siteview.snmp.pojo.Edge;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
 
 public class RouterFigure extends Figure{
 	private final static Font DEFAULT_LABEL_FONT = CustomMediaFactory.getInstance().getFont(
