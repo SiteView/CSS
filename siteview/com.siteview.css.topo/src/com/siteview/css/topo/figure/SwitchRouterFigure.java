@@ -24,6 +24,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Pattern;
 import org.osgi.framework.Bundle;
 
+import com.siteview.css.topo.factory.ImageFactory;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
 
 
@@ -85,12 +86,8 @@ public class SwitchRouterFigure extends Figure{
 		//获取当前编辑区域的坐标或者size
 		Rectangle bound = getBounds().getCopy();
 
-		//当前项目中获取image的实体类 方法
-		final Bundle bundle = Platform.getBundle("com.siteview.css.topo");
-		final URL url = bundle.getEntry("icons/bmp_SwitchRouter_Blue.bmp");
-		Image image = ImageDescriptor.createFromURL(url).createImage();
 		//把图片填充到编辑区域中
-		graphics.drawImage(image,bound.x,bound.y); 
+		graphics.drawImage(ImageFactory.getSwitchRouterBlueImage(),bound.x,bound.y); 
 		
 		graphics.setForegroundColor(thumbColor);
 		

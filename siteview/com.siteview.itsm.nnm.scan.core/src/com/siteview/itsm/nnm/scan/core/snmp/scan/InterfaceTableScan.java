@@ -67,6 +67,9 @@ public class InterfaceTableScan {
 	public Map<String, InterfaceTable> resoluteTable(List<TableEvent> l) {
 		Map<String, InterfaceTable> ifTables = new HashMap<String, InterfaceTable>();
 		for (TableEvent t : l) {
+			if(t==null || t.getColumns().length == 0|| t.getColumns()[0] == null){
+				continue;
+			}
 			String varible = t.getColumns()[0].toString();
 			String[] varibleSplit = varible.split("=");
 			String[] oids = varibleSplit[0].trim().split("\\.");
