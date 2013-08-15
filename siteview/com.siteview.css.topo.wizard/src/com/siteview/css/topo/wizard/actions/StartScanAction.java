@@ -175,6 +175,9 @@ public class StartScanAction implements IWorkbenchWindowActionDelegate {
 		if(topoEdit != null){
 			window.getActivePage().closeEditor(topoEdit, false);
 		}
+		if(file.exists()){
+			file.delete(true, null);
+		}
 		createFile(file, getInitialContents());
 		window.getActivePage()
 				.openEditor(input ,

@@ -197,7 +197,7 @@ public class TOPOEdit extends OPIEditor {
 //		conn.add(label, new MidpointLocator(conn, 0));
 		
 		//displayModel.addChild(node1);
-		
+		this.doSave(null);
 	}
 
 	/**
