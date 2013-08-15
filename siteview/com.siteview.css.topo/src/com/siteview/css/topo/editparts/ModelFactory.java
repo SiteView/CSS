@@ -2,11 +2,16 @@ package com.siteview.css.topo.editparts;
 
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 
+import com.siteview.css.topo.models.DeviceModel;
 import com.siteview.css.topo.models.DumbModel;
 import com.siteview.css.topo.models.RouterModel;
 import com.siteview.css.topo.models.SwitchModel;
 import com.siteview.css.topo.models.SwitchRouterModel;
 import com.siteview.css.topo.models.TopologyModel;
+import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
+import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
+import com.siteview.itsm.nnm.scan.core.snmp.util.ScanUtils;
+import com.siteview.itsm.nnm.scan.core.snmp.util.Utils;
 
 
 public class ModelFactory {
@@ -20,28 +25,28 @@ public class ModelFactory {
 	public static final String ROUTER = "router";
 	/**二层交换*/
 	public static final String SWITCH = "switch";
-	public static AbstractPVWidgetModel getWidgetModel(String mode,String ip){
+	public static AbstractPVWidgetModel getWidgetModel(String mode,Pair<String, IDBody> body){
+		DeviceModel model = null;
 		if (mode.equals(TOPOLOGYMODEL)) {
-			TopologyModel topologyModel = new TopologyModel();
-			topologyModel.setName(ip);
-			return topologyModel;
+			model = new TopologyModel();
 		}else if (mode.equals(DUMBMODEL)) {
-			DumbModel dumbModel = new DumbModel();
-			dumbModel.setName(ip);
-			return dumbModel;
+			model = new DumbModel();
 		}else if (mode.equals(SWITCH_ROUTER)) {
-			SwitchRouterModel switchModel = new SwitchRouterModel();
-			switchModel.setName(ip);
-			return switchModel;
+			model = new SwitchRouterModel();
 		}else if (mode.equals(ROUTER)) {
-			RouterModel routerModel = new RouterModel();
-			routerModel.setName(ip);
-			return routerModel;
+			model = new RouterModel();
 		}else if (mode.equals(SWITCH)) {
-			SwitchModel switchModel = new SwitchModel();
-			switchModel.setName(ip);
-			return switchModel;
+			model = new SwitchModel();
 		}
-		return null;
+		model.addCommunityProperty(body.getSecond().getCommunity_get());
+		String mac = body.getSecond().getBaseMac();
+		if(Utils.isEmptyOrBlank(mac)){
+			mac = "";
+		}else{
+			mac = Utils.formatMac(mac, " ");
+		}
+		model.addMacProperty(mac);
+		model.setName(body.getFirst());
+		return model;
 	}
 }

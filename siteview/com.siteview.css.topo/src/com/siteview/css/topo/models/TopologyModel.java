@@ -5,9 +5,10 @@ import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.persistence.XMLUtil;
 import org.csstudio.opibuilder.properties.DoubleProperty;
+import org.csstudio.opibuilder.properties.StringProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 
-public class TopologyModel extends AbstractPVWidgetModel {
+public class TopologyModel extends DeviceModel {
 
 	public static final String ID = "com.siteview.css.topo.topology";
 

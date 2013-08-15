@@ -48,12 +48,12 @@ public class TopologyFigure extends Figure{
 			CustomMediaFactory.COLOR_WHITE);
 	private final static Color GRAY_COLOR = CustomMediaFactory.getInstance().getColor(
 			CustomMediaFactory.COLOR_GRAY);
-	private final static Color BLUE_COLOR = CustomMediaFactory.getInstance().getColor(
+	private final static Color GREEN_COLOR = CustomMediaFactory.getInstance().getColor(
 			CustomMediaFactory.COLOR_GREEN);
 	
 	private final static Color RED_COLOR = CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_RED);
 	Dimension labelSize;
-	private Color color = BLUE_COLOR;
+	private Color color = GREEN_COLOR;
 	public TopologyFigure(List<Edge> edges){
 		this();
 		//初始化数据

@@ -23,13 +23,11 @@ public class PolyPVLineModel extends PolyLineModel implements IPVWidgetModel {
 
 	@Override
 	protected void configureProperties() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public String getTypeID() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

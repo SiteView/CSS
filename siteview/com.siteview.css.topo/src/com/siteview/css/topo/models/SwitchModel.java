@@ -7,7 +7,7 @@ import org.csstudio.opibuilder.persistence.XMLUtil;
 import org.csstudio.opibuilder.properties.DoubleProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 
-public class SwitchModel extends AbstractPVWidgetModel {
+public class SwitchModel extends DeviceModel {
 	public static final String ID = "com.siteview.css.topo.switch";
 
 	public static final String PROP_MIN = "min";

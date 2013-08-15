@@ -7,7 +7,7 @@ import org.csstudio.opibuilder.persistence.XMLUtil;
 import org.csstudio.opibuilder.properties.DoubleProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 
-public class DumbModel extends AbstractPVWidgetModel {
+public class DumbModel extends DeviceModel {
 
 	public static final String ID = "com.siteview.css.topo.dumb";
 

@@ -13,7 +13,7 @@ import org.csstudio.opibuilder.widgets.model.AbstractMarkedWidgetModel;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
-public class RouterModel extends AbstractPVWidgetModel{
+public class RouterModel extends DeviceModel{
 	public static final String ID = "com.siteview.css.topo.router";
 
 	public static final String PROP_MIN = "min";

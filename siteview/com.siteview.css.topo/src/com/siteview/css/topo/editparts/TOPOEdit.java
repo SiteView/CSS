@@ -11,9 +11,12 @@ import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
+import org.csstudio.opibuilder.widgets.model.PolyLineModel;
+import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -32,6 +35,7 @@ import com.siteview.css.topo.models.DumbModel;
 import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
 import com.siteview.itsm.nnm.scan.core.snmp.constants.CommonDef;
 import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
+import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.DevicePro;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
@@ -84,28 +88,29 @@ public class TOPOEdit extends OPIEditor {
 		forceLayout.set_RespectNodeSizes(true);
 
 		TopoGraph container = new TopoGraph(displayModel);
-
+		
 		for (Entry<String, IDBody> entry : GlobalData.deviceList.entrySet()) {
 			String ip = entry.getKey();// 获取设备的所有ip包括亚设备的信息
 			// System.out.println(ip+"```````````````````````"+entry.getValue());
 			// entry.getValue();
+			
 			// 判断设备类型
 			if (entry.getValue().getDevType().equals(CommonDef.OTHER)) {//亚设备-
-				container.addNode(new TopoNode(container, ip, ModelFactory.getWidgetModel(ModelFactory.DUMBMODEL, ip), entry
+				container.addNode(new TopoNode(container, ip, ModelFactory.getWidgetModel(ModelFactory.DUMBMODEL,new Pair<String, IDBody>(entry.getKey(), entry.getValue())), entry
 						.getValue()));
 			}else if (entry.getValue().getDevType().equals(CommonDef.ROUTE_SWITCH)) {//三层交换-
-				AbstractPVWidgetModel model = ModelFactory.getWidgetModel(ModelFactory.SWITCH_ROUTER, ip);
+				AbstractPVWidgetModel model = ModelFactory.getWidgetModel(ModelFactory.SWITCH_ROUTER, new Pair<String, IDBody>(entry.getKey(), entry.getValue()));
 				//model.setPropertyValue(AbstractPVWidgetModel.PROP_PVNAME, "sv://topo");
 				container.addNode(new TopoNode(container, ip, model, entry
 						.getValue()));
 			}else if(entry.getValue().getDevType().equals(CommonDef.SWITCH)){//二层交换
-				AbstractPVWidgetModel model = ModelFactory.getWidgetModel(ModelFactory.SWITCH, ip);
+				AbstractPVWidgetModel model = ModelFactory.getWidgetModel(ModelFactory.SWITCH, new Pair<String, IDBody>(entry.getKey(), entry.getValue()));
 				//model.setPropertyValue(AbstractPVWidgetModel.PROP_PVNAME, "sv://topo");
 			}else if(entry.getValue().getDevType().equals(CommonDef.ROUTER)){//路由器-
-				AbstractPVWidgetModel model = ModelFactory.getWidgetModel(ModelFactory.ROUTER, ip);
+				AbstractPVWidgetModel model = ModelFactory.getWidgetModel(ModelFactory.ROUTER, new Pair<String, IDBody>(entry.getKey(), entry.getValue()));
 				//model.setPropertyValue(AbstractPVWidgetModel.PROP_PVNAME, "sv://topo");
 			}else if (entry.getValue().getDevType().equals(CommonDef.PC)) {//pc终端-
-				container.addNode(new TopoNode(container, ip, ModelFactory.getWidgetModel(ModelFactory.TOPOLOGYMODEL, ip), entry
+				container.addNode(new TopoNode(container, ip, ModelFactory.getWidgetModel(ModelFactory.TOPOLOGYMODEL, new Pair<String, IDBody>(entry.getKey(), entry.getValue())), entry
 						.getValue()));
 			}
 		}
@@ -117,7 +122,6 @@ public class TOPOEdit extends OPIEditor {
 			Edge edge = (Edge) GlobalData.edgeList.get(i);
 			leftIp = edge.getIp_left();
 			rightIp = edge.getIp_right();
-			// System.out.println(leftIp + "<-->" + rightIp);
 			container.addLink(leftIp, rightIp);
 		}
 
@@ -161,12 +165,18 @@ public class TOPOEdit extends OPIEditor {
 		dumbModel.setY(100);
 		dumbMode2.setX(1100);
 		dumbMode2.setY(100);
+		
 		displayModel.addChild(dumbModel);
 		displayModel.addChild(dumbMode2);
-		ConnectionModel connectionModel1 = new ConnectionModel(displayModel);
-		connectionModel1.connect(dumbModel, "TOP", dumbMode2, "BOTTOM");
-		ConnectionModel connectionModel2 = new ConnectionModel(displayModel);
-		connectionModel2.connect(dumbModel, "BOTTOM", dumbMode2, "TOP");
+//		ConnectionModel connectionModel1 = new ConnectionModel(displayModel);
+//		connectionModel1.connect(dumbModel, "TOP", dumbMode2, "BOTTOM");
+		PolyLineModel poly = new PolyLineModel();
+//		poly.addConnection(connectionModel1);
+		poly.setBackgroundColor(new RGB(12, 12, 12));
+		poly.setSize(100, 2);
+		poly.setArrowLength(20);
+		poly.setPropertyValue(AbstractPVWidgetModel.PROP_PVNAME, "sv://flow");
+		displayModel.addChild(poly);
 		
 		
 //		RectangleFigure node1 = new RectangleFigure(), node2 = new RectangleFigure();
