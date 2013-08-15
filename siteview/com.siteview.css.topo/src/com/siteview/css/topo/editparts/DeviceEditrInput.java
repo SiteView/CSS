@@ -6,6 +6,7 @@ import org.eclipse.ui.IPersistableElement;
 
 public class DeviceEditrInput implements IEditorInput {
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getAdapter(Class adapter) {
 		return null;

@@ -43,8 +43,6 @@ public class DumbEdit extends AbstractPVWidgetEditPart {
 				if (newValue == null) {
 					return false;
 				}
-				String newValueClassname = newValue.getClass().getName();
-				// ((TopologyFigure)figure).setValue(ValueUtil.getDouble((IValue)newValue));
 				dumbFigure
 						.setLabelValue(ValueUtil.getString((IValue) newValue));
 				dumbFigure.changeBackGroundColor(ValueUtil

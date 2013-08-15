@@ -120,26 +120,7 @@ public class SwitchRouterFigure extends Figure{
 			if(support3D && effect3D){
 				try {
 					graphics.setBackgroundColor(color);
-					//graphics.setForegroundColor(RED_COLOR);
-					
-//					Rectangle bound = getBounds().getCopy();
-//
-//					//当前项目中获取image的实体类 方法
-//					final Bundle bundle = Platform.getBundle("com.siteview.css.topo");
-//					final URL url = bundle.getEntry("icons/bmp_PC_Blue.bmp");
-//					Image image = ImageDescriptor.createFromURL(url).createImage();
-//					System.out.println(image.getImageData().width + " "
-//							+ image.getImageData().height);
-//					graphics.setBackgroundPattern(new Pattern(Display.getCurrent(), image));
-//					//把图片填充到编辑区域中
-//					graphics.drawImage(image,bound.x,bound.y); 
-					
-					
 					super.fillShape(graphics);
-//					pattern = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), bounds.x, bounds.y,
-//							bounds.x + bounds.width, bounds.y + bounds.height, 
-//							RED_COLOR, 0, RED_COLOR, 255);
-//					graphics.setBackgroundPattern(pattern);
 				} catch (Exception e) {
 					support3D = false;
 					e.printStackTrace();
@@ -148,14 +129,11 @@ public class SwitchRouterFigure extends Figure{
 				}				
 			}			
 			super.fillShape(graphics);
-//			if(effect3D && support3D)
-//				pattern.dispose();
 			graphics.setForegroundColor(thumbColor);
 		}		
 	}
 	public void setValue(double value) {
 		this.value = value;
-//		valueLabel.setText(String.valueOf(value));	
 		repaint();
 	}
 
@@ -225,20 +203,6 @@ public class SwitchRouterFigure extends Figure{
 			if(rec != null){
 				rec.setBounds(computeContain);
 			}
-			
-//			if(scale != null) {				
-	//			scale.setBounds(area);
-//				bulbBounds = area.getCopy();
-//				bulbBounds.shrink(area.width/2 - scale.getInnerRadius() + GAP_BTW_BULB_SCALE, 
-//						area.height/2 - scale.getInnerRadius() + GAP_BTW_BULB_SCALE);
-//			}
-	//		
-	//		if(scale != null && ramp != null && ramp.isVisible()) {
-	//			Rectangle rampBounds = area.getCopy();
-	//			ramp.setBounds(rampBounds.shrink(area.width/2 - scale.getInnerRadius() - ramp.getRampWidth()+2,
-	//					area.height/2 - scale.getInnerRadius() - ramp.getRampWidth()+2));
-	//		}
-			
 			if(valueLabel != null && valueLabel.isVisible()) {
 				valueLabel.setVisible(true);
 								

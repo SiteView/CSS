@@ -158,45 +158,7 @@ public class TOPOEdit extends OPIEditor {
 				}
 			}
 		}
-		
-		DumbModel dumbModel = new DumbModel();
-		DumbModel dumbMode2 = new DumbModel();
-		dumbModel.setX(1000);
-		dumbModel.setY(100);
-		dumbMode2.setX(1100);
-		dumbMode2.setY(100);
-		
-		displayModel.addChild(dumbModel);
-		displayModel.addChild(dumbMode2);
-//		ConnectionModel connectionModel1 = new ConnectionModel(displayModel);
-//		connectionModel1.connect(dumbModel, "TOP", dumbMode2, "BOTTOM");
-		PolyLineModel poly = new PolyLineModel();
-//		poly.addConnection(connectionModel1);
-		poly.setBackgroundColor(new RGB(12, 12, 12));
-		poly.setSize(100, 2);
-		poly.setArrowLength(20);
-		poly.setPropertyValue(AbstractPVWidgetModel.PROP_PVNAME, "sv://flow");
-		displayModel.addChild(poly);
-		
-		
-//		RectangleFigure node1 = new RectangleFigure(), node2 = new RectangleFigure();
-//		node1.setBackgroundColor(ColorConstants.red);
-//		node1.setBounds(new Rectangle(40, 40, 50, 30));
-//		node2.setBackgroundColor(ColorConstants.blue);
-//		node2.setBounds(new Rectangle(200, 40, 50, 30));
-//
-//		PolylineConnection conn = new PolylineConnection();
-//		conn.setSourceAnchor(new ChopboxAnchor(node1));
-//		conn.setTargetAnchor(new ChopboxAnchor(node2));
-//		// conn.setTargetDecoration(new PolygonDecoration());//箭头
-//
-//		Label label = new Label("绑定数据");
-//		// label.setOpaque(true);
-//		// label.setBackgroundColor(ColorConstants.buttonLightest);
-//		// label.setBorder(new LineBorder());
-//		conn.add(label, new MidpointLocator(conn, 0));
-		
-		//displayModel.addChild(node1);
+		//保存widget
 		this.doSave(null);
 	}
 

@@ -1,11 +1,9 @@
 package com.siteview.css.topo.figure;
 
-import java.net.URL;
 import java.util.List;
 
 import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
@@ -17,13 +15,11 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Pattern;
-import org.osgi.framework.Bundle;
 
+import com.siteview.css.topo.factory.ImageFactory;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
 
 
@@ -61,18 +57,6 @@ public class SwitchFigure extends Figure{
 	}
 	public SwitchFigure(){
 		super();
-		
-//		valueLabel = new Label();		
-//		valueLabel.setFont(DEFAULT_LABEL_FONT);
-//		valueLabel.setText("IP:19.168.3.90");
-//		valueLabel.setForegroundColor(RED_COLOR);
-//		rec = new MyRectangle();
-//		labelSize = valueLabel.getPreferredSize();
-//		//���ò���
-//		setLayoutManager(new TopologyLayout());
-//		add(valueLabel, TopologyLayout.VALUE_LABEL);
-//		add(rec,TopologyLayout.REC);
-		
 		XYLayout layout = new XYLayout();
 		setLayoutManager(layout);
 		
@@ -89,20 +73,6 @@ public class SwitchFigure extends Figure{
 			graphics.setBackgroundColor(GRAY_COLOR);
 			graphics.fillRectangle(bounds);
 		}		
-//		graphics.setBackgroundColor(RED_COLOR);
-//		graphics.fillRectangle(getClientArea());
-//
-//		graphics.setBackgroundColor(BLUE_COLOR);
-//
-//		double coercedValue = value;
-//		if (value < min)
-//			coercedValue = min;
-//		else if (value > max)
-//			coercedValue = max;
-//		int valueLength = (int) ((coercedValue - min) * getClientArea().height / (max - min));
-//		graphics.fillRectangle(getClientArea().x, getClientArea().y
-//				+ getClientArea().height - valueLength, getClientArea().width,
-//				valueLength);
 	}
 	
 	@Override
@@ -110,16 +80,8 @@ public class SwitchFigure extends Figure{
 		super.paintFigure(graphics);
 		//获取当前编辑区域的坐标或者size
 		Rectangle bound = getBounds().getCopy();
-
-		//当前项目中获取image的实体类 方法
-		final Bundle bundle = Platform.getBundle("com.siteview.css.topo");
-		final URL url = bundle.getEntry("icons/bmp_Switch_Blue.bmp");
-		Image image = ImageDescriptor.createFromURL(url).createImage();
-//		System.out.println(image.getImageData().width + " "
-//				+ image.getImageData().height);
-//		graphics.setBackgroundPattern(new Pattern(Display.getCurrent(), image));
 		//把图片填充到编辑区域中
-		graphics.drawImage(image,bound.x,bound.y); 
+		graphics.drawImage(ImageFactory.getSwitchBlueImage(),bound.x,bound.y); 
 		
 		graphics.setForegroundColor(thumbColor);
 		

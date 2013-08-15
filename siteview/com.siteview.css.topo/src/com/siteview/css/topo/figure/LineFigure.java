@@ -4,12 +4,10 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 
 import org.csstudio.swt.widgets.figureparts.PolarPoint;
-import org.csstudio.swt.widgets.figures.PolylineFigure.ArrowType;
 import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.csstudio.swt.widgets.introspection.PolyWidgetIntrospector;
 import org.csstudio.swt.widgets.util.PointsUtil;
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Polyline;
