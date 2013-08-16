@@ -7,7 +7,7 @@
             category="Monitors"
             description="An Topo. "
             editpart_class="com.siteview.css.topo.editparts.TopologyEdit"
-            icon="icons/bmp_PC_Blue.bmp"
+            icon="icons/PC_Blue.ico"
             model_class="com.siteview.css.topo.models.TopologyModel"
             name="Topology"
             typeId="com.siteview.css.topo.topology">
@@ -16,7 +16,7 @@
             category="Monitors"
             description="An Dumb. "
             editpart_class="com.siteview.css.topo.editparts.DumbEdit"
-            icon="icons/bmp_Hub.bmp"
+            icon="icons/Hub.ico"
             model_class="com.siteview.css.topo.models.DumbModel"
             name="Dumb"
             typeId="com.siteview.css.topo.dumb">
@@ -25,7 +25,7 @@
             category="Monitors"
             description="A Router mode"
             editpart_class="com.siteview.css.topo.editparts.RouterEdit"
-            icon="icons/bmp_Router_Blue.bmp"
+            icon="icons/Router_Blue.ico"
             model_class="com.siteview.css.topo.models.RouterModel"
             name="Router"
             typeId="com.siteview.css.topo.router">
@@ -34,7 +34,7 @@
             category="Monitors"
             description="A Switch Router"
             editpart_class="com.siteview.css.topo.editparts.SwitchRouterEdit"
-            icon="icons/bmp_SwitchRouter_Blue.bmp"
+            icon="icons/SwitchRouter_Blue.ico"
             model_class="com.siteview.css.topo.models.SwitchRouterModel"
             name="Switch Router"
             typeId="com.siteview.css.topo.switchrouter">
@@ -43,7 +43,7 @@
             category="Monitors"
             description="A Switch"
             editpart_class="com.siteview.css.topo.editparts.SwitchEdit"
-            icon="icons/bmp_Switch_Blue.bmp"
+            icon="icons/Switch_Blue.ico"
             model_class="com.siteview.css.topo.models.SwitchModel"
             name="Switch"
             typeId="com.siteview.css.topo.switch">

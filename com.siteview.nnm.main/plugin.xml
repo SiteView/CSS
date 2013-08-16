@@ -36,7 +36,7 @@
          <view
                relationship="left"
                minimized="false"
-               id="com.siteview.nnm.main.view"
+               id="com.siteview.nnm.main.treeview"
                standalone="true"
                relative="org.eclipse.ui.editorss">
          </view>

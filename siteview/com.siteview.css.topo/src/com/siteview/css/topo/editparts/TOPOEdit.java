@@ -12,11 +12,9 @@ import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
 import org.csstudio.opibuilder.widgets.model.PolyLineModel;
-import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -74,13 +72,7 @@ public class TOPOEdit extends OPIEditor {
 	protected void createGraphicalViewer(Composite parent) {
 		super.createGraphicalViewer(parent);
 		DisplayModel displayModel = getDisplayModel();
-
-		// tree layout
-		// TreeLayout treeLayout = new TreeLayout();
-		// treeLayout.set_LayoutMode(TreeLayoutMode.Radial);
-		// treeLayout.set_AspectRatio(1);
-		// treeLayout.set_FirstCircleEvenlySpacing(true);
-
+		
 		// force layout
 		ForceDirectedLayout forceLayout = new ForceDirectedLayout();
 		forceLayout.SetLayoutReport(new ForceDirectedLayoutReport());
@@ -91,9 +83,6 @@ public class TOPOEdit extends OPIEditor {
 		
 		for (Entry<String, IDBody> entry : GlobalData.deviceList.entrySet()) {
 			String ip = entry.getKey();// 获取设备的所有ip包括亚设备的信息
-			// System.out.println(ip+"```````````````````````"+entry.getValue());
-			// entry.getValue();
-			
 			// 判断设备类型
 			if (entry.getValue().getDevType().equals(CommonDef.OTHER)) {//亚设备-
 				container.addNode(new TopoNode(container, ip, ModelFactory.getWidgetModel(ModelFactory.DUMBMODEL,new Pair<String, IDBody>(entry.getKey(), entry.getValue())), entry
@@ -138,11 +127,6 @@ public class TOPOEdit extends OPIEditor {
 					tmpWidth = object.getMode().getWidth();
 					int tmpHeight = object.getMode().getHeight();
 					String id = object.getId();
-					// int centerX = (int)(tmpX + tmpWidth/2);
-					// int centerY = (int)(tmpY + tmpHeight/2);
-					// Point centerP = new Point(centerX, centerY);
-					// System.out.println("模型："+object.getId()+"x = " +
-					// tmpX+"-----"+"y = "+tmpY);
 					LabelModel labelModel = new LabelModel();
 					labelModel.setText(id);
 					labelModel.setForegroundColor(new RGB(255, 0, 255));
@@ -158,6 +142,14 @@ public class TOPOEdit extends OPIEditor {
 				}
 			}
 		}
+		DumbModel dumb1 = new DumbModel();
+		DumbModel dumb2 = new DumbModel();
+		ConnectionModel cModel = new ConnectionModel(displayModel);
+		cModel.connect(dumb1, dumb1.getName(), dumb2, dumb2.getName());
+		PolyLineModel model = new PolyLineModel();
+		model.addConnection(cModel);
+		model.setParent(displayModel);
+		displayModel.addChild(model);
 		//保存widget
 		this.doSave(null);
 	}

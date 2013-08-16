@@ -1,11 +1,9 @@
 package com.siteview.css.topo.figure;
 
-import java.net.URL;
 import java.util.List;
 
 import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
@@ -17,12 +15,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Pattern;
-import org.osgi.framework.Bundle;
 
 import com.siteview.css.topo.factory.ImageFactory;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
