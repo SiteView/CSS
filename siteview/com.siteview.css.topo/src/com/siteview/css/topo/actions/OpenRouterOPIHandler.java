@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import com.siteview.css.topo.figure.RouterFigure;
+import com.siteview.css.topo.models.RouterModel;
 import com.siteview.itsm.nnm.scan.core.snmp.constants.CommonDef;
 import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
@@ -59,16 +61,18 @@ public class OpenRouterOPIHandler extends AbstractHandler{
 		
 		//如果设备类型不是 路由器类型，给出提示信息
 		if (!type.equals(CommonDef.ROUTER)&&!type.equals(CommonDef.ROUTE_SWITCH)&&!type.equals(CommonDef.SWITCH)) {
-			showError("获取路由器设备出错", "面板图查看只支持路由器设备查看！");
+			showError("获取路由器设备出错", "面板图查看只支持路由器设备类型查看！");
 			return null;
 		}
 		
 		String sysOid = device.getSysOid();
+		RouterModel.SYSOID = sysOid;
+		RouterFigure.SYSOID = sysOid;
 		
-		String filepath = IoUtils.getPlatformPath()+"opi";
-		
-		File filename = new File(filepath + File.separator + sysOid + ".opi");
-		
+//		String filepath = IoUtils.getPlatformPath()+"opi";
+//		File filename = new File(filepath + File.separator + sysOid + ".opi");
+		String filepath = IoUtils.getPlatformPath()+"opi" + File.separator + sysOid + ".opi";
+		File filename = new File(filepath);
 		//如果该路由器设备没有对应的OPI文件，给出提示信息
 		if (!filename.exists()) {
 			showError("获取设备面板图失败", "没有找到匹配的设备面板图,该设备不支持显示！");
@@ -78,7 +82,10 @@ public class OpenRouterOPIHandler extends AbstractHandler{
 		IPath probeOPIPath = PreferencesHelper.getProbeOPIPath();
 		if(probeOPIPath == null || probeOPIPath.isEmpty()){
 			//1.3.6.1.4.1.9.1.516.opi
-			probeOPIPath = ResourceUtil.getPathFromString("platform:/plugin/com.siteview.css.topo/opi/"+sysOid+".opi");
+//			IoUtils.getProductPath() + opi + File.separator + sysOid +".opi"
+//			probeOPIPath = ResourceUtil.getPathFromString("platform:/plugin/com.siteview.css.topo/opi/"+sysOid+".opi");
+			probeOPIPath = ResourceUtil.getPathFromString(filepath);
+		
 		}
 		
 		LinkedHashMap<String, String> macros = new LinkedHashMap<String, String>();
@@ -92,7 +99,7 @@ public class OpenRouterOPIHandler extends AbstractHandler{
 		}
 
 		MacrosInput macrosInput = new MacrosInput(macros, true);
-
+		
 		// Errors in here will show in dialog and error log
 		RunModeService.runOPIInView(probeOPIPath, null,macrosInput, Position.DETACHED);
 		
@@ -110,5 +117,5 @@ public class OpenRouterOPIHandler extends AbstractHandler{
 		dialog.setText(title);
 		dialog.open();
 	}
-	
+
 }

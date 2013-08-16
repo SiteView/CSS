@@ -1,5 +1,6 @@
 package com.siteview.css.topo.figure;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import org.osgi.framework.Bundle;
 import com.siteview.css.topo.pojo.DataFromVisio;
 import com.siteview.css.topo.pojo.Lamp;
 import com.siteview.css.topo.pojo.Port;
+import com.siteview.itsm.nnm.scan.core.snmp.util.IoUtils;
 
 public class RouterFigure extends Figure {
 	private Color thumbColor = WHITE_COLOR;
@@ -43,7 +45,7 @@ public class RouterFigure extends Figure {
 	private final static Color light_creen = new Color(null,29,220,1);
 	private final static Color COLOR_GREEN =CustomMediaFactory.getInstance()
 			.getColor(CustomMediaFactory.COLOR_GREEN);
-	
+	public static String SYSOID = "";
 	
 	private XYLayout layout;
 	Dimension labelSize;
@@ -69,7 +71,12 @@ public class RouterFigure extends Figure {
 
 		DataFromVisio dfv = new DataFromVisio();
 
-		String filename = "D://panel//1.3.6.1.4.1.3320.1.116.0.vdx";
+		//String filename = "D://panel//1.3.6.1.4.1.3320.1.116.0.vdx";
+		String filename = IoUtils.getProductPath() + "panel" + File.separator + SYSOID +".vdx";
+//		String filename = IoUtils.getPlatformPath()+"panel/" + SYSOID + ".vdx";	
+		if (!new File(filename).exists()) {
+			throw new RuntimeException("visio文件不存在！");
+		}
 		dfv.getCoordinatesForXML(filename);
 		ports = dfv.ports;
 		lamps = dfv.lamps;
@@ -143,7 +150,7 @@ public class RouterFigure extends Figure {
 
 		//当前项目中获取image的实体类 方法
 		final Bundle bundle = Platform.getBundle("com.siteview.css.topo");
-		final URL url = bundle.getEntry("icons/1.3.6.1.4.1.3320.1.116.0.png");
+		final URL url = bundle.getEntry("icons/" + SYSOID + ".png");
 		Image image = ImageDescriptor.createFromURL(url).createImage();
 		System.out.println(image.getImageData().width + " "
 				+ image.getImageData().height);
