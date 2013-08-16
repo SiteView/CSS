@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            visible="true"
+            label="Sample Action Set"
+            id="com.siteview.itsm.nnm.widgets.actionSet">
+         <menu
+               label="Sample &amp;Menu"
+               id="sampleMenu">
+            <separator
+                  name="sampleGroup">
+            </separator>
+         </menu>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.csstudio.opibuilder.widget">
+      <widget
+            category="Monitors"
+            editpart_class="com.siteview.itsm.nnm.widgets.editpart.TopologyEdit"
+            icon="icons/png_PC_Blue.png"
+            model_class="com.siteview.itsm.nnm.widgets.model.TopologyModel"
+            name="PC"
+            typeId="com.siteview.css.topo.topology">
+      </widget>
+      <widget
+            category="Monitors"
+            editpart_class="com.siteview.itsm.nnm.widgets.editpart.RouterEdit"
+            icon="icons/png_Router_Blue.png"
+            model_class="com.siteview.itsm.nnm.widgets.model.RouterModel"
+            name="Router"
+            typeId="com.siteview.css.topo.router">
+      </widget>
+      <widget
+            category="Monitors"
+            editpart_class="com.siteview.itsm.nnm.widgets.editpart.SwitchEdit"
+            icon="icons/Switch_Green.ico"
+            model_class="com.siteview.itsm.nnm.widgets.model.SwitchModel"
+            name="Switch"
+            typeId="com.siteview.css.topo.switch">
+      </widget>
+      <widget
+            category="Monitors"
+            editpart_class="com.siteview.itsm.nnm.widgets.editpart.SwitchRouterEdit"
+            icon="icons/png_Router_Blue.png"
+            model_class="com.siteview.itsm.nnm.widgets.model.SwitchRouterModel"
+            name="SwitchRouter"
+            typeId="com.siteview.css.topo.switchrouter">
+      </widget>
+      <widget
+            editpart_class="com.siteview.itsm.nnm.widgets.editpart.DumbEdit"
+            icon="icons/Hub.ico"
+            model_class="com.siteview.itsm.nnm.widgets.model.DumbModel"
+            name="Hub"
+            typeId="com.siteview.css.topo.dumb">
+      </widget>
+   </extension>
+
+</plugin>
