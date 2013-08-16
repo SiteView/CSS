@@ -14,7 +14,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.siteview.css.topo.models.TopologyModel;
+import com.siteview.itsm.nnm.widgets.model.TopologyModel;
+
 
 public class ReadAndCreate {
 	/** ���궨λ */

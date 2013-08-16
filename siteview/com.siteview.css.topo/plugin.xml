@@ -1,54 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-	<extension
-         point="org.csstudio.opibuilder.widget">
-      <widget
-            category="Monitors"
-            description="An Topo. "
-            editpart_class="com.siteview.css.topo.editparts.TopologyEdit"
-            icon="icons/PC_Blue.ico"
-            model_class="com.siteview.css.topo.models.TopologyModel"
-            name="Topology"
-            typeId="com.siteview.css.topo.topology">
-      </widget>
-      <widget
-            category="Monitors"
-            description="An Dumb. "
-            editpart_class="com.siteview.css.topo.editparts.DumbEdit"
-            icon="icons/Hub.ico"
-            model_class="com.siteview.css.topo.models.DumbModel"
-            name="Dumb"
-            typeId="com.siteview.css.topo.dumb">
-      </widget>
-      <widget
-            category="Monitors"
-            description="A Router mode"
-            editpart_class="com.siteview.css.topo.editparts.RouterEdit"
-            icon="icons/Router_Blue.ico"
-            model_class="com.siteview.css.topo.models.RouterModel"
-            name="Router"
-            typeId="com.siteview.css.topo.router">
-      </widget>
-      <widget
-            category="Monitors"
-            description="A Switch Router"
-            editpart_class="com.siteview.css.topo.editparts.SwitchRouterEdit"
-            icon="icons/SwitchRouter_Blue.ico"
-            model_class="com.siteview.css.topo.models.SwitchRouterModel"
-            name="Switch Router"
-            typeId="com.siteview.css.topo.switchrouter">
-      </widget>
-      <widget
-            category="Monitors"
-            description="A Switch"
-            editpart_class="com.siteview.css.topo.editparts.SwitchEdit"
-            icon="icons/Switch_Blue.ico"
-            model_class="com.siteview.css.topo.models.SwitchModel"
-            name="Switch"
-            typeId="com.siteview.css.topo.switch">
-      </widget>
-	</extension>
  <extension
        point="org.csstudio.opibuilder.graphicalFeedbackFactory">
     <graphicalFeedbackFactory

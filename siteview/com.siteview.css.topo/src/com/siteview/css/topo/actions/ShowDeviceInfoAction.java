@@ -3,14 +3,10 @@ package com.siteview.css.topo.actions;
 import org.csstudio.opibuilder.actions.AbstractWidgetTargetAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.ui.IActionDelegate;
-import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 
-import com.siteview.css.topo.editparts.TopologyEdit;
+import com.siteview.itsm.nnm.widgets.editpart.TopologyEdit;
+
 
 public class ShowDeviceInfoAction extends AbstractWidgetTargetAction {
 

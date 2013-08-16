@@ -2,16 +2,16 @@ package com.siteview.css.topo.editparts;
 
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 
-import com.siteview.css.topo.models.DeviceModel;
-import com.siteview.css.topo.models.DumbModel;
-import com.siteview.css.topo.models.RouterModel;
-import com.siteview.css.topo.models.SwitchModel;
-import com.siteview.css.topo.models.SwitchRouterModel;
-import com.siteview.css.topo.models.TopologyModel;
 import com.siteview.itsm.nnm.scan.core.snmp.model.Pair;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
 import com.siteview.itsm.nnm.scan.core.snmp.util.ScanUtils;
 import com.siteview.itsm.nnm.scan.core.snmp.util.Utils;
+import com.siteview.itsm.nnm.widgets.model.DeviceModel;
+import com.siteview.itsm.nnm.widgets.model.DumbModel;
+import com.siteview.itsm.nnm.widgets.model.RouterModel;
+import com.siteview.itsm.nnm.widgets.model.SwitchModel;
+import com.siteview.itsm.nnm.widgets.model.SwitchRouterModel;
+import com.siteview.itsm.nnm.widgets.model.TopologyModel;
 
 
 public class ModelFactory {

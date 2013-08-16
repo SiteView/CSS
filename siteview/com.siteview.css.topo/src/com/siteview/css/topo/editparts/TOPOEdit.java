@@ -8,13 +8,13 @@ import java.util.Map.Entry;
 
 import org.csstudio.opibuilder.editor.OPIEditor;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
-import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
-import org.csstudio.opibuilder.widgets.model.PolyLineModel;
 import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.filesystem.URIUtil;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -29,7 +29,6 @@ import ILOG.Diagrammer.Link;
 import ILOG.Diagrammer.GraphLayout.ForceDirectedLayout;
 import ILOG.Diagrammer.GraphLayout.ForceDirectedLayoutReport;
 
-import com.siteview.css.topo.models.DumbModel;
 import com.siteview.itsm.nnm.scan.core.snmp.common.ScanParam;
 import com.siteview.itsm.nnm.scan.core.snmp.constants.CommonDef;
 import com.siteview.itsm.nnm.scan.core.snmp.data.GlobalData;
@@ -39,7 +38,15 @@ import com.siteview.itsm.nnm.scan.core.snmp.pojo.Edge;
 import com.siteview.itsm.nnm.scan.core.snmp.pojo.IDBody;
 
 public class TOPOEdit extends OPIEditor {
-	
+	/**
+	 * The source widget UID
+	 */
+	public static final String PROP_SRC_WUID = "src_wuid"; //$NON-NLS-1$
+
+	/**
+	 * The target widget UID
+	 */
+	public static final String PROP_TGT_WUID = "tgt_wuid"; //$NON-NLS-1$
 	final String TOP_LEFT = "TOP_LEFT";
 	final String TOP = "TOP";
 	final String TOP_RIGHT = "TOP_RIGHT";
@@ -48,7 +55,8 @@ public class TOPOEdit extends OPIEditor {
 	final String BOTTOM_LEFT = "BOTTOM_LEFT";
 	final String BOTTOM = "BOTTOM";
 	final String BOTTOM_RIGHT = "BOTTOM_RIGHT";
-
+	final private static String PVFACTORY_EXT_ID =
+	        "org.csstudio.utility.pv.pvfactory";
 	public static final String PROP_IMAGE_FILE = "image_file";
 	public static final String PROP_AUTOSIZE = "auto_size";
 	int nnodes;
@@ -67,12 +75,15 @@ public class TOPOEdit extends OPIEditor {
 			Map<String, Map<String, String>> specialoidlist, ScanParam param) {
 	}
 
-	
+	DisplayModel displayModel;
 	@SuppressWarnings("unused")
 	protected void createGraphicalViewer(Composite parent) {
 		super.createGraphicalViewer(parent);
-		DisplayModel displayModel = getDisplayModel();
+		displayModel = getDisplayModel();
 		
+		IConfigurationElement[] configs = Platform.getExtensionRegistry()
+		            .getConfigurationElementsFor(PVFACTORY_EXT_ID);
+
 		// force layout
 		ForceDirectedLayout forceLayout = new ForceDirectedLayout();
 		forceLayout.SetLayoutReport(new ForceDirectedLayoutReport());
@@ -142,14 +153,70 @@ public class TOPOEdit extends OPIEditor {
 				}
 			}
 		}
-		DumbModel dumb1 = new DumbModel();
-		DumbModel dumb2 = new DumbModel();
-		ConnectionModel cModel = new ConnectionModel(displayModel);
-		cModel.connect(dumb1, dumb1.getName(), dumb2, dumb2.getName());
-		PolyLineModel model = new PolyLineModel();
-		model.addConnection(cModel);
-		model.setParent(displayModel);
-		displayModel.addChild(model);
+//		final DumbModel dumb1 = new DumbModel();
+//		dumb1.setLocation(0, 0);
+//		
+//		final DumbModel dumb2 = new DumbModel();
+//		dumb2.setLocation(100,100);
+//		
+//		ConnectionModel cModel = new ConnectionModel(displayModel);
+//		cModel.connect(dumb1, dumb1.getName(), dumb2, dumb2.getName());
+//		PolyLineModel model = new PolyLineModel();
+//		PointList points = new PointList();
+//		points.addPoint(dumb1.getLocation());
+//		points.addPoint(dumb2.getLocation());
+//		model.setPoints(points, true);
+//		model.addConnection(cModel);
+//		model.setParent(displayModel);
+//		AbstractWidgetProperty srcWUIDProp = new StringProperty(PROP_SRC_WUID,
+//				"Source WUID", WidgetPropertyCategory.Display, "");
+//		model.addProperty(srcWUIDProp);
+//		srcWUIDProp.addPropertyChangeListener(new PropertyChangeListener() {			
+//			@Override
+//			public void propertyChange(PropertyChangeEvent evt) {
+//				if(displayModel == null)
+//					return;
+//				String wuid = evt.getNewValue().toString();
+//				String srcWuid = evt.getOldValue().toString();
+//				AbstractWidgetModel w = displayModel.getWidgetFromWUID(wuid);
+//				AbstractWidgetModel s = displayModel.getWidgetFromWUID(wuid);
+//				PointList pl = new PointList();
+//				if(w != null){
+//					pl.addPoint(w.getLocation());
+//					pl.addPoint(dumb2.getLocation());
+//				}
+//				else{
+//					pl.addPoint(dumb1.getLocation());
+//					pl.addPoint(dumb2.getLocation());
+//				}
+//			}
+//		});
+//		AbstractWidgetProperty tgtWUIDProp = new StringProperty(PROP_TGT_WUID,
+//				"Target WUID", WidgetPropertyCategory.Display, "");
+//		model.addProperty(tgtWUIDProp);
+//		tgtWUIDProp.addPropertyChangeListener(new PropertyChangeListener() {			
+//			@Override
+//			public void propertyChange(PropertyChangeEvent evt) {
+//				if(displayModel == null)
+//					return;
+//				String wuid = evt.getNewValue().toString();
+//				AbstractWidgetModel w = displayModel.getWidgetFromWUID(wuid);
+//				String tarWuid = evt.getOldValue().toString();
+//				AbstractWidgetModel t = displayModel.getWidgetFromWUID(tarWuid);
+//				PointList pl = new PointList();
+//				if(w != null){
+//					pl.addPoint(w.getLocation());
+//					pl.addPoint(dumb2.getLocation());
+//				}
+//				else{
+//					pl.addPoint(dumb1.getLocation());
+//					pl.addPoint(dumb2.getLocation());
+//				}
+//			}
+//		});		
+//		displayModel.addChild(model);
+//		displayModel.addChild(dumb1);
+//		displayModel.addChild(dumb2);
 		//保存widget
 		this.doSave(null);
 	}
