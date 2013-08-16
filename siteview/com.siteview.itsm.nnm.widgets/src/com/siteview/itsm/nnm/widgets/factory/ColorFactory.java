@@ -11,4 +11,6 @@ public class ColorFactory {
 			CustomMediaFactory.COLOR_GRAY);
 	public final static Color GREEN_COLOR = CustomMediaFactory.getInstance().getColor(
 			CustomMediaFactory.COLOR_GREEN);
+	public final static Color RED_COLOR = CustomMediaFactory.getInstance().getColor(
+			CustomMediaFactory.COLOR_GREEN);
 }

@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Widgets
+Bundle-SymbolicName: com.siteview.itsm.nnm.widgets; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: SITEVIEW
+Require-Bundle: org.eclipse.ui,
+ org.csstudio.opibuilder;bundle-version="3.2.0",
+ com.siteview.itsm.nnm.scan.core;bundle-version="1.0.0",
+ org.csstudio.swt.widgets;bundle-version="2.0.2"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: com.siteview.itsm.nnm.widgets.actions,
+ com.siteview.itsm.nnm.widgets.editpart,
+ com.siteview.itsm.nnm.widgets.factory,
+ com.siteview.itsm.nnm.widgets.figure,
+ com.siteview.itsm.nnm.widgets.model
