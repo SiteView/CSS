@@ -12,6 +12,7 @@ import Siteview.QueryInfoToGet;
 import Siteview.SearchCriteria;
 import Siteview.SiteviewException;
 import Siteview.SiteviewQuery;
+import Siteview.Windows.Forms.ConnectionBroker;
 import Siteview.thread.IPrincipal;
 
 public class BusObSearch {
@@ -39,8 +40,8 @@ public class BusObSearch {
 			
 		}
 		
-		Siteview.thread.Thread.set_CurrentPrincipal(pal);
-		DataTable dt = BusObConnection.getBusObApi().get_BusObService().get_SimpleQueryResolver().ResolveQueryToBusObDataTable(siteviewQuery);
+//		Siteview.thread.Thread.set_CurrentPrincipal(pal);
+		DataTable dt = ConnectionBroker.get_SiteviewApi().get_BusObService().get_SimpleQueryResolver().ResolveQueryToBusObDataTable(siteviewQuery);
 		
 		if(dt == null){
 			return null;

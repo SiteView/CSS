@@ -10,6 +10,11 @@ import org.csstudio.utility.pv.simu.SimulatedPV;
 import org.csstudio.utility.pv.simu.StaticPV;
 import org.csstudio.utility.pv.simu.TextValue;
 import org.csstudio.utility.pv.simu.Value;
+import org.eclipse.swt.widgets.Display;
+
+import Siteview.Api.ISiteviewApi;
+import Siteview.Windows.Forms.ConnectionBroker;
+import Siteview.thread.IPrincipal;
 
 public class BusObPVSearch implements IPVFactory {
 
@@ -21,7 +26,10 @@ public class BusObPVSearch implements IPVFactory {
 	public PV createPV(String name) {
 		try {
 			if(name.trim().length()!=0){
-				MonitorValue value = new MonitorValue(name);
+				Display dis=Display.getDefault();
+				ISiteviewApi siteviewapi=ConnectionBroker.get_SiteviewApi();
+				IPrincipal iprincipal = Siteview.thread.Thread.get_CurrentPrincipal();
+				GetApi value = new GetApi(name,dis,siteviewapi,iprincipal);
 				values.put(name,value);
 				return new SimulatedPV(PREFIX, (DynamicValue) value);
 			}

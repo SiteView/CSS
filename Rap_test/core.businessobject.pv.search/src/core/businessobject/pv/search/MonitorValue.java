@@ -40,7 +40,7 @@ public class MonitorValue extends DynamicValue{
 	protected void update() {
 		try {
 			final ISeverity severity = ValueFactory.createOKSeverity();
-			Map<Class<?>,Object> valueMap = busobsearch.searchBusOb(busobname, findfieldname, expressionMap,BusObConnection.getPrincipal());
+			Map<Class<?>,Object> valueMap = busobsearch.searchBusOb(busobname, findfieldname, expressionMap,null);
 			if(valueMap!=null){
 				Class<?> currentClass = valueMap.keySet().iterator().next();
 				if(currentClass!=null){
