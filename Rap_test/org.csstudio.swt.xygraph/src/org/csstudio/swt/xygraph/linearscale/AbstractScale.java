@@ -301,7 +301,7 @@ public abstract class AbstractScale extends Figure{
     		return;
     	this.formatPattern = formatPattern;
     	if(isDateEnabled())
-    		formatPatternSize = TextUtilities.INSTANCE.getTextExtents(formatPattern, getFont()).width;
+    		formatPatternSize = TextUtilities.INSTANCE().getTextExtents(formatPattern, getFont()).width;
     }
 
 	/**

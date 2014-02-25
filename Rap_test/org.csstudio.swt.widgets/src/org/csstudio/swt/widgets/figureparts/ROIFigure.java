@@ -315,7 +315,7 @@ public class ROIFigure extends Figure {
 				public boolean containsPoint(int x, int y) {
 					if (!super.containsPoint(x, y))
 						return false;
-					return !Rectangle.SINGLETON.setBounds(getBounds())
+					return !Rectangle.getSINGLETON().setBounds(getBounds())
 							.shrink(3, 3).contains(x, y);
 				}
 			};
@@ -392,7 +392,7 @@ public class ROIFigure extends Figure {
 			if(roiInfoProvider!=null){
 				String text = roiInfoProvider.getROIInfo(roiDataBounds.x, roiDataBounds.y, 
 						roiDataBounds.width, roiDataBounds.height);
-				Dimension size = TextUtilities.INSTANCE.getTextExtents(text, getFont());
+				Dimension size = TextUtilities.INSTANCE().getTextExtents(text, getFont());
 				graphics.pushState();
 				graphics.translate(getLocation());
 				graphics.fillRectangle(roiGeoBounds.x, roiGeoBounds.y - size.height, size.width, size.height);

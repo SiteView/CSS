@@ -21,10 +21,9 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.rwt.RWT;
-import org.eclipse.rwt.internal.widgets.JSExecutor;
-import org.eclipse.rwt.widgets.ExternalBrowser;
-import org.eclipse.swt.SWT;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
+import org.eclipse.rap.rwt.client.service.UrlLauncher;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -97,9 +96,20 @@ public class SingleSourceHelperImpl extends SingleSourceHelper {
     	String url = request.getRequestURL().toString();
     	//to allow multilple browser instances, session id is not allowed
     	if(url.contains(";jsessionid")) //$NON-NLS-1$
-    		url = url.substring(0, url.indexOf(";jsessionid"));//$NON-NLS-1$			    	
-    	ExternalBrowser.open("_blank", url+"?opi=" + path.toString(), SWT.None);
+    		url = url.substring(0, url.indexOf(";jsessionid"));//$NON-NLS-1$
     	
+    	/*
+		 * rap<1.5 method
+		 * ExternalBrowser.open("_blank", url+"?opi=" + path.toString(), SWT.None);
+		 */
+    	
+    	/*
+    	 * rap>1.5 method
+    	 */
+    	UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
+		if(launcher!=null){
+			launcher.openURL(url+"?opi=" + path.toString());
+		}
 	}
 
 	@Override
@@ -116,11 +126,15 @@ public class SingleSourceHelperImpl extends SingleSourceHelper {
 		if(!ResourceUtil.isURL(absolutePath.toString())){
 			MessageDialog.openWarning(Display.getCurrent().getActiveShell(), "Not support", 
 					"The sound file path must be an URL!");
-			return;		}
+			return;		
+		}
+		JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
 			
 		String code = "document.getElementById(\"dummy\").innerHTML=\"<embed src=\\\""+ //$NON-NLS-1$
 				absolutePath + "\\\" hidden=\\\"true\\\" autostart=\\\"true\\\" loop=\\\"false\\\" />\""; //$NON-NLS-1$
-		JSExecutor.executeJS(code);
+		if(executor!=null){
+			executor.execute(code);
+		}
 	}
 
 	@Override
@@ -169,7 +183,18 @@ public class SingleSourceHelperImpl extends SingleSourceHelper {
 
 	@Override
 	protected void iRapOpenWebPage(String hyperLink) {
-		ExternalBrowser.open("_blank", hyperLink, SWT.NONE);
+		/*
+		 * rap<1.5 method
+		 * ExternalBrowser.open("_blank", hyperLink, SWT.NONE);
+		 */
+		
+		/*
+		 * rap>1.5 method
+		 */
+		UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
+		if(launcher!=null){
+			launcher.openURL(hyperLink);
+		}
 	}
 
 }

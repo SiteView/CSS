@@ -11,8 +11,8 @@ import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.rwt.RWT;
-import org.eclipse.rwt.lifecycle.UICallBack;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.widgets.Display;
 
 public class DisplayManager {
@@ -30,6 +30,8 @@ public class DisplayManager {
 	private static long uiCallbackID = 0;
 
 	private static long displayCounter=0;
+	
+	private ServerPushSession pushsession = new ServerPushSession();
 	
 	@SuppressWarnings("nls")
 	private DisplayManager() {
@@ -106,12 +108,13 @@ public class DisplayManager {
 		
 		if(enableCallback){
 			display.asyncExec(new Runnable() {
-				
 				@Override
 				public void run() {
-					String callbackID = generateNewUICallbackID();
-					UICallBack.deactivate(callbackID);
-					UICallBack.activate(callbackID);				
+//					String callbackID = generateNewUICallbackID();
+//					UICallBack.deactivate(callbackID);
+//					UICallBack.activate(callbackID);	
+					pushsession.stop();
+					pushsession.start();
 				}
 			});		
 		}

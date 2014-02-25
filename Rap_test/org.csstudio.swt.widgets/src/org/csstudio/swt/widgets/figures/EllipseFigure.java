@@ -215,7 +215,7 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
 	    int inset1 = (int)Math.floor(lineInset);
 	    int inset2 = (int)Math.ceil(lineInset);
 	
-	    Rectangle r = Rectangle.SINGLETON.setBounds(getClientArea());
+	    Rectangle r = Rectangle.getSINGLETON().setBounds(getClientArea());
 	    r.x += inset1 ; 
 	    r.y += inset1; 
 	    r.width -= inset1 + inset2;

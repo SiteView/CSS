@@ -13,10 +13,8 @@
          point="org.eclipse.rap.ui.branding">
       <branding
             body="html/body.html"
-            defaultEntrypointId="core.businessobject.pv.search.ServerConfig"
             favicon="html/Core.ico"
             id="core.businessobject.pv.search.ServerConfig.branding"
-            servletName="connectionconfig"
             themeId="org.eclipse.rap.design.example.business.theme"
             title="连接配置">
       </branding>
@@ -24,9 +22,11 @@
    <extension
          point="org.eclipse.rap.ui.entrypoint">
       <entrypoint
+            brandingId="core.businessobject.pv.search.ServerConfig.branding"
             class="core.businessobject.pv.search.ServerConfig"
             id="core.businessobject.pv.search.ServerConfig"
-            parameter="connectionconfig">
+            parameter="pvlinkconfig"
+            path="/pvlinkconfig">
       </entrypoint>
    </extension>
    <extension

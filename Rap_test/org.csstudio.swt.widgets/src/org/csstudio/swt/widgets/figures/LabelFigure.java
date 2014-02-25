@@ -89,7 +89,7 @@ public class LabelFigure extends Figure implements Introspectable{
 	}
 
 	protected Dimension calculateTextSize() {
-		return TextUtilities.INSTANCE.getTextExtents(text, getFont());
+		return TextUtilities.INSTANCE().getTextExtents(text, getFont());
 	}
 	
 	protected void clearLocation(){

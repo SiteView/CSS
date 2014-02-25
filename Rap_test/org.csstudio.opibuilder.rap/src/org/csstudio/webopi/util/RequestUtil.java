@@ -17,7 +17,7 @@ import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.webopi.WebOPIConstants;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.rwt.RWT;
+import org.eclipse.rap.rwt.RWT;
 
 /**
  * Utility for request related functions.

@@ -12,7 +12,6 @@ import org.csstudio.utility.pv.simu.DynamicValue;
 import org.dom4j.Element;
 import org.eclipse.swt.widgets.Display;
 
-import SiteView.ecc.tools.FileTools;
 import Siteview.Convert;
 import Siteview.Operators;
 import Siteview.QueryInfoToGet;

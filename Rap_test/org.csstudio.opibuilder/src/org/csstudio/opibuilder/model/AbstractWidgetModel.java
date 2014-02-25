@@ -79,8 +79,8 @@ import org.eclipse.ui.views.properties.IPropertySource;
  * @author Xihui Chen
  *
  */
-public abstract class AbstractWidgetModel implements IAdaptable,
-		IPropertySource {
+public abstract class AbstractWidgetModel implements IAdaptable,IPropertySource 
+{
 	
 	public static final String VERSION = "1.0";
 	

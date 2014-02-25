@@ -96,7 +96,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
 	}
 
 	protected Dimension calculateTextSize() {
-		return TextUtilities.INSTANCE.getTextExtents(text, getFont());
+		return TextUtilities.INSTANCE().getTextExtents(text, getFont());
 	}
 	
 	protected void clearLocationSize(){		

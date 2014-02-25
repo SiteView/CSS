@@ -1337,7 +1337,7 @@ public class ConnectionManager extends Dialog {
 		
 	}
 
-	private void ShowConnectionDef(ConnectionDef cdf,Object lst,int oldIndex) throws ArgumentException {
+	private void ShowConnectionDef(ConnectionDef cdf,Object lst,int oldIndex) throws SiteviewException {
 		
 		try {
 			getlogininfo();

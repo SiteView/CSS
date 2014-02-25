@@ -106,7 +106,7 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
 			return;
 		}
 		Rectangle textArea = getClientArea();		
-		Dimension textSize = TextUtilities.INSTANCE.getTextExtents(
+		Dimension textSize = TextUtilities.INSTANCE().getTextExtents(
 				boolLabel.getText(), getFont());
 			int x=0;
 			if(textArea.width > textSize.width){				

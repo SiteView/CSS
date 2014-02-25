@@ -531,7 +531,7 @@ public abstract class CommonMultiSymbolFigure extends Figure {
 			return;
 		}
 		Rectangle textArea = getClientArea();
-		Dimension textSize = TextUtilities.INSTANCE.getTextExtents(
+		Dimension textSize = TextUtilities.INSTANCE().getTextExtents(
 				label.getText(), getFont());
 		int x = 0;
 		if (textArea.width > textSize.width) {

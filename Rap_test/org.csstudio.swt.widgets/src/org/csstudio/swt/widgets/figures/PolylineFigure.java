@@ -138,7 +138,7 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
 	
 	private int arrowLineLength = 30;
 	
-	private static final Rectangle LINEBOUNDS = Rectangle.SINGLETON;
+	private static final Rectangle LINEBOUNDS = Rectangle.getSINGLETON();
 	/**
 	 * Constructor.
 	 */

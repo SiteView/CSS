@@ -29,6 +29,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.SharedMessages;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
@@ -131,7 +132,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
 							return;
 						if (size.x * size.y > 0)
 							((ScalableFreeformRootEditPart)getRoot()).getZoomManager().setZoomAsText(
-									ZoomManager.FIT_ALL);
+									SharedMessages.getFitAllAction_Label());
 						oldSize = size;
 
 					}

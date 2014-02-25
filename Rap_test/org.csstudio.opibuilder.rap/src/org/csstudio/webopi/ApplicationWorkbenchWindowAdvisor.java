@@ -6,7 +6,7 @@ import org.csstudio.opibuilder.runmode.RunnerInput;
 import org.csstudio.opibuilder.runmode.RunModeService.TargetWindow;
 import org.csstudio.webopi.util.RequestUtil;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.rwt.RWT;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;

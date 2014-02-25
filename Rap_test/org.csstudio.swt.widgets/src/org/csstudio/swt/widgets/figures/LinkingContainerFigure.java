@@ -21,6 +21,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.StackLayout;
+import org.eclipse.gef.SharedMessages;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.swt.widgets.Display;
 
@@ -99,7 +100,7 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
 		zoomManager.setZoom(1.0);
 
 		if (zoomToFitAll) {
-			zoomManager.setZoomAsText(ZoomManager.FIT_ALL);
+			zoomManager.setZoomAsText(SharedMessages.getFitAllAction_Label());
 		}
 	}
 

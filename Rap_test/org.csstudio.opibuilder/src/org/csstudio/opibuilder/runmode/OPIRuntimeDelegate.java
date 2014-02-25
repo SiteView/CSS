@@ -35,6 +35,7 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.SharedMessages;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
@@ -233,9 +234,9 @@ public class OPIRuntimeDelegate implements IAdaptable{
 
 		if (zoomManager != null) {
 			List<String> zoomLevels = new ArrayList<String>(3);
-			zoomLevels.add(ZoomManager.FIT_ALL);
-			zoomLevels.add(ZoomManager.FIT_WIDTH);
-			zoomLevels.add(ZoomManager.FIT_HEIGHT);
+			zoomLevels.add(SharedMessages.getFitAllAction_Label());
+			zoomLevels.add(SharedMessages.getFitWidthAction_Label());
+			zoomLevels.add(SharedMessages.getFitWidthAction_Label());
 			zoomManager.setZoomLevelContributions(zoomLevels);
 
 			zoomManager.setZoomLevels(createZoomLevels());
