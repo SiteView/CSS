@@ -19,7 +19,6 @@ import Siteview.SiteviewException;
 import Siteview.SiteviewQuery;
 import Siteview.Api.BusinessObject;
 import Siteview.Api.ISiteviewApi;
-import Siteview.Windows.Forms.ConnectionBroker;
 import Siteview.thread.IPrincipal;
 
 public class GetApi extends DynamicValue{
@@ -42,12 +41,16 @@ public class GetApi extends DynamicValue{
 	}
 
 	public  String getMonitorLog(String s) throws SiteviewException{
+//		System.out.println("≤È—Øº‡≤‚∆˜»’÷æ-----"+s);
 		String table=s.substring(s.indexOf("//")+1,s.indexOf("?"));
 		String key=s.substring(s.indexOf("?")+1,s.indexOf("="));
 		String value=s.substring(s.indexOf("=")+1,s.indexOf("@"));
 		String colum=s.substring(s.indexOf("@")+1);
-		BusinessObject monitorlog=CreateBo(key, value, table);
-		String returnvalue=monitorlog.GetField(colum).get_NativeValue().toString();
+		BusinessObject monitorlog=CreateBo(key, value, table);//B59D2B8303A746BB9F317DF458E3E388
+//		System.out.println("º‡≤‚∆˜÷µ------------"+monitorlog);
+		String returnvalue="";
+		if(monitorlog!=null)
+			returnvalue=monitorlog.GetField(colum).get_NativeValue().toString();
 		return returnvalue;
 	}
 
