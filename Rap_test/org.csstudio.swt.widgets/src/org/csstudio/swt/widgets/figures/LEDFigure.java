@@ -216,4 +216,9 @@ public class LEDFigure extends AbstractBoolFigure {
 		bulb.setBulbColor(booleanValue ? onColor : offColor);
 		
 	}
+
+	public String getLampID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
