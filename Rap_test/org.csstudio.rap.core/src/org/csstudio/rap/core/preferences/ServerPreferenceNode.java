@@ -8,6 +8,7 @@
 package org.csstudio.rap.core.preferences;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,10 +23,12 @@ import org.csstudio.rap.core.RAPCorePlugin;
 import org.eclipse.core.internal.preferences.Base64;
 import org.eclipse.core.internal.preferences.ImmutableMap;
 import org.eclipse.core.internal.preferences.PrefsMessages;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IPreferenceNodeVisitor;
@@ -416,7 +419,13 @@ public class ServerPreferenceNode implements IEclipsePreferences {
 					
 				//try "user.home"
 					propDir = System.getProperty("user.home");//$NON-NLS-1$
-					properties = loadProperties(new Path(propDir).append(SERVER_PREFERENCE_FILE_NAME).toOSString());
+					String path = new Path(propDir).append(SERVER_PREFERENCE_FILE_NAME).toOSString();
+					if(new File(path).exists()){
+						properties = loadProperties(path);
+					}
+					else{
+						properties = loadProperties(new Path(getPath("org.csstudio.opibuilder")).append("preferences.ini").toOSString());
+					}
 //				}
 
 			}
@@ -427,6 +436,18 @@ public class ServerPreferenceNode implements IEclipsePreferences {
 					"Server Side Preference loading failed.", e);
 		}
 
+	}
+	
+	public static String getPath(String pluginid) {
+		String path = null;
+		try {
+			path = FileLocator.toFileURL(
+					Platform.getBundle(pluginid).getEntry("")).getPath();
+			path = path.substring(path.indexOf("/") + 1, path.length());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return path;
 	}
 
 	private Properties loadProperties(String filename) throws IOException {
