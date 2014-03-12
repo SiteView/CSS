@@ -22,7 +22,7 @@ public class FixedPositionAnchor extends AbstractConnectionAnchor {
 	public enum AnchorPosition{		
 		TOP,	
 		LEFT,
-//		CENTER,
+		CENTER,
 		RIGHT,
 		BOTTOM,
 		TOP_LEFT,
@@ -60,50 +60,71 @@ public class FixedPositionAnchor extends AbstractConnectionAnchor {
 
 	@Override
 	public Point getLocation(Point reference) {
-		Rectangle box = getBox();
-		int x=box.x, y=box.y;
-		switch (anchorPosition) {
-		case BOTTOM:
-		case BOTTOM_LEFT:
-		case BOTTOM_RIGHT:
-			y=box.y + box.height;
-			break;
-//		case CENTER:
-		case LEFT:
-		case RIGHT:
-			y=box.y + box.height/2;
-			break;
-		case TOP:
-		case TOP_LEFT:
-		case TOP_RIGHT:
-			y=box.y;
-			break;
-		default:
-			break;
+		Rectangle r = Rectangle.getSINGLETON();
+		r.setBounds(getBox());
+		r.translate(-1, -1);
+		r.resize(1, 1);
+		getOwner().translateToAbsolute(r);
+		float centerX = r.x + 0.5F * r.width;
+		float centerY = r.y + 0.5F * r.height;
+		if ((r.isEmpty()) || reference ==null ||
+				( (reference.x == (int)centerX) && (reference.y == (int)centerY))) {
+			return new Point((int)centerX, (int)centerY);
 		}
-		
-		switch (anchorPosition) {
-		case LEFT:
-		case BOTTOM_LEFT:
-		case TOP_LEFT:
-			x=box.x;
-			break;
+		float dx = reference.x - centerX;
+		float dy = reference.y - centerY;
+		float scale = 0.5F / Math.max(Math.abs(dx) / r.width, Math.abs(dy) / 
+		r.height);
+		dx *= scale;
+		dy *= scale;
+		centerX += dx;
+		centerY += dy;
+		return new Point(Math.round(centerX), Math.round(centerY));
+//		Rectangle box = getBox();
+//		int x=box.x, y=box.y;
+//		switch (anchorPosition) {
+//		case BOTTOM:
+//		case BOTTOM_LEFT:
+//		case BOTTOM_RIGHT:
+//			y=box.y + box.height;
+//			break;
 //		case CENTER:
-		case TOP:
-		case BOTTOM:
-			x=box.x + box.width/2;
-			break;
-		case BOTTOM_RIGHT:
-		case RIGHT:
-		case TOP_RIGHT:
-			x=box.x + box.width;
-			break;
-		default:
-			break;
-		}
-		Point p= new Point(x, y);
-		getOwner().translateToAbsolute(p);
-		return p;
+//			
+//		case LEFT:
+//		case RIGHT:
+//			y=box.y + box.height/2;
+//			break;
+//		case TOP:
+//		case TOP_LEFT:
+//		case TOP_RIGHT:
+//			y=box.y;
+//			break;
+//		default:
+//			break;
+//		}
+//		
+//		switch (anchorPosition) {
+//		case LEFT:
+//		case BOTTOM_LEFT:
+//		case TOP_LEFT:
+//			x=box.x;
+//			break;
+//		case CENTER:
+//		case TOP:
+//		case BOTTOM:
+//			x=box.x + box.width/2;
+//			break;
+//		case BOTTOM_RIGHT:
+//		case RIGHT:
+//		case TOP_RIGHT:
+//			x=box.x + box.width;
+//			break;
+//		default:
+//			break;
+//		}
+//		Point p= new Point(x, y);
+//		getOwner().translateToAbsolute(p);
+//		return p;
 	}
 
 	/**

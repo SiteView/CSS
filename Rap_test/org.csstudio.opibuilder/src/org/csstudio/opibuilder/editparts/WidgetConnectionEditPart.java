@@ -16,9 +16,12 @@ import org.csstudio.opibuilder.editpolicies.ManhattanBendpointEditPolicy;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.util.GUIRefreshThread;
 import org.csstudio.opibuilder.util.OPIColor;
+import org.csstudio.opibuilder.visualparts.TooltipLabel;
 import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
+import org.eclipse.draw2d.MidpointLocator;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PolylineDecoration;
@@ -224,7 +227,17 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
 		updateArrowLength(connection);
 		updateRouter(connection);
 		connection.setAntialias(getWidgetModel().isAntiAlias() ? SWT.ON
-				: SWT.OFF);		
+				: SWT.OFF);	
+		TooltipLabel tooltipLabel = new TooltipLabel(getWidgetModel());
+		connection.setToolTip(tooltipLabel);
+		//如果 是路由设备添加流量数据label
+		if(getWidgetModel().getName().split("-").length == 3){
+			Label label = new Label();
+			int l = getWidgetModel().getName().lastIndexOf("-");
+			String value = getWidgetModel().getName().substring(l);
+			label.setText(value.split("\\:")[1]);
+			connection.add(label, new MidpointLocator(connection, 0));
+		}
 		return connection;
 	}
 
