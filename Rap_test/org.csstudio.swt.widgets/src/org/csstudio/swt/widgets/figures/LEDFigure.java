@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Display;
 public class LEDFigure extends AbstractBoolFigure {
 
 	Bulb bulb; 
+	private String lampID;
 	private final static int OUTLINE_WIDTH = 2;
 	private final static int SQURE_BORDER_WIDTH = 3;
 	private final static Color DARK_GRAY_COLOR = CustomMediaFactory.getInstance().getColor(
@@ -218,7 +219,11 @@ public class LEDFigure extends AbstractBoolFigure {
 	}
 
 	public String getLampID() {
-		// TODO Auto-generated method stub
-		return null;
+		return lampID;
 	}
+
+	public void setLampID(String lampID) {
+		this.lampID = lampID;
+	}
+	
 }

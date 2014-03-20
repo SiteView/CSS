@@ -33,10 +33,11 @@ import org.csstudio.data.values.ValueFactory;
 @SuppressWarnings("nls")
 abstract public class DynamicValue extends Value implements Runnable
 {
+	private volatile boolean run = true;
     /** Defaults */
     private static final int DEFAULT_MIN = -5,
                              DEFAULT_MAX = 5,
-                             DEFAULT_UPDATE = 1000,
+                             DEFAULT_UPDATE = 3000,
                              DEFAULT_STEP = 1,
                              MIN_UPDATE_PERIOD = 10;
 
@@ -160,14 +161,16 @@ abstract public class DynamicValue extends Value implements Runnable
         // Without waiting, a quick follow-up call to start() could
         // set update_thread != null and then the 'old' thread
         // would continue to run.
-        try
-        {	if(running_thread != null)
-            	running_thread.join();
-        }
-        catch (InterruptedException ex)
-        {
-            // Ignore
-        }
+//        try
+//        {	
+        	if(running_thread != null)
+            	run = false;
+//        }
+//        catch (InterruptedException ex)
+//        {
+//            // Ignore
+//        }
+        
     }
 
     /** Set a new value. To be called from <code>update</code>.
@@ -220,7 +223,7 @@ abstract public class DynamicValue extends Value implements Runnable
     @Override
     public void run()
     {
-        while (true)
+        while (run)
         {
             update();
             // Period delay, may be interrupted by stop()

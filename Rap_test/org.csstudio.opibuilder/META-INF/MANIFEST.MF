@@ -46,5 +46,6 @@ Export-Package: org.csstudio.opibuilder,
  org.csstudio.opibuilder.widgetActions,
  org.csstudio.platform.data
 Bundle-ClassPath: lib/rhino/js.jar,
- .
+ .,
+ lib/jdom/jdom.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
